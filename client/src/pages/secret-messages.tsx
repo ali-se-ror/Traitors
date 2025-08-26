@@ -40,7 +40,7 @@ export default function SecretMessages() {
 
   // Fetch all players
   const { data: players = [] } = useQuery<Player[]>({
-    queryKey: ["/api/users"],
+    queryKey: ["/api/players"],
     refetchInterval: 5000,
   });
 
