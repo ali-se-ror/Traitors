@@ -4,10 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { VotingForm } from "@/components/voting-form";
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost } from "lucide-react";
-import { Link } from "wouter";
+import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost, Skull, Crown, Eye } from "lucide-react";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -25,12 +27,24 @@ interface Message {
   senderUsername: string;
   content: string;
   createdAt: string;
+  isPrivate?: boolean;
+  receiverId?: string;
+  receiverUsername?: string;
+}
+
+interface Announcement {
+  id: string;
+  content: string;
+  createdAt: string;
 }
 
 const SPOOKY_EMOJIS = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️"];
 
 export default function Dashboard() {
   const [newMessage, setNewMessage] = useState("");
+  const [newPrivateMessage, setNewPrivateMessage] = useState("");
+  const [selectedRecipient, setSelectedRecipient] = useState("");
+  const [, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
   
@@ -47,7 +61,17 @@ export default function Dashboard() {
     refetchInterval: 3000,
   });
 
-  const currentVote = authData?.currentVote;
+  const { data: privateMessages = [], refetch: refetchPrivateMessages } = useQuery<Message[]>({
+    queryKey: ["/api/messages/private"],
+    refetchInterval: 3000,
+  });
+
+  const { data: announcements = [], refetch: refetchAnnouncements } = useQuery<Announcement[]>({
+    queryKey: ["/api/announcements"],
+    refetchInterval: 3000,
+  });
+
+  const currentVote = authData?.user?.currentVote || authData?.currentVote;
   const activePlayersCount = players.length;
   const votedPlayersCount = currentVote ? 1 : 0; // This would be improved with real vote counting
 
@@ -60,6 +84,30 @@ export default function Dashboard() {
     },
     onError: (error: any) => {
       toast({ title: "Failed to send whisper", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const sendPrivateMessageMutation = useMutation({
+    mutationFn: ({ content, receiverId }: { content: string; receiverId: string }) => 
+      apiClient.post("/api/messages", { content, isPrivate: true, receiverId }),
+    onSuccess: () => {
+      setNewPrivateMessage("");
+      setSelectedRecipient("");
+      refetchPrivateMessages();
+      toast({ title: "Secret message sent!", description: "Your whisper reaches its target" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Failed to send secret", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const logoutMutation = useMutation({
+    mutationFn: () => apiClient.post("/api/auth/logout", {}),
+    onSuccess: () => {
+      navigate("/logout");
+    },
+    onError: (error: any) => {
+      toast({ title: "Logout failed", description: error.message, variant: "destructive" });
     },
   });
 
@@ -118,88 +166,211 @@ export default function Dashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid lg:grid-cols-3 gap-6">
-              {/* Messages Display */}
-              <div className="lg:col-span-2">
-                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700" data-testid="dashboard-messages">
+            <Tabs defaultValue="public" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 bg-slate-800/50">
+                <TabsTrigger value="public" className="text-xs">
+                  <MessageCircle className="w-3 h-3 mr-1" />
+                  Public Board
+                </TabsTrigger>
+                <TabsTrigger value="private" className="text-xs">
+                  <Eye className="w-3 h-3 mr-1" />
+                  Private Messages
+                  {privateMessages.length > 0 && (
+                    <Badge variant="secondary" className="ml-1 text-xs">
+                      {privateMessages.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="announcements" className="text-xs">
+                  <Crown className="w-3 h-3 mr-1" />
+                  Announcements
+                  {announcements.length > 0 && (
+                    <Badge variant="secondary" className="ml-1 text-xs">
+                      {announcements.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Public Messages Tab */}
+              <TabsContent value="public" className="mt-4">
+                <div className="grid lg:grid-cols-3 gap-4">
+                  <div className="lg:col-span-2">
+                    <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
+                      <div className="space-y-3">
+                        {publicMessages.slice(-8).map((msg, index) => (
+                          <motion.div
+                            key={msg.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className={`p-2 rounded ${
+                              msg.senderId === user?.id 
+                                ? 'bg-purple-900/30 ml-4 border-l-2 border-purple-400' 
+                                : 'bg-slate-700/50 mr-4'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-purple-300 font-medium text-xs">
+                                {msg.senderUsername}
+                              </span>
+                              <span className="text-slate-400 text-xs">
+                                {formatTime(msg.createdAt)}
+                              </span>
+                            </div>
+                            <p className="text-white text-sm">{msg.content}</p>
+                          </motion.div>
+                        ))}
+                        {publicMessages.length === 0 && (
+                          <div className="text-center text-slate-400 py-8">
+                            <Ghost className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">The darkness is silent... be the first to whisper</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                   <div className="space-y-3">
-                    {publicMessages.slice(-5).map((msg, index) => (
+                    <Textarea
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      placeholder="Share a dark whisper..."
+                      className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
+                      maxLength={200}
+                    />
+                    <div className="grid grid-cols-4 gap-1">
+                      {SPOOKY_EMOJIS.map((emoji) => (
+                        <Button
+                          key={emoji}
+                          variant="ghost"
+                          size="sm"
+                          className="text-sm hover:bg-purple-900/30 p-1"
+                          onClick={() => insertEmoji(emoji)}
+                        >
+                          {emoji}
+                        </Button>
+                      ))}
+                    </div>
+                    <Button
+                      onClick={() => sendMessageMutation.mutate(newMessage)}
+                      disabled={!newMessage.trim() || sendMessageMutation.isPending}
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm"
+                    >
+                      <Send className="w-3 h-3 mr-2" />
+                      {sendMessageMutation.isPending ? "Sending..." : "Whisper"}
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Private Messages Tab */}
+              <TabsContent value="private" className="mt-4">
+                <div className="grid lg:grid-cols-3 gap-4">
+                  <div className="lg:col-span-2">
+                    <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
+                      <div className="space-y-3">
+                        {privateMessages.slice(-8).map((msg, index) => (
+                          <motion.div
+                            key={msg.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className={`p-2 rounded ${
+                              msg.senderId === user?.id 
+                                ? 'bg-red-900/20 ml-4 border-l-2 border-red-400' 
+                                : 'bg-slate-700/50 mr-4 border border-amber-500/30'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-red-300 font-medium text-xs">
+                                {msg.senderId === user?.id ? `To: ${msg.receiverUsername}` : `From: ${msg.senderUsername}`}
+                              </span>
+                              <span className="text-slate-400 text-xs">
+                                {formatTime(msg.createdAt)}
+                              </span>
+                            </div>
+                            <p className="text-white text-sm">{msg.content}</p>
+                          </motion.div>
+                        ))}
+                        {privateMessages.length === 0 && (
+                          <div className="text-center text-slate-400 py-8">
+                            <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">No secret messages yet...</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <select
+                      value={selectedRecipient}
+                      onChange={(e) => setSelectedRecipient(e.target.value)}
+                      className="w-full bg-slate-700/50 border border-slate-600 rounded-md px-3 py-2 text-white text-sm"
+                    >
+                      <option value="">Select recipient...</option>
+                      {players.filter(p => p.id !== user?.id).map((player) => (
+                        <option key={player.id} value={player.id}>
+                          {player.username}
+                        </option>
+                      ))}
+                    </select>
+                    <Textarea
+                      value={newPrivateMessage}
+                      onChange={(e) => setNewPrivateMessage(e.target.value)}
+                      placeholder="Send a secret message..."
+                      className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
+                      maxLength={200}
+                      disabled={!selectedRecipient}
+                    />
+                    <Button
+                      onClick={() => sendPrivateMessageMutation.mutate({ 
+                        content: newPrivateMessage, 
+                        receiverId: selectedRecipient 
+                      })}
+                      disabled={!newPrivateMessage.trim() || !selectedRecipient || sendPrivateMessageMutation.isPending}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-sm"
+                    >
+                      <Send className="w-3 h-3 mr-2" />
+                      {sendPrivateMessageMutation.isPending ? "Sending..." : "Send Secret"}
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Announcements Tab */}
+              <TabsContent value="announcements" className="mt-4">
+                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
+                  <div className="space-y-3">
+                    {announcements.slice(-10).map((announcement, index) => (
                       <motion.div
-                        key={msg.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        key={announcement.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className={`p-2 rounded ${
-                          msg.senderId === user?.id 
-                            ? 'bg-purple-900/30 ml-4 border-l-2 border-purple-400' 
-                            : 'bg-slate-700/50 mr-4'
-                        }`}
+                        className="p-3 rounded bg-gradient-to-r from-amber-900/20 to-yellow-900/20 border border-amber-500/30"
                       >
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-purple-300 font-medium text-xs">
-                            {msg.senderUsername}
+                        <div className="flex items-center gap-2 mb-2">
+                          <Crown className="w-4 h-4 text-amber-400" />
+                          <span className="text-amber-300 font-medium text-xs">
+                            Game Master
                           </span>
                           <span className="text-slate-400 text-xs">
-                            {formatTime(msg.createdAt)}
+                            {formatTime(announcement.createdAt)}
                           </span>
                         </div>
-                        <p className="text-white text-sm">{msg.content}</p>
+                        <p className="text-amber-100 text-sm font-medium">{announcement.content}</p>
                       </motion.div>
                     ))}
-                    {publicMessages.length === 0 && (
+                    {announcements.length === 0 && (
                       <div className="text-center text-slate-400 py-8">
-                        <Ghost className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">The darkness is silent... be the first to whisper</p>
+                        <Crown className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">No announcements from the shadows...</p>
                       </div>
                     )}
                   </div>
                 </div>
-              </div>
-
-              {/* Quick Message Panel */}
-              <div className="space-y-3">
-                <Textarea
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Share a dark whisper..."
-                  className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
-                  maxLength={200}
-                  data-testid="dashboard-message-input"
-                />
-                
-                {/* Quick Spooky Emojis */}
-                <div className="grid grid-cols-4 gap-1">
-                  {SPOOKY_EMOJIS.map((emoji) => (
-                    <Button
-                      key={emoji}
-                      variant="ghost"
-                      size="sm"
-                      className="text-sm hover:bg-purple-900/30 p-1"
-                      onClick={() => insertEmoji(emoji)}
-                    >
-                      {emoji}
-                    </Button>
-                  ))}
-                </div>
-
-                <Button
-                  onClick={() => sendMessageMutation.mutate(newMessage)}
-                  disabled={!newMessage.trim() || sendMessageMutation.isPending}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm"
-                  data-testid="dashboard-send-message"
-                >
-                  <Send className="w-3 h-3 mr-2" />
-                  {sendMessageMutation.isPending ? "Sending..." : "Whisper"}
-                </Button>
-
-                <Link href="/communications">
-                  <Button variant="outline" className="w-full text-sm border-purple-500/30 text-purple-300 hover:bg-purple-900/20">
-                    <MessageCircle className="w-3 h-3 mr-2" />
-                    Full Communications
-                  </Button>
-                </Link>
-              </div>
-            </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </motion.div>
@@ -383,12 +554,15 @@ export default function Dashboard() {
                     Profile
                   </Button>
                 </Link>
-                <Link href="/logout">
-                  <Button className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30" data-testid="nav-logout">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Leave Castle
-                  </Button>
-                </Link>
+                <Button 
+                  className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30" 
+                  onClick={() => logoutMutation.mutate()}
+                  disabled={logoutMutation.isPending}
+                  data-testid="nav-logout"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  {logoutMutation.isPending ? "Leaving..." : "Leave Castle"}
+                </Button>
               </CardContent>
             </Card>
           </motion.div>
