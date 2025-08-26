@@ -116,7 +116,19 @@ export default function SecretMessages() {
         msg.senderId === userId && msg.receiverId === user?.id
       ).length
     };
-  }).filter(conv => conv.userId);
+  }).filter(conv => conv.userId && conv.username !== 'Unknown');
+
+  // Get available players to message (excluding current user)
+  const availablePlayers = players.filter(p => p.id !== user?.id);
+  
+  // Debug logging
+  console.log('Secret Messages Debug:', {
+    totalPlayers: players.length,
+    availablePlayers: availablePlayers.length,
+    currentUserId: user?.id,
+    players: players.map(p => ({ id: p.id, username: p.username })),
+    selectedConversation
+  });
 
   return (
     <div className="min-h-screen atmospheric-bg">
@@ -345,11 +357,12 @@ export default function SecretMessages() {
                       <Eye className="w-12 h-12 mx-auto mb-4 opacity-50" />
                       <p className="text-lg mb-2">Start a Secret Conversation</p>
                       <p className="text-sm">Select a player to begin whispering in the shadows</p>
+                      <p className="text-xs mt-2">Found {availablePlayers.length} players available</p>
                     </div>
 
                     {/* All Players Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {players.filter(p => p.id !== user?.id).map((player) => {
+                      {availablePlayers.map((player) => {
                         // Generate consistent spooky symbol for each player
                         const spookySymbols = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️", "🏴‍☠️", "🦹", "🎭", "🔥"];
                         const symbolIndex = player.id.charCodeAt(0) % spookySymbols.length;
@@ -403,7 +416,7 @@ export default function SecretMessages() {
                       })}
                     </div>
 
-                    {players.filter(p => p.id !== user?.id).length === 0 && (
+                    {availablePlayers.length === 0 && (
                       <div className="text-center text-slate-400 py-8">
                         <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
                         <p className="text-sm">No other players found. Wait for more players to join the game.</p>
