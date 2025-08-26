@@ -71,7 +71,7 @@ export default function Dashboard() {
     refetchInterval: 3000,
   });
 
-  const currentVote = authData?.user?.currentVote || authData?.currentVote;
+  const currentVote = (authData as any)?.user?.currentVote || (authData as any)?.currentVote;
   const activePlayersCount = players.length;
   const votedPlayersCount = currentVote ? 1 : 0; // This would be improved with real vote counting
 
@@ -104,8 +104,8 @@ export default function Dashboard() {
   const logoutMutation = useMutation({
     mutationFn: () => apiClient.post("/api/auth/logout", {}),
     onSuccess: () => {
-      // Clear any cached data
-      window.location.href = "/logout";
+      // Force full page reload to logout page to clear all cached data
+      window.location.replace("/logout");
     },
     onError: (error: any) => {
       toast({ title: "Logout failed", description: error.message, variant: "destructive" });
