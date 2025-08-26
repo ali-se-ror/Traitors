@@ -363,317 +363,146 @@ export default function Dashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="public" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-slate-800/50">
-                <TabsTrigger value="public" className="text-xs">
-                  <MessageCircle className="w-3 h-3 mr-1" />
-                  Public Board
-                </TabsTrigger>
-                <TabsTrigger value="private" className="text-xs">
-                  <Eye className="w-3 h-3 mr-1" />
-                  Private Messages
+            <div className="flex justify-between items-center mb-4">
+              <div className="text-lg font-medium text-white">Public Board</div>
+              <Link href="/secret-messages">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="bg-red-800/20 border-red-400/50 text-red-300 hover:bg-red-800/40 hover:text-red-200"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Secret Messages
                   {receivedPrivateMessages.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 text-xs bg-red-600/80">
+                    <Badge variant="secondary" className="ml-2 text-xs bg-red-600/80">
                       {receivedPrivateMessages.length}
                     </Badge>
                   )}
-                </TabsTrigger>
-                <TabsTrigger value="announcements" className="text-xs">
-                  <Crown className="w-3 h-3 mr-1" />
-                  Announcements
-                  {announcements.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 text-xs bg-amber-600/80">
-                      {announcements.length}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-              </TabsList>
+                </Button>
+              </Link>
+            </div>
 
-              {/* Public Messages Tab */}
-              <TabsContent value="public" className="mt-4">
-                <div className="grid lg:grid-cols-3 gap-4">
-                  <div className="lg:col-span-2">
-                    <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
-                      <div className="space-y-3">
-                        {publicMessages.slice(-8).map((msg, index) => (
-                          <motion.div
-                            key={msg.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`p-2 rounded ${
-                              msg.senderId === user?.id 
-                                ? 'bg-purple-900/30 ml-4 border-l-2 border-purple-400' 
-                                : 'bg-slate-700/50 mr-4'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-purple-300 font-medium text-xs">
-                                {msg.senderUsername}
-                              </span>
-                              <span className="text-slate-400 text-xs">
-                                {formatTime(msg.createdAt)}
-                              </span>
-                            </div>
-                            <p className="text-white text-sm">{msg.content}</p>
-                            {msg.mediaUrl && (
-                              <div className="mt-2">
-                                {msg.mediaType?.startsWith('image/') ? (
-                                  <img 
-                                    src={msg.mediaUrl} 
-                                    alt="Shared media" 
-                                    className="max-w-xs rounded border border-slate-600"
-                                  />
-                                ) : msg.mediaType?.startsWith('video/') ? (
-                                  <video 
-                                    src={msg.mediaUrl} 
-                                    controls 
-                                    className="max-w-xs rounded border border-slate-600"
-                                  />
-                                ) : (
-                                  <a 
-                                    href={msg.mediaUrl} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-purple-400 hover:text-purple-300 underline text-sm"
-                                  >
-                                    <Paperclip className="w-3 h-3 inline mr-1" />
-                                    View attachment
-                                  </a>
-                                )}
-                              </div>
-                            )}
-                          </motion.div>
-                        ))}
-                        {publicMessages.length === 0 && (
-                          <div className="text-center text-slate-400 py-8">
-                            <Ghost className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            <p className="text-sm">The darkness is silent... be the first to whisper</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+            <div className="grid lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2">
+                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
                   <div className="space-y-3">
-                    <Textarea
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder="Share a dark whisper..."
-                      className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
-                      maxLength={200}
-                    />
-                    <div className="grid grid-cols-4 gap-1">
-                      {SPOOKY_EMOJIS.map((emoji) => (
-                        <Button
-                          key={emoji}
-                          variant="ghost"
-                          size="sm"
-                          className="text-sm hover:bg-purple-900/30 p-1"
-                          onClick={() => insertEmoji(emoji)}
-                        >
-                          {emoji}
-                        </Button>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <ObjectUploader
-                        onUploadComplete={(url, type) => setPendingMedia({ url, type })}
-                        className="flex-shrink-0"
-                      >
-                        <Upload className="w-4 h-4 mr-1" />
-                        Media
-                      </ObjectUploader>
-                      {pendingMedia && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setPendingMedia(null)}
-                          className="text-red-400 border-red-400/50 hover:bg-red-900/20"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      )}
-                    </div>
-                    {pendingMedia && (
-                      <div className="p-2 bg-purple-900/20 rounded border border-purple-400/30 text-sm text-purple-300">
-                        <Paperclip className="w-3 h-3 inline mr-1" />
-                        Media attached ({pendingMedia.type.split('/')[0]})
-                      </div>
-                    )}
-                    <Button
-                      onClick={() => sendMessageMutation.mutate(newMessage)}
-                      disabled={!newMessage.trim() || sendMessageMutation.isPending}
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm"
-                    >
-                      <Send className="w-3 h-3 mr-2" />
-                      {sendMessageMutation.isPending ? "Sending..." : "Whisper"}
-                    </Button>
-                  </div>
-                </div>
-              </TabsContent>
-
-              {/* Private Messages Tab */}
-              <TabsContent value="private" className="mt-4">
-                <div className="grid lg:grid-cols-3 gap-4">
-                  <div className="lg:col-span-2">
-                    <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
-                      <div className="space-y-3">
-                        {receivedPrivateMessages.slice(-8).map((msg: Message, index: number) => (
-                          <motion.div
-                            key={msg.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`p-2 rounded ${
-                              msg.senderId === user?.id 
-                                ? 'bg-red-900/20 ml-4 border-l-2 border-red-400' 
-                                : 'bg-slate-700/50 mr-4 border border-amber-500/30'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-red-300 font-medium text-xs">
-                                {msg.senderId === user?.id ? `To: ${msg.receiverUsername}` : `From: ${msg.senderUsername}`}
-                              </span>
-                              <span className="text-slate-400 text-xs">
-                                {formatTime(msg.createdAt)}
-                              </span>
-                            </div>
-                            <p className="text-white text-sm">{msg.content}</p>
-                            {msg.mediaUrl && (
-                              <div className="mt-2">
-                                {msg.mediaType?.startsWith('image/') ? (
-                                  <img 
-                                    src={msg.mediaUrl} 
-                                    alt="Shared media" 
-                                    className="max-w-xs rounded border border-slate-600"
-                                  />
-                                ) : msg.mediaType?.startsWith('video/') ? (
-                                  <video 
-                                    src={msg.mediaUrl} 
-                                    controls 
-                                    className="max-w-xs rounded border border-slate-600"
-                                  />
-                                ) : (
-                                  <a 
-                                    href={msg.mediaUrl} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-red-400 hover:text-red-300 underline text-sm"
-                                  >
-                                    <Paperclip className="w-3 h-3 inline mr-1" />
-                                    View attachment
-                                  </a>
-                                )}
-                              </div>
-                            )}
-                          </motion.div>
-                        ))}
-                        {receivedPrivateMessages.length === 0 && (
-                          <div className="text-center text-slate-400 py-8">
-                            <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            <p className="text-sm">No secret messages yet...</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <select
-                      value={selectedRecipient}
-                      onChange={(e) => setSelectedRecipient(e.target.value)}
-                      className="w-full bg-slate-700/50 border border-slate-600 rounded-md px-3 py-2 text-white text-sm"
-                    >
-                      <option value="">Select recipient...</option>
-                      {players.filter(p => p.id !== user?.id).map((player) => (
-                        <option key={player.id} value={player.id}>
-                          {player.username}
-                        </option>
-                      ))}
-                    </select>
-                    <Textarea
-                      value={newPrivateMessage}
-                      onChange={(e) => setNewPrivateMessage(e.target.value)}
-                      placeholder="Send a secret message..."
-                      className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
-                      maxLength={200}
-                      disabled={!selectedRecipient}
-                    />
-                    <div className="flex gap-2">
-                      <ObjectUploader
-                        onUploadComplete={(url, type) => setPendingMedia({ url, type })}
-                        className="flex-shrink-0"
-                      >
-                        <Upload className="w-4 h-4 mr-1" />
-                        Media
-                      </ObjectUploader>
-                      {pendingMedia && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setPendingMedia(null)}
-                          className="text-red-400 border-red-400/50 hover:bg-red-900/20"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      )}
-                    </div>
-                    {pendingMedia && (
-                      <div className="p-2 bg-red-900/20 rounded border border-red-400/30 text-sm text-red-300">
-                        <Paperclip className="w-3 h-3 inline mr-1" />
-                        Media attached ({pendingMedia.type.split('/')[0]})
-                      </div>
-                    )}
-                    <Button
-                      onClick={() => sendPrivateMessageMutation.mutate({ 
-                        content: newPrivateMessage, 
-                        receiverId: selectedRecipient 
-                      })}
-                      disabled={!newPrivateMessage.trim() || !selectedRecipient || sendPrivateMessageMutation.isPending}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-sm"
-                    >
-                      <Send className="w-3 h-3 mr-2" />
-                      {sendPrivateMessageMutation.isPending ? "Sending..." : "Send Secret"}
-                    </Button>
-                  </div>
-                </div>
-              </TabsContent>
-
-
-              {/* Announcements Tab */}
-              <TabsContent value="announcements" className="mt-4">
-                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-amber-500/20">
-                  <div className="space-y-3">
-                    {announcements.slice(-8).map((announcement, index) => (
+                    {publicMessages.slice(-8).map((msg, index) => (
                       <motion.div
-                        key={announcement.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        key={msg.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="p-3 rounded bg-gradient-to-r from-amber-800/20 to-yellow-800/20 border border-amber-500/30"
+                        className={`p-2 rounded ${
+                          msg.senderId === user?.id 
+                            ? 'bg-purple-900/30 ml-4 border-l-2 border-purple-400' 
+                            : 'bg-slate-700/50 mr-4'
+                        }`}
                       >
-                        <div className="flex items-center gap-2 mb-2">
-                          <Crown className="w-4 h-4 text-amber-400" />
-                          <span className="text-amber-300 font-medium text-xs">
-                            Game Master
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-purple-300 font-medium text-xs">
+                            {msg.senderUsername}
                           </span>
                           <span className="text-slate-400 text-xs">
-                            {formatTime(announcement.createdAt)}
+                            {formatTime(msg.createdAt)}
                           </span>
                         </div>
-                        <p className="text-amber-100 text-sm font-medium">{announcement.content}</p>
+                        <p className="text-white text-sm">{msg.content}</p>
+                        {msg.mediaUrl && (
+                          <div className="mt-2">
+                            {msg.mediaType?.startsWith('image/') ? (
+                              <img 
+                                src={msg.mediaUrl} 
+                                alt="Shared media" 
+                                className="max-w-xs rounded border border-slate-600"
+                              />
+                            ) : msg.mediaType?.startsWith('video/') ? (
+                              <video 
+                                src={msg.mediaUrl} 
+                                controls 
+                                className="max-w-xs rounded border border-slate-600"
+                              />
+                            ) : (
+                              <a 
+                                href={msg.mediaUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-purple-400 hover:text-purple-300 underline text-sm"
+                              >
+                                <Paperclip className="w-3 h-3 inline mr-1" />
+                                View attachment
+                              </a>
+                            )}
+                          </div>
+                        )}
                       </motion.div>
                     ))}
-                    {announcements.length === 0 && (
-                      <div className="text-center text-amber-300/50 py-8">
-                        <Crown className="w-6 h-6 mx-auto mb-2 opacity-50" />
-                        <p className="text-xs">Awaiting proclamations from the Game Master...</p>
+                    {publicMessages.length === 0 && (
+                      <div className="text-center text-slate-400 py-8">
+                        <Ghost className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">The darkness is silent... be the first to whisper</p>
                       </div>
                     )}
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+              <div className="space-y-3">
+                <Textarea
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Share a dark whisper..."
+                  className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
+                  maxLength={200}
+                />
+                <div className="grid grid-cols-4 gap-1">
+                  {SPOOKY_EMOJIS.map((emoji) => (
+                    <Button
+                      key={emoji}
+                      variant="ghost"
+                      size="sm"
+                      className="text-sm hover:bg-purple-900/30 p-1"
+                      onClick={() => insertEmoji(emoji)}
+                    >
+                      {emoji}
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <ObjectUploader
+                    onUploadComplete={(url, type) => setPendingMedia({ url, type })}
+                    className="flex-shrink-0"
+                  >
+                    <Upload className="w-4 h-4 mr-1" />
+                    Media
+                  </ObjectUploader>
+                  {pendingMedia && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPendingMedia(null)}
+                      className="text-red-400 border-red-400/50 hover:bg-red-900/20"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+                {pendingMedia && (
+                  <div className="p-2 bg-purple-900/20 rounded border border-purple-400/30 text-sm text-purple-300">
+                    <Paperclip className="w-3 h-3 inline mr-1" />
+                    Media attached ({pendingMedia.type.split('/')[0]})
+                  </div>
+                )}
+                <Button
+                  onClick={() => sendMessageMutation.mutate(newMessage)}
+                  disabled={!newMessage.trim() || sendMessageMutation.isPending}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm"
+                >
+                  <Send className="w-3 h-3 mr-2" />
+                  {sendMessageMutation.isPending ? "Sending..." : "Whisper"}
+                </Button>
+              </div>
+            </div>
 
-            </Tabs>
+
           </CardContent>
         </Card>
       </motion.div>
