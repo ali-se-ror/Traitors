@@ -13,6 +13,7 @@ import NotFound from "@/pages/not-found";
 import GameMasterAuth from "@/pages/gamemaster-auth";
 import GameMaster from "@/pages/game-master";
 import Communications from "@/pages/communications";
+import Voting from "@/pages/voting";
 import Logout from "@/pages/logout";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -92,6 +93,7 @@ function Router() {
       <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/suspicion" component={() => <ProtectedRoute component={SuspicionMeter} />} />
       <Route path="/communications" component={() => <ProtectedRoute component={Communications} />} />
+      <Route path="/voting" component={() => <ProtectedRoute component={Voting} />} />
       <Route path="/profile" component={() => <ProtectedRoute component={Profile} />} />
       <Route path="/logout" component={Logout} />
       <Route component={NotFound} />

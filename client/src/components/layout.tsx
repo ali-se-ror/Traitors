@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useLocation } from "wouter";
-import { Skull, Home, BarChart3, User, LogOut, Menu } from "lucide-react";
+import { Skull, Home, BarChart3, User, LogOut, Menu, Vote } from "lucide-react";
 import { useState } from "react";
 
 interface LayoutProps {
@@ -16,6 +16,7 @@ export function Layout({ children }: LayoutProps) {
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
+    { href: "/voting", label: "Vote", icon: Vote },
     { href: "/suspicion", label: "Suspicion Meter", icon: BarChart3 },
     { href: "/profile", label: "My Profile", icon: User },
   ];

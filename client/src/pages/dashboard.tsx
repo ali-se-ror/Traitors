@@ -558,6 +558,12 @@ export default function Dashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
+                <Link href="/voting">
+                  <Button className="w-full justify-start bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30" data-testid="nav-voting">
+                    <Skull className="mr-2 h-4 w-4" />
+                    Cast Your Vote
+                  </Button>
+                </Link>
                 <Link href="/communications">
                   <Button className="w-full justify-start bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30" data-testid="nav-communications">
                     <MessageCircle className="mr-2 h-4 w-4" />
