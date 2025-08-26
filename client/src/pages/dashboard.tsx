@@ -527,6 +527,19 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                <div className="bg-red-900/20 border border-red-400/30 rounded-lg p-4 mb-4">
+                  <h4 className="font-medium text-red-300 mb-3 flex items-center">
+                    <Info className="w-4 h-4 mr-2" />
+                    Voting Rules
+                  </h4>
+                  <div className="text-sm text-red-200/80 space-y-1">
+                    <p>• Vote anytime for who you think is most suspicious</p>
+                    <p>• All votes are completely anonymous</p>
+                    <p>• Change your vote as often as you want</p>
+                    <p>• Check the Suspicion Meter to see current poll results</p>
+                    <p>• Voting helps identify potential traitors</p>
+                  </div>
+                </div>
                 <Link href="/voting">
                   <motion.div
                     whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(220, 38, 38, 0.5)" }}

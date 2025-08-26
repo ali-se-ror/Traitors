@@ -90,6 +90,24 @@ export default function Voting() {
             Cast Your Suspicion
           </h1>
         </div>
+        <div className="max-w-4xl mx-auto mb-8">
+          <Card className="card-medieval border-red-400/30 bg-gradient-to-br from-red-900/10 to-red-800/10">
+            <CardContent className="p-6">
+              <div className="grid md:grid-cols-2 gap-4 text-sm text-red-200/80">
+                <div className="space-y-2">
+                  <p>• Vote anytime for who you think is most suspicious</p>
+                  <p>• All votes are completely anonymous</p>
+                  <p>• Change your vote as often as you want</p>
+                </div>
+                <div className="space-y-2">
+                  <p>• Check the Suspicion Meter to see current poll results</p>
+                  <p>• Voting helps identify potential traitors</p>
+                  <p>• Click any player below to cast your vote</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Choose wisely, for your vote may determine the fate of the castle. Who do you suspect harbors treachery in their heart?
         </p>

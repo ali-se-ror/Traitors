@@ -225,9 +225,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Cast vote
-  app.post("/api/vote", requireAuth, async (req, res) => {
+  app.post("/api/votes", requireAuth, async (req, res) => {
     try {
-      const { targetId } = voteSchema.parse(req.body);
+      const { suspectedId } = req.body;
+      const targetId = suspectedId;
       const userId = req.session.userId;
 
       // Validate target exists and is not self
@@ -256,7 +257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Clear vote
-  app.delete("/api/vote", requireAuth, async (req, res) => {
+  app.delete("/api/votes", requireAuth, async (req, res) => {
     try {
       const userId = req.session.userId;
       await storage.setVote(userId, null);

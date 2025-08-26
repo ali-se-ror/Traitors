@@ -14,6 +14,7 @@ interface SuspicionData {
 export default function SuspicionMeter() {
   const { data: suspicionData = [], isLoading } = useQuery<SuspicionData[]>({
     queryKey: ["/api/suspicion"],
+    refetchInterval: 3000, // Refresh every 3 seconds
   });
 
   if (isLoading) {
@@ -42,6 +43,36 @@ export default function SuspicionMeter() {
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           The scales of justice weigh heavy with doubt. Who among you harbors treachery?
         </p>
+      </motion.div>
+
+      {/* Voting Rules */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.6 }}
+      >
+        <Card className="card-medieval border-red-400/30 bg-gradient-to-br from-red-900/10 to-red-800/10">
+          <CardHeader>
+            <CardTitle className="font-serif text-xl font-semibold text-red-300 flex items-center">
+              <Info className="mr-3 h-5 w-5 text-red-400" />
+              How Voting Works
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4 text-sm text-red-200/80">
+              <div className="space-y-2">
+                <p>• Vote anytime for who you think is most suspicious</p>
+                <p>• All votes are completely anonymous</p>
+                <p>• Change your vote as often as you want</p>
+              </div>
+              <div className="space-y-2">
+                <p>• Results update in real-time on this page</p>
+                <p>• Voting helps identify potential traitors</p>
+                <p>• Use the "Cast Your Suspicion" button to vote</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </motion.div>
 
       {/* Main Suspicion Card */}
