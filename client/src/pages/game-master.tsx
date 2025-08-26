@@ -38,6 +38,16 @@ interface Message {
   createdAt: string;
 }
 
+interface PrivateMessage {
+  id: string;
+  senderId: string;
+  senderUsername: string;
+  receiverId: string;
+  receiverUsername: string;
+  content: string;
+  createdAt: string;
+}
+
 interface Announcement {
   id: string;
   gameMasterUsername: string;
@@ -69,6 +79,11 @@ export default function GameMaster() {
 
   const { data: publicMessages = [] } = useQuery<Message[]>({
     queryKey: ["/api/messages/public"],
+    refetchInterval: 2000,
+  });
+
+  const { data: privateMessages = [] } = useQuery<PrivateMessage[]>({
+    queryKey: ["/api/messages/private/admin/all"],
     refetchInterval: 2000,
   });
 
@@ -385,29 +400,31 @@ export default function GameMaster() {
 
           {/* Messages Tab */}
           <TabsContent value="messages" className="mt-6">
-            <Card className="bg-slate-800/90 border-green-500/30">
-              <CardHeader>
-                <CardTitle className="text-green-400 flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5" />
-                  Public Messages Monitor
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 max-h-96 overflow-y-auto" data-testid="public-messages-monitor">
-                  {publicMessages.map((msg, index) => (
-                    <motion.div
-                      key={msg.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.02 }}
-                      className="p-3 rounded-lg bg-green-900/20 border border-green-500/20"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-green-300 font-medium text-sm">{msg.senderUsername}</span>
-                        <span className="text-slate-400 text-xs">{formatTime(msg.createdAt)}</span>
-                      </div>
-                      <p className="text-white text-sm">{msg.content}</p>
-                    </motion.div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Public Messages Monitor */}
+              <Card className="bg-slate-800/90 border-green-500/30">
+                <CardHeader>
+                  <CardTitle className="text-green-400 flex items-center gap-2">
+                    <MessageCircle className="w-5 h-5" />
+                    Public Messages ({publicMessages.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto" data-testid="public-messages-monitor">
+                    {publicMessages.map((msg, index) => (
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.02 }}
+                        className="p-3 rounded-lg bg-green-900/20 border border-green-500/20"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-green-300 font-medium text-sm">{msg.senderUsername}</span>
+                          <span className="text-slate-400 text-xs">{formatTime(msg.createdAt)}</span>
+                        </div>
+                        <p className="text-white text-sm">{msg.content}</p>
+                      </motion.div>
                   ))}
                   {publicMessages.length === 0 && (
                     <div className="text-center py-8">
@@ -418,6 +435,46 @@ export default function GameMaster() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Private Messages Monitor */}
+            <Card className="bg-slate-800/90 border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Eye className="w-5 h-5" />
+                  Private Messages ({privateMessages.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 max-h-96 overflow-y-auto" data-testid="private-messages-monitor">
+                  {privateMessages.map((msg, index) => (
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.02 }}
+                      className="p-3 rounded-lg bg-red-900/20 border border-red-500/20"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-2 text-xs">
+                          <span className="text-red-300 font-medium">{msg.senderUsername}</span>
+                          <span className="text-slate-400">→</span>
+                          <span className="text-red-300 font-medium">{msg.receiverUsername}</span>
+                        </div>
+                        <span className="text-slate-400 text-xs">{formatTime(msg.createdAt)}</span>
+                      </div>
+                      <p className="text-white text-sm">{msg.content}</p>
+                    </motion.div>
+                  ))}
+                  {privateMessages.length === 0 && (
+                    <div className="text-center py-8">
+                      <Eye className="w-12 h-12 mx-auto mb-2 text-slate-500" />
+                      <p className="text-slate-400">No private messages yet</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            </div>
           </TabsContent>
 
           {/* Announcements Tab */}

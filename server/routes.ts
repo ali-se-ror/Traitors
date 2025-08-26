@@ -382,6 +382,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all private messages (Game Master only)
+  app.get("/api/messages/private/admin/all", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const currentUser = await storage.getUser(userId);
+      
+      if (!currentUser || !currentUser.isGameMaster) {
+        return res.status(403).json({ message: "Game Master access required" });
+      }
+
+      const messages = await storage.getAllPrivateMessages();
+      res.json(messages);
+    } catch (error) {
+      console.error("Get all private messages error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Create announcement (Game Master only)
   app.post("/api/announcements", requireAuth, async (req, res) => {
     try {

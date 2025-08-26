@@ -20,6 +20,7 @@ export interface IStorage {
   createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number }): Promise<Message>;
   getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]>;
   getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]>;
+  getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]>;
   
   // Announcement operations
   createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement>;
@@ -162,6 +163,26 @@ export class MemStorage implements IStorage {
         id: msg.id,
         senderId: msg.senderId,
         senderUsername: sender?.username || 'Unknown',
+        content: msg.content,
+        createdAt: msg.createdAt!,
+      };
+    });
+  }
+
+  async getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]> {
+    const privateMessages = Array.from(this.messages.values())
+      .filter(msg => msg.isPrivate && msg.receiverId)
+      .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
+    
+    return privateMessages.map(msg => {
+      const sender = this.users.get(msg.senderId);
+      const receiver = this.users.get(msg.receiverId!);
+      return {
+        id: msg.id,
+        senderId: msg.senderId,
+        senderUsername: sender?.username || 'Unknown',
+        receiverId: msg.receiverId!,
+        receiverUsername: receiver?.username || 'Unknown',
         content: msg.content,
         createdAt: msg.createdAt!,
       };
