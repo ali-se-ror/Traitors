@@ -93,11 +93,12 @@ export function VotingForm({ players, currentVote }: VotingFormProps) {
             >
               <SelectValue placeholder="— Choose your target —" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-slate-800 border-slate-600 max-h-[200px] overflow-y-auto">
               {players.map((player) => (
                 <SelectItem 
                   key={player.id} 
                   value={player.id}
+                  className="text-foreground hover:bg-slate-700 focus:bg-slate-700 cursor-pointer"
                   data-testid={`option-player-${player.id}`}
                 >
                   {player.username}

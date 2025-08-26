@@ -149,7 +149,7 @@ export default function Logout() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.8 }}
           >
-            <Link href="/auth">
+            <Link href="/">
               <motion.div
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(239, 68, 68, 0.5)" }}
                 whileTap={{ scale: 0.95 }}

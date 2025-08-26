@@ -104,7 +104,8 @@ export default function Dashboard() {
   const logoutMutation = useMutation({
     mutationFn: () => apiClient.post("/api/auth/logout", {}),
     onSuccess: () => {
-      navigate("/logout");
+      // Clear any cached data
+      window.location.href = "/logout";
     },
     onError: (error: any) => {
       toast({ title: "Logout failed", description: error.message, variant: "destructive" });
@@ -148,6 +149,63 @@ export default function Dashboard() {
         </p>
       </motion.div>
 
+      {/* Game Master Announcements - Separate Window */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.08, duration: 0.6 }}
+        className="mb-6"
+      >
+        <Card className="card-medieval border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
+          <CardHeader>
+            <CardTitle className="font-serif text-2xl font-semibold text-amber-300 flex items-center">
+              <Crown className="mr-3 h-6 w-6 text-amber-400" />
+              Game Master Announcements
+              {announcements.length > 0 && (
+                <Badge variant="secondary" className="ml-2 bg-amber-500/20 text-amber-300">
+                  {announcements.length}
+                </Badge>
+              )}
+            </CardTitle>
+            <CardDescription className="text-amber-200/70">
+              Official rules, updates, and proclamations from the shadows...
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-slate-900/50 rounded-lg p-4 h-32 overflow-y-auto border border-amber-500/20">
+              <div className="space-y-3">
+                {announcements.slice(-5).map((announcement, index) => (
+                  <motion.div
+                    key={announcement.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="p-3 rounded bg-gradient-to-r from-amber-800/20 to-yellow-800/20 border border-amber-500/30"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Crown className="w-4 h-4 text-amber-400" />
+                      <span className="text-amber-300 font-medium text-xs">
+                        Game Master
+                      </span>
+                      <span className="text-slate-400 text-xs">
+                        {formatTime(announcement.createdAt)}
+                      </span>
+                    </div>
+                    <p className="text-amber-100 text-sm font-medium">{announcement.content}</p>
+                  </motion.div>
+                ))}
+                {announcements.length === 0 && (
+                  <div className="text-center text-amber-300/50 py-4">
+                    <Crown className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                    <p className="text-xs">Awaiting proclamations from the Game Master...</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
       {/* Whispers in the Dark - Communication Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -167,7 +225,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="public" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-slate-800/50">
+              <TabsList className="grid w-full grid-cols-2 bg-slate-800/50">
                 <TabsTrigger value="public" className="text-xs">
                   <MessageCircle className="w-3 h-3 mr-1" />
                   Public Board
@@ -178,15 +236,6 @@ export default function Dashboard() {
                   {privateMessages.length > 0 && (
                     <Badge variant="secondary" className="ml-1 text-xs">
                       {privateMessages.length}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger value="announcements" className="text-xs">
-                  <Crown className="w-3 h-3 mr-1" />
-                  Announcements
-                  {announcements.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 text-xs">
-                      {announcements.length}
                     </Badge>
                   )}
                 </TabsTrigger>
@@ -337,39 +386,7 @@ export default function Dashboard() {
                 </div>
               </TabsContent>
 
-              {/* Announcements Tab */}
-              <TabsContent value="announcements" className="mt-4">
-                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
-                  <div className="space-y-3">
-                    {announcements.slice(-10).map((announcement, index) => (
-                      <motion.div
-                        key={announcement.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="p-3 rounded bg-gradient-to-r from-amber-900/20 to-yellow-900/20 border border-amber-500/30"
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <Crown className="w-4 h-4 text-amber-400" />
-                          <span className="text-amber-300 font-medium text-xs">
-                            Game Master
-                          </span>
-                          <span className="text-slate-400 text-xs">
-                            {formatTime(announcement.createdAt)}
-                          </span>
-                        </div>
-                        <p className="text-amber-100 text-sm font-medium">{announcement.content}</p>
-                      </motion.div>
-                    ))}
-                    {announcements.length === 0 && (
-                      <div className="text-center text-slate-400 py-8">
-                        <Crown className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">No announcements from the shadows...</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </TabsContent>
+
             </Tabs>
           </CardContent>
         </Card>
