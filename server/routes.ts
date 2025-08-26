@@ -62,7 +62,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate random spooky symbol
       const symbol = getRandomSpookySymbol();
       
-      // Create user
+      // Create user with optional profile image (will be added after you upload images)
       const user = await storage.createUser({ username, codewordHash, symbol });
       
       // Set session

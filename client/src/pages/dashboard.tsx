@@ -19,6 +19,8 @@ import { ObjectUploader } from "@/components/ObjectUploader";
 interface Player {
   id: string;
   username: string;
+  symbol?: string;
+  profileImage?: string;
   createdAt: string;
 }
 

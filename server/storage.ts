@@ -51,13 +51,14 @@ export class MemStorage implements IStorage {
     );
   }
 
-  async createUser(user: { username: string; codewordHash: string; symbol: string; isGameMaster?: number }): Promise<User> {
+  async createUser(user: { username: string; codewordHash: string; symbol: string; profileImage?: string; isGameMaster?: number }): Promise<User> {
     const id = randomUUID();
     const newUser: User = {
       id,
       username: user.username,
       codewordHash: user.codewordHash,
       symbol: user.symbol,
+      profileImage: user.profileImage || null,
       isGameMaster: user.isGameMaster || 0,
       createdAt: new Date(),
     };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
@@ -157,6 +157,9 @@ export default function Voting() {
                       <CardContent className="p-6 text-center">
                         <div className="relative mb-4">
                           <Avatar className="w-16 h-16 mx-auto border-2 border-slate-600">
+                            {player.profileImage && (
+                              <AvatarImage src={player.profileImage} alt={`${player.username}'s avatar`} />
+                            )}
                             <AvatarFallback className="bg-slate-800 text-3xl">
                               {player.symbol || player.username.substring(0, 2).toUpperCase()}
                             </AvatarFallback>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Crown, User } from "lucide-react";
 
@@ -7,6 +7,7 @@ interface Player {
   id: string;
   username: string;
   symbol?: string;
+  profileImage?: string;
   createdAt: string;
 }
 
@@ -34,6 +35,9 @@ export function PlayerCard({ player, isCurrentUser, selected = false, onClick, "
     >
       <div className="flex items-center space-x-4">
         <Avatar className="w-12 h-12 border border-border">
+          {player.profileImage && (
+            <AvatarImage src={player.profileImage} alt={`${player.username}'s avatar`} />
+          )}
           <AvatarFallback className="bg-slate-800 text-2xl">
             {player.symbol || player.username.slice(0, 2).toUpperCase()}
           </AvatarFallback>

@@ -7,6 +7,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -14,6 +15,8 @@ import { useState } from "react";
 interface Player {
   id: string;
   username: string;
+  symbol?: string;
+  profileImage?: string;
   createdAt: string;
 }
 

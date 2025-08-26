@@ -8,6 +8,7 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   codewordHash: text("codeword_hash").notNull(),
   symbol: text("symbol").notNull(),
+  profileImage: text("profile_image"),
   isGameMaster: integer("is_game_master").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
