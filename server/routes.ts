@@ -400,6 +400,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get private messages received by current user
+  app.get("/api/messages/private/received", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const messages = await storage.getPrivateMessagesForUser(userId);
+      res.json(messages);
+    } catch (error) {
+      console.error("Get received private messages error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Create announcement (Game Master only)
   app.post("/api/announcements", requireAuth, async (req, res) => {
     try {
