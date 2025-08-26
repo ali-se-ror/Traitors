@@ -24,7 +24,7 @@ export default function Logout() {
     // Add some spooky atmosphere sound effect or animation trigger here if needed
     document.title = "Farewell, Traitor...";
     return () => {
-      document.title = "The Traitors";
+      document.title = "Traitors Game";
     };
   }, []);
 
@@ -156,10 +156,10 @@ export default function Logout() {
               >
                 <Button 
                   className="btn-primary px-8 py-4 font-bold text-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border border-red-500/50 shadow-lg shadow-red-900/50"
-                  data-testid="button-return-to-shadows"
+                  data-testid="button-return-to-login"
                 >
-                  <Ghost className="mr-2 h-5 w-5" />
-                  Return to the Shadows
+                  <Skull className="mr-2 h-5 w-5" />
+                  Return to Login
                 </Button>
               </motion.div>
             </Link>

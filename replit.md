@@ -1,6 +1,14 @@
 # Overview
 
-This is a full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, and view real-time suspicion metrics. The application features a React frontend with a modern UI design system and an Express backend with PostgreSQL database storage.
+**Traitors Game** is a comprehensive full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, communicate through public/private messaging, and view real-time suspicion metrics. The application features a React frontend with a dark medieval-themed UI design system and an Express backend with in-memory storage.
+
+## Recent Changes (January 26, 2025)
+- ✅ **Complete Messaging System**: Added public board, private messages, and spooky emoji integration
+- ✅ **Game Master Dashboard**: Comprehensive admin interface with voting analytics, message monitoring, and announcement broadcasting  
+- ✅ **Enhanced Branding**: Changed app name to "Traitors Game" with skull logo throughout
+- ✅ **Spooky Logout Page**: Atmospheric farewell page with return to login functionality
+- ✅ **Fixed Voting Interface**: Resolved dropdown glitch with proper TypeScript definitions
+- ✅ **Enhanced Navigation**: Seamless navigation between all game features from dashboard
 
 # User Preferences
 
