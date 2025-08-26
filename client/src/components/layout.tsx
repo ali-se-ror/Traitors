@@ -1,8 +1,5 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useLocation } from "wouter";
 import { Skull, Home, BarChart3, User, LogOut, Menu } from "lucide-react";
@@ -15,34 +12,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
   const { user } = useAuth();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/auth/logout");
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
-      toast({
-        title: "Farewell, shadow",
-        description: "You have left the game safely.",
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Logout failed",
-        description: error.message || "Could not log out properly.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
@@ -106,16 +76,16 @@ export function Layout({ children }: LayoutProps) {
                 </Link>
               );
             })}
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              disabled={logoutMutation.isPending}
-              className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
-              data-testid="button-logout"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
+            <Link href="/logout">
+              <Button
+                variant="ghost"
+                className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
+                data-testid="button-logout"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Leave Castle
+              </Button>
+            </Link>
           </motion.div>
 
           {/* Mobile Menu Button */}
@@ -161,19 +131,17 @@ export function Layout({ children }: LayoutProps) {
                   </Link>
                 );
               })}
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  handleLogout();
-                  setIsMobileMenuOpen(false);
-                }}
-                disabled={logoutMutation.isPending}
-                className="w-full justify-start text-destructive hover:text-destructive/80 hover:bg-destructive/10 px-3 py-3"
-                data-testid="button-mobile-logout"
-              >
-                <LogOut className="mr-3 h-5 w-5" />
-                Logout
-              </Button>
+              <Link href="/logout">
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full justify-start text-destructive hover:text-destructive/80 hover:bg-destructive/10 px-3 py-3"
+                  data-testid="button-mobile-logout"
+                >
+                  <LogOut className="mr-3 h-5 w-5" />
+                  Leave Castle
+                </Button>
+              </Link>
             </div>
           </motion.div>
         )}
