@@ -6,6 +6,7 @@ import { Crown, User } from "lucide-react";
 interface Player {
   id: string;
   username: string;
+  symbol?: string;
   createdAt: string;
 }
 
@@ -33,8 +34,8 @@ export function PlayerCard({ player, isCurrentUser, selected = false, onClick, "
     >
       <div className="flex items-center space-x-4">
         <Avatar className="w-12 h-12 border border-border">
-          <AvatarFallback className="bg-muted font-medium">
-            {player.username.slice(0, 2).toUpperCase()}
+          <AvatarFallback className="bg-slate-800 text-2xl">
+            {player.symbol || player.username.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0">

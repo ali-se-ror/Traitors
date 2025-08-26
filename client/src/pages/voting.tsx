@@ -139,8 +139,8 @@ export default function Voting() {
                       <CardContent className="p-6 text-center">
                         <div className="relative mb-4">
                           <Avatar className="w-16 h-16 mx-auto border-2 border-slate-600">
-                            <AvatarFallback className="bg-gradient-to-br from-purple-600 to-red-600 text-white font-bold text-lg">
-                              {player.username.substring(0, 2).toUpperCase()}
+                            <AvatarFallback className="bg-slate-800 text-3xl">
+                              {player.symbol || player.username.substring(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           {votedFor === player.id && (

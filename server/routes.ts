@@ -8,6 +8,18 @@ import MemoryStore from "memorystore";
 
 const MemoryStoreSession = MemoryStore(session);
 
+// Spooky symbols for player avatars
+const SPOOKY_SYMBOLS = [
+  "👻", "💀", "🦇", "🕷️", "🕸️", "🌙", "⚡", "🔮", 
+  "⚰️", "🗡️", "🏹", "🛡️", "👑", "💎", "🔥", "❄️",
+  "🌟", "💫", "🌀", "⭐", "🔱", "⚔️", "🏰", "🗝️",
+  "📿", "🔯", "☠️", "🎭", "🦉", "🐺", "🌒", "🌕"
+];
+
+function getRandomSpookySymbol(): string {
+  return SPOOKY_SYMBOLS[Math.floor(Math.random() * SPOOKY_SYMBOLS.length)];
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session middleware
   app.use(session({
@@ -46,8 +58,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Hash codeword
       const codewordHash = await bcrypt.hash(codeword, 10);
       
+      // Generate random spooky symbol
+      const symbol = getRandomSpookySymbol();
+      
       // Create user
-      const user = await storage.createUser({ username, codewordHash });
+      const user = await storage.createUser({ username, codewordHash, symbol });
       
       // Set session
       req.session.userId = user.id;
@@ -56,6 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user: { 
           id: user.id, 
           username: user.username, 
+          symbol: user.symbol,
           createdAt: user.createdAt 
         } 
       });
@@ -89,6 +105,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user: { 
           id: user.id, 
           username: user.username, 
+          symbol: user.symbol,
           createdAt: user.createdAt 
         } 
       });
@@ -121,8 +138,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Hash codeword
       const codewordHash = await bcrypt.hash(codeword, 10);
       
+      // Generate random spooky symbol
+      const symbol = getRandomSpookySymbol();
+      
       // Create game master user
-      const user = await storage.createUser({ username, codewordHash, isGameMaster: 1 });
+      const user = await storage.createUser({ username, codewordHash, symbol, isGameMaster: 1 });
       
       // Set session
       req.session.userId = user.id;
@@ -131,6 +151,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user: { 
           id: user.id, 
           username: user.username, 
+          symbol: user.symbol,
           isGameMaster: user.isGameMaster,
           createdAt: user.createdAt 
         } 
