@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { VotingForm } from "@/components/voting-form";
+
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
 import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost, Skull, Crown, Eye } from "lucide-react";
@@ -400,27 +400,40 @@ export default function Dashboard() {
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Voting Card */}
+          {/* Voting Card - Big Button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <Card className="card-medieval">
+            <Card className="card-medieval border-red-500/30 bg-gradient-to-br from-red-900/10 to-red-800/10">
               <CardHeader>
-                <CardTitle className="font-serif text-2xl font-semibold text-foreground flex items-center">
-                  <Activity className="mr-3 h-6 w-6 text-primary" />
+                <CardTitle className="font-serif text-2xl font-semibold text-red-300 flex items-center">
+                  <Skull className="mr-3 h-6 w-6 text-red-400" />
                   Cast Your Suspicion
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-red-200/70">
                   The shadows whisper secrets. Choose your target wisely.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <VotingForm 
-                  players={players.filter(p => p.id !== user?.id)} 
-                  currentVote={currentVote}
-                />
+                <Link href="/voting">
+                  <motion.div
+                    whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(220, 38, 38, 0.5)" }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      className="w-full h-20 text-xl font-bold bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border border-red-500/50 shadow-lg shadow-red-900/50"
+                      data-testid="button-cast-suspicion"
+                    >
+                      <Skull className="mr-3 h-8 w-8" />
+                      Cast Your Suspicion
+                    </Button>
+                  </motion.div>
+                </Link>
+                <p className="text-center text-red-300/60 text-sm mt-4 italic">
+                  Click to view all players and cast your vote
+                </p>
               </CardContent>
             </Card>
           </motion.div>
