@@ -5,6 +5,7 @@ import { loginSchema, registerSchema, voteSchema, changeCodewordSchema, gameMast
 import bcrypt from "bcrypt";
 import session from "express-session";
 import MemoryStore from "memorystore";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 const MemoryStoreSession = MemoryStore(session);
 
@@ -338,7 +339,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Send message
   app.post("/api/messages", requireAuth, async (req, res) => {
     try {
-      const { receiverId, content, isPrivate } = messageSchema.parse(req.body);
+      const { receiverId, content, isPrivate, mediaUrl, mediaType } = messageSchema.parse(req.body);
       const senderId = req.session.userId;
 
       const message = await storage.createMessage({
@@ -346,6 +347,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         receiverId: receiverId || undefined,
         content,
         isPrivate: isPrivate ? 1 : 0,
+        mediaUrl,
+        mediaType,
       });
 
       res.status(201).json({ message: "Message sent successfully", data: message });
@@ -447,6 +450,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get announcements error:", error);
       res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Object storage routes for media uploads
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error serving object:", error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
+  app.post("/api/objects/upload", requireAuth, async (req, res) => {
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Failed to get upload URL" });
+    }
+  });
+
+  app.put("/api/media-attachments", requireAuth, async (req, res) => {
+    if (!req.body.mediaUrl) {
+      return res.status(400).json({ error: "mediaUrl is required" });
+    }
+
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = objectStorageService.normalizeObjectEntityPath(req.body.mediaUrl);
+      res.status(200).json({ objectPath });
+    } catch (error) {
+      console.error("Error setting media permissions:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 

@@ -118,7 +118,7 @@ export class MemStorage implements IStorage {
     return Array.from(this.votes.values());
   }
 
-  async createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number }): Promise<Message> {
+  async createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number; mediaUrl?: string; mediaType?: string }): Promise<Message> {
     const id = randomUUID();
     const newMessage: Message = {
       id,
@@ -126,13 +126,15 @@ export class MemStorage implements IStorage {
       receiverId: message.receiverId || null,
       content: message.content,
       isPrivate: message.isPrivate || 0,
+      mediaUrl: message.mediaUrl || null,
+      mediaType: message.mediaType || null,
       createdAt: new Date(),
     };
     this.messages.set(id, newMessage);
     return newMessage;
   }
 
-  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]> {
+  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; content: string; mediaUrl: string | null; mediaType: string | null; createdAt: Date }[]> {
     const publicMessages = Array.from(this.messages.values())
       .filter(msg => !msg.isPrivate)
       .sort((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime());
@@ -144,12 +146,14 @@ export class MemStorage implements IStorage {
         senderId: msg.senderId,
         senderUsername: sender?.username || 'Unknown',
         content: msg.content,
+        mediaUrl: msg.mediaUrl,
+        mediaType: msg.mediaType,
         createdAt: msg.createdAt!,
       };
     });
   }
 
-  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]> {
+  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; mediaUrl: string | null; mediaType: string | null; createdAt: Date }[]> {
     const privateMessages = Array.from(this.messages.values())
       .filter(msg => 
         msg.isPrivate && 
@@ -165,6 +169,8 @@ export class MemStorage implements IStorage {
         senderId: msg.senderId,
         senderUsername: sender?.username || 'Unknown',
         content: msg.content,
+        mediaUrl: msg.mediaUrl,
+        mediaType: msg.mediaType,
         createdAt: msg.createdAt!,
       };
     });

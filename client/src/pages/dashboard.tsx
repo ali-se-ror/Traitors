@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost, Skull, Crown, Eye, X } from "lucide-react";
+import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost, Skull, Crown, Eye, X, Upload, Image, Video, Paperclip } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { ObjectUploader } from "@/components/ObjectUploader";
 
 interface Player {
   id: string;
@@ -30,6 +31,8 @@ interface Message {
   isPrivate?: boolean;
   receiverId?: string;
   receiverUsername?: string;
+  mediaUrl?: string;
+  mediaType?: string;
 }
 
 interface Announcement {
@@ -44,6 +47,7 @@ export default function Dashboard() {
   const [newMessage, setNewMessage] = useState("");
   const [newPrivateMessage, setNewPrivateMessage] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState("");
+  const [pendingMedia, setPendingMedia] = useState<{ url: string; type: string } | null>(null);
   const [showPrivateNotification, setShowPrivateNotification] = useState(false);
   const [selectedMessageSender, setSelectedMessageSender] = useState("");
   const [replyMessage, setReplyMessage] = useState("");
@@ -82,11 +86,17 @@ export default function Dashboard() {
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
-      const response = await apiRequest("POST", "/api/messages", { content, isPrivate: false });
+      const response = await apiRequest("POST", "/api/messages", { 
+        content, 
+        isPrivate: false,
+        mediaUrl: pendingMedia?.url,
+        mediaType: pendingMedia?.type,
+      });
       return response.json();
     },
     onSuccess: () => {
       setNewMessage("");
+      setPendingMedia(null);
       queryClient.invalidateQueries({ queryKey: ["/api/messages/public"] });
       toast({ title: "Whisper sent!", description: "Your message echoes through the darkness" });
     },
@@ -97,11 +107,18 @@ export default function Dashboard() {
 
   const sendPrivateMessageMutation = useMutation({
     mutationFn: async ({ content, receiverId }: { content: string; receiverId: string }) => {
-      const response = await apiRequest("POST", "/api/messages", { content, isPrivate: true, receiverId });
+      const response = await apiRequest("POST", "/api/messages", { 
+        content, 
+        isPrivate: true, 
+        receiverId,
+        mediaUrl: pendingMedia?.url,
+        mediaType: pendingMedia?.type,
+      });
       return response.json();
     },
     onSuccess: () => {
       setNewPrivateMessage("");
+      setPendingMedia(null);
       setSelectedRecipient("");
       setReplyMessage("");
       queryClient.invalidateQueries({ queryKey: ["/api/messages/private/received"] });
@@ -347,7 +364,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="public" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-slate-800/50">
+              <TabsList className="grid w-full grid-cols-3 bg-slate-800/50">
                 <TabsTrigger value="public" className="text-xs">
                   <MessageCircle className="w-3 h-3 mr-1" />
                   Public Board
@@ -356,8 +373,17 @@ export default function Dashboard() {
                   <Eye className="w-3 h-3 mr-1" />
                   Private Messages
                   {receivedPrivateMessages.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 text-xs">
+                    <Badge variant="secondary" className="ml-1 text-xs bg-red-600/80">
                       {receivedPrivateMessages.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="announcements" className="text-xs">
+                  <Crown className="w-3 h-3 mr-1" />
+                  Announcements
+                  {announcements.length > 0 && (
+                    <Badge variant="secondary" className="ml-1 text-xs bg-amber-600/80">
+                      {announcements.length}
                     </Badge>
                   )}
                 </TabsTrigger>
@@ -390,6 +416,33 @@ export default function Dashboard() {
                               </span>
                             </div>
                             <p className="text-white text-sm">{msg.content}</p>
+                            {msg.mediaUrl && (
+                              <div className="mt-2">
+                                {msg.mediaType?.startsWith('image/') ? (
+                                  <img 
+                                    src={msg.mediaUrl} 
+                                    alt="Shared media" 
+                                    className="max-w-xs rounded border border-slate-600"
+                                  />
+                                ) : msg.mediaType?.startsWith('video/') ? (
+                                  <video 
+                                    src={msg.mediaUrl} 
+                                    controls 
+                                    className="max-w-xs rounded border border-slate-600"
+                                  />
+                                ) : (
+                                  <a 
+                                    href={msg.mediaUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-purple-400 hover:text-purple-300 underline text-sm"
+                                  >
+                                    <Paperclip className="w-3 h-3 inline mr-1" />
+                                    View attachment
+                                  </a>
+                                )}
+                              </div>
+                            )}
                           </motion.div>
                         ))}
                         {publicMessages.length === 0 && (
@@ -422,6 +475,31 @@ export default function Dashboard() {
                         </Button>
                       ))}
                     </div>
+                    <div className="flex gap-2">
+                      <ObjectUploader
+                        onUploadComplete={(url, type) => setPendingMedia({ url, type })}
+                        className="flex-shrink-0"
+                      >
+                        <Upload className="w-4 h-4 mr-1" />
+                        Media
+                      </ObjectUploader>
+                      {pendingMedia && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setPendingMedia(null)}
+                          className="text-red-400 border-red-400/50 hover:bg-red-900/20"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                    {pendingMedia && (
+                      <div className="p-2 bg-purple-900/20 rounded border border-purple-400/30 text-sm text-purple-300">
+                        <Paperclip className="w-3 h-3 inline mr-1" />
+                        Media attached ({pendingMedia.type.split('/')[0]})
+                      </div>
+                    )}
                     <Button
                       onClick={() => sendMessageMutation.mutate(newMessage)}
                       disabled={!newMessage.trim() || sendMessageMutation.isPending}
@@ -461,6 +539,33 @@ export default function Dashboard() {
                               </span>
                             </div>
                             <p className="text-white text-sm">{msg.content}</p>
+                            {msg.mediaUrl && (
+                              <div className="mt-2">
+                                {msg.mediaType?.startsWith('image/') ? (
+                                  <img 
+                                    src={msg.mediaUrl} 
+                                    alt="Shared media" 
+                                    className="max-w-xs rounded border border-slate-600"
+                                  />
+                                ) : msg.mediaType?.startsWith('video/') ? (
+                                  <video 
+                                    src={msg.mediaUrl} 
+                                    controls 
+                                    className="max-w-xs rounded border border-slate-600"
+                                  />
+                                ) : (
+                                  <a 
+                                    href={msg.mediaUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-red-400 hover:text-red-300 underline text-sm"
+                                  >
+                                    <Paperclip className="w-3 h-3 inline mr-1" />
+                                    View attachment
+                                  </a>
+                                )}
+                              </div>
+                            )}
                           </motion.div>
                         ))}
                         {receivedPrivateMessages.length === 0 && (
@@ -493,6 +598,31 @@ export default function Dashboard() {
                       maxLength={200}
                       disabled={!selectedRecipient}
                     />
+                    <div className="flex gap-2">
+                      <ObjectUploader
+                        onUploadComplete={(url, type) => setPendingMedia({ url, type })}
+                        className="flex-shrink-0"
+                      >
+                        <Upload className="w-4 h-4 mr-1" />
+                        Media
+                      </ObjectUploader>
+                      {pendingMedia && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setPendingMedia(null)}
+                          className="text-red-400 border-red-400/50 hover:bg-red-900/20"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                    {pendingMedia && (
+                      <div className="p-2 bg-red-900/20 rounded border border-red-400/30 text-sm text-red-300">
+                        <Paperclip className="w-3 h-3 inline mr-1" />
+                        Media attached ({pendingMedia.type.split('/')[0]})
+                      </div>
+                    )}
                     <Button
                       onClick={() => sendPrivateMessageMutation.mutate({ 
                         content: newPrivateMessage, 
@@ -508,6 +638,40 @@ export default function Dashboard() {
                 </div>
               </TabsContent>
 
+
+              {/* Announcements Tab */}
+              <TabsContent value="announcements" className="mt-4">
+                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-amber-500/20">
+                  <div className="space-y-3">
+                    {announcements.slice(-8).map((announcement, index) => (
+                      <motion.div
+                        key={announcement.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="p-3 rounded bg-gradient-to-r from-amber-800/20 to-yellow-800/20 border border-amber-500/30"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <Crown className="w-4 h-4 text-amber-400" />
+                          <span className="text-amber-300 font-medium text-xs">
+                            Game Master
+                          </span>
+                          <span className="text-slate-400 text-xs">
+                            {formatTime(announcement.createdAt)}
+                          </span>
+                        </div>
+                        <p className="text-amber-100 text-sm font-medium">{announcement.content}</p>
+                      </motion.div>
+                    ))}
+                    {announcements.length === 0 && (
+                      <div className="text-center text-amber-300/50 py-8">
+                        <Crown className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                        <p className="text-xs">Awaiting proclamations from the Game Master...</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </TabsContent>
 
             </Tabs>
           </CardContent>

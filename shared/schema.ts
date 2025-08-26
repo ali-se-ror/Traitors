@@ -23,6 +23,8 @@ export const messages = pgTable("messages", {
   receiverId: varchar("receiver_id").references(() => users.id, { onDelete: "cascade" }),
   content: text("content").notNull(),
   isPrivate: integer("is_private").default(0),
+  mediaUrl: text("media_url"),
+  mediaType: text("media_type"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -31,6 +33,8 @@ export const announcements = pgTable("announcements", {
   gameMasterId: varchar("game_master_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
   content: text("content").notNull(),
+  mediaUrl: text("media_url"),
+  mediaType: text("media_type"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -63,11 +67,15 @@ export const messageSchema = z.object({
   receiverId: z.string().uuid().optional(),
   content: z.string().min(1, "Message cannot be empty").max(500, "Message is too long"),
   isPrivate: z.boolean().default(false),
+  mediaUrl: z.string().optional(),
+  mediaType: z.string().optional(),
 });
 
 export const announcementSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
   content: z.string().min(1, "Content is required").max(1000, "Content is too long"),
+  mediaUrl: z.string().optional(),
+  mediaType: z.string().optional(),
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
