@@ -113,7 +113,7 @@ export default function Auth() {
             <div className="flex items-center justify-center space-x-4 mb-6">
               <Skull className="text-primary text-4xl animate-pulse-ember" />
               <h1 className="font-serif text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
-                Traitors Game: A Game of Shadows
+                The Traitors: A Game of Shadows
               </h1>
             </div>
             <motion.h2 

@@ -1,11 +1,14 @@
 # Overview
 
-**Traitors Game** is a comprehensive full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, communicate through public/private messaging, and view real-time suspicion metrics. The application features a React frontend with a dark medieval-themed UI design system and an Express backend with in-memory storage.
+**The Traitors** is a comprehensive full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, communicate through public/private messaging, and view real-time suspicion metrics. The application features a React frontend with a dark medieval-themed UI design system and an Express backend with in-memory storage.
 
 ## Recent Changes (January 26, 2025)
 - ✅ **Complete Communications Hub**: Replaced simple messaging with full-featured "Whispers in the Dark" section on dashboard featuring tabbed interface (Public Board, Private Messages, Announcements) with live updates
 - ✅ **Game Master Dashboard**: Comprehensive admin interface with voting analytics, message monitoring, and announcement broadcasting  
-- ✅ **Enhanced Branding**: Changed app name to "Traitors Game" with skull logo throughout
+- ✅ **Enhanced Branding**: Changed app name to "The Traitors" with custom skull logo throughout
+- ✅ **Private Message Notifications**: Added top-level notification system for received private messages with reply functionality
+- ✅ **Spooky Player Symbols**: Automatic random symbol assignment (👻💀🦇🕷️etc.) for each player profile
+- ✅ **Game Master Message Oversight**: Complete visibility into all private communications between players
 - ✅ **Spooky Logout Page**: Atmospheric farewell page with return to login functionality
 - ✅ **Fixed Voting Dropdown**: Resolved dropdown glitch with proper value binding and TypeScript definitions
 - ✅ **Enhanced Logout Flow**: Fixed logout button to properly redirect to spooky logout page instead of direct link
