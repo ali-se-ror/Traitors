@@ -102,19 +102,20 @@ export default function Dashboard() {
     },
   });
 
-  const logoutMutation = useMutation({
-    mutationFn: () => apiClient.post("/api/auth/logout", {}),
-    onSuccess: () => {
-      // Clear all cached data and navigate to logout page
+  const handleLogout = async () => {
+    try {
+      // Call logout API
+      await apiClient.post("/api/auth/logout", {});
+      
+      // Clear all cached data
       queryClient.clear();
-      setTimeout(() => {
-        navigate("/logout");
-      }, 100);
-    },
-    onError: (error: any) => {
+      
+      // Force navigation to logout page
+      window.location.href = "/logout";
+    } catch (error: any) {
       toast({ title: "Logout failed", description: error.message, variant: "destructive" });
-    },
-  });
+    }
+  };
 
   const insertEmoji = (emoji: string) => {
     setNewMessage(prev => prev + emoji);
@@ -577,12 +578,11 @@ export default function Dashboard() {
                 </Link>
                 <Button 
                   className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30" 
-                  onClick={() => logoutMutation.mutate()}
-                  disabled={logoutMutation.isPending}
+                  onClick={handleLogout}
                   data-testid="nav-logout"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  {logoutMutation.isPending ? "Leaving..." : "Leave Castle"}
+                  Leave Castle
                 </Button>
               </CardContent>
             </Card>
