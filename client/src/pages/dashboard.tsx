@@ -341,9 +341,9 @@ export default function Dashboard() {
                 <TabsTrigger value="private" className="text-xs">
                   <Eye className="w-3 h-3 mr-1" />
                   Private Messages
-                  {privateMessages.length > 0 && (
+                  {receivedPrivateMessages.length > 0 && (
                     <Badge variant="secondary" className="ml-1 text-xs">
-                      {privateMessages.length}
+                      {receivedPrivateMessages.length}
                     </Badge>
                   )}
                 </TabsTrigger>
@@ -426,7 +426,7 @@ export default function Dashboard() {
                   <div className="lg:col-span-2">
                     <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
                       <div className="space-y-3">
-                        {privateMessages.slice(-8).map((msg, index) => (
+                        {receivedPrivateMessages.slice(-8).map((msg: Message, index: number) => (
                           <motion.div
                             key={msg.id}
                             initial={{ opacity: 0, x: -20 }}
@@ -449,7 +449,7 @@ export default function Dashboard() {
                             <p className="text-white text-sm">{msg.content}</p>
                           </motion.div>
                         ))}
-                        {privateMessages.length === 0 && (
+                        {receivedPrivateMessages.length === 0 && (
                           <div className="text-center text-slate-400 py-8">
                             <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
                             <p className="text-sm">No secret messages yet...</p>
