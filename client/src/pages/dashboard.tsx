@@ -4,9 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { VotingForm } from "@/components/voting-form";
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut } from "lucide-react";
+import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useMutation } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 interface Player {
   id: string;
@@ -14,8 +19,20 @@ interface Player {
   createdAt: string;
 }
 
+interface Message {
+  id: string;
+  senderId: string;
+  senderUsername: string;
+  content: string;
+  createdAt: string;
+}
+
+const SPOOKY_EMOJIS = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️"];
+
 export default function Dashboard() {
+  const [newMessage, setNewMessage] = useState("");
   const { user } = useAuth();
+  const { toast } = useToast();
   
   const { data: players = [], isLoading: playersLoading } = useQuery<Player[]>({
     queryKey: ["/api/players"],
@@ -25,9 +42,38 @@ export default function Dashboard() {
     queryKey: ["/api/auth/me"],
   });
 
+  const { data: publicMessages = [], refetch: refetchMessages } = useQuery<Message[]>({
+    queryKey: ["/api/messages/public"],
+    refetchInterval: 3000,
+  });
+
   const currentVote = authData?.currentVote;
   const activePlayersCount = players.length;
   const votedPlayersCount = currentVote ? 1 : 0; // This would be improved with real vote counting
+
+  const sendMessageMutation = useMutation({
+    mutationFn: (content: string) => apiClient.post("/api/messages", { content, isPrivate: false }),
+    onSuccess: () => {
+      setNewMessage("");
+      refetchMessages();
+      toast({ title: "Whisper sent!", description: "Your message echoes through the darkness" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Failed to send whisper", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const insertEmoji = (emoji: string) => {
+    setNewMessage(prev => prev + emoji);
+  };
+
+  const formatTime = (date: string) => {
+    return new Date(date).toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+  };
 
   if (playersLoading) {
     return (
@@ -52,6 +98,110 @@ export default function Dashboard() {
         <p className="text-xl text-muted-foreground">
           The shadows whisper secrets. Choose wisely.
         </p>
+      </motion.div>
+
+      {/* Whispers in the Dark - Communication Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.6 }}
+        className="mb-8"
+      >
+        <Card className="card-medieval">
+          <CardHeader>
+            <CardTitle className="font-serif text-2xl font-semibold text-foreground flex items-center">
+              <Ghost className="mr-3 h-6 w-6 text-purple-400" />
+              Whispers in the Dark
+            </CardTitle>
+            <CardDescription>
+              Share your thoughts with fellow shadows...
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Messages Display */}
+              <div className="lg:col-span-2">
+                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700" data-testid="dashboard-messages">
+                  <div className="space-y-3">
+                    {publicMessages.slice(-5).map((msg, index) => (
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className={`p-2 rounded ${
+                          msg.senderId === user?.id 
+                            ? 'bg-purple-900/30 ml-4 border-l-2 border-purple-400' 
+                            : 'bg-slate-700/50 mr-4'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-purple-300 font-medium text-xs">
+                            {msg.senderUsername}
+                          </span>
+                          <span className="text-slate-400 text-xs">
+                            {formatTime(msg.createdAt)}
+                          </span>
+                        </div>
+                        <p className="text-white text-sm">{msg.content}</p>
+                      </motion.div>
+                    ))}
+                    {publicMessages.length === 0 && (
+                      <div className="text-center text-slate-400 py-8">
+                        <Ghost className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">The darkness is silent... be the first to whisper</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Message Panel */}
+              <div className="space-y-3">
+                <Textarea
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Share a dark whisper..."
+                  className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
+                  maxLength={200}
+                  data-testid="dashboard-message-input"
+                />
+                
+                {/* Quick Spooky Emojis */}
+                <div className="grid grid-cols-4 gap-1">
+                  {SPOOKY_EMOJIS.map((emoji) => (
+                    <Button
+                      key={emoji}
+                      variant="ghost"
+                      size="sm"
+                      className="text-sm hover:bg-purple-900/30 p-1"
+                      onClick={() => insertEmoji(emoji)}
+                    >
+                      {emoji}
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  onClick={() => sendMessageMutation.mutate(newMessage)}
+                  disabled={!newMessage.trim() || sendMessageMutation.isPending}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm"
+                  data-testid="dashboard-send-message"
+                >
+                  <Send className="w-3 h-3 mr-2" />
+                  {sendMessageMutation.isPending ? "Sending..." : "Whisper"}
+                </Button>
+
+                <Link href="/communications">
+                  <Button variant="outline" className="w-full text-sm border-purple-500/30 text-purple-300 hover:bg-purple-900/20">
+                    <MessageCircle className="w-3 h-3 mr-2" />
+                    Full Communications
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </motion.div>
 
       <div className="grid lg:grid-cols-3 gap-8">
