@@ -158,33 +158,50 @@ export default function SecretMessages() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
+                  <div className="text-center text-slate-400 mb-4">
+                    <p className="text-xs">Active Conversations</p>
+                  </div>
                   {conversations.length > 0 ? (
-                    conversations.map((conv) => (
-                      <Button
-                        key={conv.userId}
-                        variant={selectedConversation === conv.userId ? "secondary" : "ghost"}
-                        className="w-full justify-start text-left p-3 h-auto"
-                        onClick={() => setSelectedConversation(conv.userId)}
-                      >
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-sm">{conv.username}</span>
-                            {conv.unreadCount > 0 && (
-                              <Badge variant="destructive" className="text-xs">
-                                {conv.unreadCount}
-                              </Badge>
-                            )}
+                    conversations.map((conv) => {
+                      // Generate consistent spooky symbol for each player
+                      const spookySymbols = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️", "🏴‍☠️", "🦹", "🎭", "🔥"];
+                      const player = players.find(p => p.id === conv.userId);
+                      const symbolIndex = conv.userId.charCodeAt(0) % spookySymbols.length;
+                      const playerSymbol = spookySymbols[symbolIndex];
+                      
+                      return (
+                        <Button
+                          key={conv.userId}
+                          variant={selectedConversation === conv.userId ? "secondary" : "ghost"}
+                          className="w-full justify-start text-left p-3 h-auto"
+                          onClick={() => setSelectedConversation(conv.userId)}
+                        >
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center text-sm flex-shrink-0">
+                              {playerSymbol}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium text-sm truncate">{conv.username}</span>
+                                {conv.unreadCount > 0 && (
+                                  <Badge variant="destructive" className="text-xs ml-2">
+                                    {conv.unreadCount}
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-xs text-slate-400 truncate mt-1">
+                                {conv.lastMessage || 'No messages yet'}
+                              </p>
+                            </div>
                           </div>
-                          <p className="text-xs text-slate-400 truncate mt-1">
-                            {conv.lastMessage || 'No messages yet'}
-                          </p>
-                        </div>
-                      </Button>
-                    ))
+                        </Button>
+                      );
+                    })
                   ) : (
                     <div className="text-center text-slate-400 py-8">
                       <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p className="text-sm">No conversations yet</p>
+                      <p className="text-xs mt-1">Select a player to start messaging</p>
                     </div>
                   )}
                 </div>
@@ -323,27 +340,75 @@ export default function SecretMessages() {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    <div className="text-center text-slate-400 py-16">
+                  <div className="space-y-6">
+                    <div className="text-center text-slate-400 py-8">
                       <Eye className="w-12 h-12 mx-auto mb-4 opacity-50" />
                       <p className="text-lg mb-2">Start a Secret Conversation</p>
                       <p className="text-sm">Select a player to begin whispering in the shadows</p>
                     </div>
 
-                    {/* Quick Start */}
-                    <div className="grid grid-cols-2 gap-3">
-                      {players.filter(p => p.id !== user?.id).slice(0, 6).map((player) => (
-                        <Button
-                          key={player.id}
-                          variant="outline"
-                          className="justify-start border-red-400/30 hover:bg-red-900/20"
-                          onClick={() => setSelectedConversation(player.id)}
-                        >
-                          <Eye className="w-4 h-4 mr-2" />
-                          {player.username}
-                        </Button>
-                      ))}
+                    {/* All Players Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {players.filter(p => p.id !== user?.id).map((player) => {
+                        // Generate consistent spooky symbol for each player
+                        const spookySymbols = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️", "🏴‍☠️", "🦹", "🎭", "🔥"];
+                        const symbolIndex = player.id.charCodeAt(0) % spookySymbols.length;
+                        const playerSymbol = spookySymbols[symbolIndex];
+                        
+                        const hasConversation = conversations.some(conv => conv.userId === player.id);
+                        const unreadCount = hasConversation 
+                          ? conversations.find(conv => conv.userId === player.id)?.unreadCount || 0 
+                          : 0;
+                        
+                        return (
+                          <div
+                            key={player.id}
+                            onClick={() => setSelectedConversation(player.id)}
+                            className="group cursor-pointer transform transition-all duration-200 hover:scale-105"
+                          >
+                            <Card className="card-medieval hover:border-red-400/50 transition-colors">
+                              <CardContent className="p-4">
+                                <div className="text-center">
+                                  <div className="relative">
+                                    <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full flex items-center justify-center text-2xl border-2 border-slate-600 group-hover:border-red-400/50 transition-colors">
+                                      {playerSymbol}
+                                    </div>
+                                    {unreadCount > 0 && (
+                                      <Badge 
+                                        variant="destructive" 
+                                        className="absolute -top-1 -right-1 text-xs min-w-6 h-6 flex items-center justify-center"
+                                      >
+                                        {unreadCount}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <h3 className="font-semibold text-white mb-1 group-hover:text-red-300 transition-colors">
+                                    {player.username}
+                                  </h3>
+                                  <p className="text-xs text-slate-400">
+                                    {hasConversation ? 'Existing conversation' : 'Start new conversation'}
+                                  </p>
+                                  {hasConversation && (
+                                    <div className="mt-2 pt-2 border-t border-slate-700">
+                                      <p className="text-xs text-slate-500 truncate">
+                                        {conversations.find(conv => conv.userId === player.id)?.lastMessage || 'No messages yet'}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        );
+                      })}
                     </div>
+
+                    {players.filter(p => p.id !== user?.id).length === 0 && (
+                      <div className="text-center text-slate-400 py-8">
+                        <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">No other players found. Wait for more players to join the game.</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </CardContent>
