@@ -576,14 +576,15 @@ export default function Dashboard() {
                     Profile
                   </Button>
                 </Link>
-                <Button 
-                  className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30" 
-                  onClick={handleLogout}
-                  data-testid="nav-logout"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Leave Castle
-                </Button>
+                <Link href="/logout">
+                  <Button 
+                    className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30" 
+                    data-testid="nav-logout"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Leave Castle
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </motion.div>

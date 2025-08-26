@@ -1,8 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Skull, Ghost, Eye, Moon, Zap } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const SPOOKY_MESSAGES = [
   "The shadows remember you... until next time.",
@@ -18,10 +21,24 @@ const SPOOKY_MESSAGES = [
 ];
 
 export default function Logout() {
+  const [hasLoggedOut, setHasLoggedOut] = useState(false);
   const randomMessage = SPOOKY_MESSAGES[Math.floor(Math.random() * SPOOKY_MESSAGES.length)];
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const logoutMutation = useMutation({
+    mutationFn: () => apiClient.post("/api/auth/logout", {}),
+    onSuccess: () => {
+      queryClient.clear();
+      setHasLoggedOut(true);
+      toast({ title: "Farewell, shadow...", description: "You have left the game." });
+    },
+    onError: (error: any) => {
+      toast({ title: "Logout failed", description: error.message, variant: "destructive" });
+    },
+  });
 
   useEffect(() => {
-    // Add some spooky atmosphere sound effect or animation trigger here if needed
     document.title = "Farewell, Traitor...";
     return () => {
       document.title = "Traitors Game";
@@ -143,26 +160,44 @@ export default function Logout() {
             </motion.div>
           </motion.div>
 
-          {/* Return Button */}
+          {/* Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.8 }}
+            className="space-y-4"
           >
-            <Link href="/">
+            {!hasLoggedOut ? (
               <motion.div
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(239, 68, 68, 0.5)" }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Button 
+                  onClick={() => logoutMutation.mutate()}
+                  disabled={logoutMutation.isPending}
                   className="btn-primary px-8 py-4 font-bold text-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border border-red-500/50 shadow-lg shadow-red-900/50"
-                  data-testid="button-return-to-login"
+                  data-testid="button-confirm-logout"
                 >
                   <Skull className="mr-2 h-5 w-5" />
-                  Return to Login
+                  {logoutMutation.isPending ? "Leaving..." : "Confirm Logout"}
                 </Button>
               </motion.div>
-            </Link>
+            ) : (
+              <Link href="/">
+                <motion.div
+                  whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(239, 68, 68, 0.5)" }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button 
+                    className="btn-primary px-8 py-4 font-bold text-lg bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white border border-amber-500/50 shadow-lg shadow-amber-900/50"
+                    data-testid="button-return-to-login"
+                  >
+                    <Ghost className="mr-2 h-5 w-5" />
+                    Return to Login
+                  </Button>
+                </motion.div>
+              </Link>
+            )}
           </motion.div>
 
           {/* Atmospheric Text */}
