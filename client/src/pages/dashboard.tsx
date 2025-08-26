@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
@@ -68,6 +68,7 @@ export default function Dashboard() {
   const { data: receivedPrivateMessages = [] } = useQuery<Message[]>({
     queryKey: ["/api/messages/private/received"],
     refetchInterval: 2000,
+    enabled: !!user && !user.isGameMaster, // Only fetch for regular players
   });
 
   const { data: announcements = [], refetch: refetchAnnouncements } = useQuery<Announcement[]>({
@@ -80,10 +81,13 @@ export default function Dashboard() {
   const votedPlayersCount = currentVote ? 1 : 0; // This would be improved with real vote counting
 
   const sendMessageMutation = useMutation({
-    mutationFn: (content: string) => apiClient.post("/api/messages", { content, isPrivate: false }),
+    mutationFn: async (content: string) => {
+      const response = await apiRequest("POST", "/api/messages", { content, isPrivate: false });
+      return response.json();
+    },
     onSuccess: () => {
       setNewMessage("");
-      refetchMessages();
+      queryClient.invalidateQueries({ queryKey: ["/api/messages/public"] });
       toast({ title: "Whisper sent!", description: "Your message echoes through the darkness" });
     },
     onError: (error: any) => {
@@ -92,8 +96,10 @@ export default function Dashboard() {
   });
 
   const sendPrivateMessageMutation = useMutation({
-    mutationFn: ({ content, receiverId }: { content: string; receiverId: string }) => 
-      apiClient.post("/api/messages", { content, isPrivate: true, receiverId }),
+    mutationFn: async ({ content, receiverId }: { content: string; receiverId: string }) => {
+      const response = await apiRequest("POST", "/api/messages", { content, isPrivate: true, receiverId });
+      return response.json();
+    },
     onSuccess: () => {
       setNewPrivateMessage("");
       setSelectedRecipient("");
@@ -109,7 +115,7 @@ export default function Dashboard() {
   const handleLogout = async () => {
     try {
       // Call logout API
-      await apiClient.post("/api/auth/logout", {});
+      await apiRequest("POST", "/api/auth/logout", {});
       
       // Clear all cached data
       queryClient.clear();
@@ -141,9 +147,17 @@ export default function Dashboard() {
     );
   }
 
-  // Handle private message notification logic
-  const hasNewPrivateMessages = receivedPrivateMessages.length > 0;
+  // Handle private message notification logic  
+  const hasNewPrivateMessages = receivedPrivateMessages.length > 0 && !user?.isGameMaster;
   const latestPrivateMessage = receivedPrivateMessages[0];
+  
+  // Debug log
+  console.log('Private messages debug:', {
+    isGameMaster: user?.isGameMaster,
+    messageCount: receivedPrivateMessages.length,
+    hasNewPrivateMessages,
+    latestMessage: latestPrivateMessage
+  });
 
   const handleViewPrivateMessage = (senderId: string, senderUsername: string) => {
     setSelectedMessageSender(senderId);
