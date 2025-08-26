@@ -10,6 +10,8 @@ import Dashboard from "@/pages/dashboard";
 import SuspicionMeter from "@/pages/suspicion-meter";
 import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
+import GameMasterAuth from "@/pages/gamemaster-auth";
+import GameMaster from "@/pages/game-master";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, isLoading } = useAuth();
@@ -33,6 +35,28 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
   );
 }
 
+function GameMasterRoute({ component: Component }: { component: React.ComponentType }) {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen atmospheric-bg flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-400"></div>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return <GameMasterAuth />;
+  }
+  
+  if (!user.isGameMaster) {
+    return <GameMasterAuth />;
+  }
+  
+  return <Component />;
+}
+
 function PublicRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, isLoading } = useAuth();
   
@@ -45,7 +69,11 @@ function PublicRoute({ component: Component }: { component: React.ComponentType 
   }
   
   if (user) {
-    window.location.href = "/dashboard";
+    if (user.isGameMaster) {
+      window.location.href = "/game-master";
+    } else {
+      window.location.href = "/dashboard";
+    }
     return null;
   }
   
@@ -56,6 +84,9 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={() => <PublicRoute component={Auth} />} />
+      <Route path="/auth" component={() => <PublicRoute component={Auth} />} />
+      <Route path="/gamemaster-auth" component={GameMasterAuth} />
+      <Route path="/game-master" component={() => <GameMasterRoute component={GameMaster} />} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/suspicion" component={() => <ProtectedRoute component={SuspicionMeter} />} />
       <Route path="/profile" component={() => <ProtectedRoute component={Profile} />} />

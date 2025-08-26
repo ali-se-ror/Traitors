@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { loginSchema, registerSchema, voteSchema, changeCodewordSchema } from "@shared/schema";
+import { loginSchema, registerSchema, voteSchema, changeCodewordSchema, gameMasterSchema } from "@shared/schema";
 import bcrypt from "bcrypt";
 import session from "express-session";
 import MemoryStore from "memorystore";
@@ -101,6 +101,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Game Master Registration
+  app.post("/api/auth/gamemaster", async (req, res) => {
+    try {
+      const { username, codeword, secretKey } = gameMasterSchema.parse(req.body);
+      
+      // Verify secret key (use environment variable or hardcoded for demo)
+      const GAME_MASTER_SECRET = process.env.GAME_MASTER_SECRET || "TRAITORS_MASTER_2024";
+      if (secretKey !== GAME_MASTER_SECRET) {
+        return res.status(403).json({ message: "Invalid game master secret key" });
+      }
+      
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(409).json({ message: "Username already taken" });
+      }
+
+      // Hash codeword
+      const codewordHash = await bcrypt.hash(codeword, 10);
+      
+      // Create game master user
+      const user = await storage.createUser({ username, codewordHash, isGameMaster: 1 });
+      
+      // Set session
+      req.session.userId = user.id;
+      
+      res.status(201).json({ 
+        user: { 
+          id: user.id, 
+          username: user.username, 
+          isGameMaster: user.isGameMaster,
+          createdAt: user.createdAt 
+        } 
+      });
+    } catch (error: any) {
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ message: error.errors[0]?.message || "Invalid input" });
+      }
+      console.error("Game master registration error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Logout
   app.post("/api/auth/logout", (req, res) => {
     req.session.destroy((err) => {
@@ -132,6 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user: { 
           id: user.id, 
           username: user.username, 
+          isGameMaster: user.isGameMaster,
           createdAt: user.createdAt 
         },
         currentVote: currentVoteTarget
@@ -208,6 +252,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(voteCounts);
     } catch (error) {
       console.error("Get suspicion error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get detailed votes (Game Master only)
+  app.get("/api/votes/details", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const currentUser = await storage.getUser(userId);
+      
+      // Check if user is game master
+      if (!currentUser || !currentUser.isGameMaster) {
+        return res.status(403).json({ message: "Game Master access required" });
+      }
+
+      const votes = await storage.getAllVotes();
+      const users = await storage.getAllUsers();
+      const userMap = new Map(users.map(user => [user.id, user.username]));
+
+      const detailedVotes = votes.map(vote => ({
+        voterId: vote.voterId,
+        targetId: vote.targetId,
+        voterUsername: userMap.get(vote.voterId) || 'Unknown',
+        targetUsername: vote.targetId ? userMap.get(vote.targetId) || 'Unknown' : undefined,
+      }));
+
+      res.json(detailedVotes);
+    } catch (error) {
+      console.error("Get detailed votes error:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });

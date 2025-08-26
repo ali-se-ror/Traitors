@@ -12,7 +12,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
-import { Skull, UserPlus, LogIn, Key, VenetianMask, DoorOpen, DoorClosed } from "lucide-react";
+import { Skull, UserPlus, LogIn, Key, VenetianMask, DoorOpen, DoorClosed, Crown } from "lucide-react";
+import { Link } from "wouter";
 
 type LoginForm = z.infer<typeof loginSchema>;
 type RegisterForm = z.infer<typeof registerSchema>;
@@ -356,6 +357,32 @@ export default function Auth() {
               </Card>
             </motion.div>
           </div>
+
+          {/* Game Master Access */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+            className="text-center mt-12"
+          >
+            <div className="max-w-md mx-auto p-6 bg-amber-900/20 border border-amber-500/30 rounded-lg backdrop-blur-sm">
+              <Crown className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+              <h3 className="text-amber-400 font-bold mb-2">Game Master Access</h3>
+              <p className="text-amber-200/80 text-sm mb-4">
+                Monitor and control the game from behind the shadows
+              </p>
+              <Link href="/gamemaster-auth">
+                <Button 
+                  variant="outline" 
+                  className="border-amber-500/50 text-amber-300 hover:bg-amber-900/30"
+                  data-testid="button-gamemaster-access"
+                >
+                  <Crown className="w-4 h-4 mr-2" />
+                  Enter as Game Master
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>

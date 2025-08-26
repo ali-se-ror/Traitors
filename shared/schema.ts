@@ -7,6 +7,7 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   codewordHash: text("codeword_hash").notNull(),
+  isGameMaster: integer("is_game_master").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -34,6 +35,10 @@ export const voteSchema = z.object({
 export const changeCodewordSchema = z.object({
   oldCodeword: z.string().min(1, "Current code word is required"),
   newCodeword: z.string().min(4, "New code word must be at least 4 characters").max(32, "New code word must be at most 32 characters"),
+});
+
+export const gameMasterSchema = loginSchema.extend({
+  secretKey: z.string().min(1, "Game master secret key is required"),
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

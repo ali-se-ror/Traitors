@@ -6,7 +6,7 @@ export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: { username: string; codewordHash: string }): Promise<User>;
+  createUser(user: { username: string; codewordHash: string; isGameMaster?: number }): Promise<User>;
   updateUserCodeword(id: string, codewordHash: string): Promise<void>;
   getAllUsers(): Promise<User[]>;
 
@@ -36,12 +36,13 @@ export class MemStorage implements IStorage {
     );
   }
 
-  async createUser(user: { username: string; codewordHash: string }): Promise<User> {
+  async createUser(user: { username: string; codewordHash: string; isGameMaster?: number }): Promise<User> {
     const id = randomUUID();
     const newUser: User = {
       id,
       username: user.username,
       codewordHash: user.codewordHash,
+      isGameMaster: user.isGameMaster || 0,
       createdAt: new Date(),
     };
     this.users.set(id, newUser);
