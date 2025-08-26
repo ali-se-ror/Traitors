@@ -1,0 +1,324 @@
+/**
+ * Traitors-style Social Deduction Prototype (No email; code-word login)
+ * Single-file Node.js app using Express + SQLite.
+ *
+ * Features
+ * - Create a username protected by a personal code word (no email verification)
+ * - Login with username + code word
+ * - Private profile page (only you can view)
+ * - Global dashboard of all players
+ * - One-vote system (change/cancel anytime)
+ * - Public “Suspicion Meter” leaderboard showing vote counts (not voters)
+ *
+ * Quick start
+ * 1) Save this file as app.js
+ * 2) Run:  npm init -y
+ * 3) Run:  npm i express better-sqlite3 bcrypt cookie-session
+ * 4) Start: node app.js
+ * 5) Open:  http://localhost:3000
+ *
+ * Notes
+ * - This is a minimal prototype. It stores code words hashed (bcrypt) in a local SQLite DB (file: game.db).
+ * - For production: use HTTPS, secure cookies, proper session secret rotation, CSRF protection, rate limiting, etc.
+ */
+
+const express = require('express');
+const Database = require('better-sqlite3');
+const bcrypt = require('bcrypt');
+const session = require('cookie-session');
+const path = require('path');
+
+const app = express();
+const db = new Database(path.join(__dirname, 'game.db'));
+
+// --- DB setup ---
+// users: id, username, codeword_hash, created_at
+// votes: voter_id (unique), target_id (nullable)
+db.exec(`
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  codeword_hash TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS votes (
+  voter_id INTEGER UNIQUE NOT NULL,
+  target_id INTEGER,
+  FOREIGN KEY(voter_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(target_id) REFERENCES users(id) ON DELETE SET NULL
+);
+`);
+
+// --- Middleware ---
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(session({
+  name: 'sid',
+  keys: [process.env.SESSION_SECRET || 'devsecret-change-me'],
+  maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+  sameSite: 'lax'
+}));
+
+// --- Tiny helpers ---
+function requireAuth(req, res, next) {
+  if (!req.session.userId) return res.redirect('/');
+  next();
+}
+
+function layout(title, bodyHtml) {
+  return `<!doctype html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${title}</title>
+    <style>
+      :root { --bg:#0b0b0b; --fg:#f5f5f5; --muted:#9a9a9a; --card:#141414; --accent:#f5f5f5; }
+      *{ box-sizing:border-box; }
+      body{ margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial; background:var(--bg); color:var(--fg); }
+      a{ color:var(--fg); text-decoration:none; }
+      .wrap{ max-width:900px; margin:0 auto; padding:24px; }
+      .nav{ display:flex; gap:16px; align-items:center; justify-content:space-between; margin-bottom:24px; }
+      .brand{ font-weight:800; letter-spacing:1px; }
+      .card{ background:var(--card); border:1px solid #222; border-radius:16px; padding:20px; box-shadow:0 4px 24px rgba(0,0,0,.35); }
+      .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+      input, button, select{ width:100%; padding:12px 14px; border-radius:12px; border:1px solid #2a2a2a; background:#0f0f0f; color:var(--fg); }
+      button{ background:#fff; color:#000; font-weight:700; cursor:pointer; }
+      label{ display:block; font-size:12px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; letter-spacing:.04em; }
+      h1{ font-size:28px; margin:0 0 12px; }
+      h2{ font-size:20px; margin:0 0 12px; color:#ddd; }
+      .muted{ color:var(--muted); font-size:14px; }
+      .list{ list-style:none; padding:0; margin:0; }
+      .list li{ padding:10px 0; border-bottom:1px dashed #222; display:flex; justify-content:space-between; gap:12px; }
+      .tag{ font-size:12px; border:1px solid #333; padding:4px 8px; border-radius:999px; color:#ccc; }
+      .row{ display:flex; gap:12px; align-items:center; }
+      .danger{ color:#ff6b6b; }
+      .success{ color:#8fff8f; }
+      .center{ text-align:center; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand">☠︎ The Traitors: A Game of Shadows</div>
+        <div class="row" style="gap:8px;">
+          <a href="/dashboard">Dashboard</a>
+          <a href="/meter">Suspicion Meter</a>
+          <a href="/me">My Profile</a>
+          <a href="/logout" class="danger">Logout</a>
+        </div>
+      </div>
+      ${bodyHtml}
+    </div>
+  </body>
+  </html>`;
+}
+
+// --- Routes ---
+app.get('/', (req, res) => {
+  if (req.session.userId) return res.redirect('/dashboard');
+  const body = `
+  <div class="grid">
+    <div class="card">
+      <h1>Enter the Shadows</h1>
+      <p class="muted">No emails. No codes in your inbox. Choose a <strong>username</strong> and protect it with a <strong>secret code word</strong>. Keep it safe.</p>
+      <form method="POST" action="/signup">
+        <label>Username</label>
+        <input name="username" required minlength="3" maxlength="18" placeholder="e.g. MoonRaven" />
+        <label style="margin-top:10px;">Secret code word</label>
+        <input name="codeword" type="password" required minlength="4" maxlength="32" placeholder="One word you won't forget" />
+        <button style="margin-top:12px;" type="submit">Create my player</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Returning?</h2>
+      <form method="POST" action="/login">
+        <label>Username</label>
+        <input name="username" required />
+        <label style="margin-top:10px;">Secret code word</label>
+        <input name="codeword" type="password" required />
+        <button style="margin-top:12px;" type="submit">Enter</button>
+      </form>
+      <p class="muted" style="margin-top:12px;">Forgot your code word? Ask the game master to reset it manually in the DB.</p>
+    </div>
+  </div>`;
+  res.send(layout('Enter the Shadows', body));
+});
+
+// Create account
+app.post('/signup', async (req, res) => {
+  const { username, codeword } = req.body;
+  if (!username || !codeword) return res.status(400).send('Missing fields');
+  try {
+    const hash = await bcrypt.hash(codeword, 10);
+    const stmt = db.prepare('INSERT INTO users (username, codeword_hash) VALUES (?, ?)');
+    const info = stmt.run(username.trim(), hash);
+    // init vote row
+    db.prepare('INSERT INTO votes (voter_id, target_id) VALUES (?, NULL)').run(info.lastInsertRowid);
+    req.session.userId = info.lastInsertRowid;
+    res.redirect('/dashboard');
+  } catch (e) {
+    if (e && e.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      return res.status(409).send(layout('Username taken', `<div class="card"><h1>That username is taken.</h1><p class="muted">Try another one.</p><p><a href="/">Go back</a></p></div>`));
+    }
+    console.error(e);
+    res.status(500).send('Server error');
+  }
+});
+
+// Login
+app.post('/login', async (req, res) => {
+  const { username, codeword } = req.body;
+  if (!username || !codeword) return res.status(400).send('Missing fields');
+  const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username.trim());
+  if (!user) return res.status(401).send(layout('Nope', `<div class="card"><h1>Invalid login.</h1><p class="muted">Check your details and try again.</p><p><a href="/">Go back</a></p></div>`));
+  const ok = await bcrypt.compare(codeword, user.codeword_hash);
+  if (!ok) return res.status(401).send(layout('Nope', `<div class="card"><h1>Invalid login.</h1><p class="muted">Check your details and try again.</p><p><a href="/">Go back</a></p></div>`));
+  req.session.userId = user.id;
+  res.redirect('/dashboard');
+});
+
+// Dashboard (all players + quick vote)
+app.get('/dashboard', requireAuth, (req, res) => {
+  const me = db.prepare('SELECT id, username FROM users WHERE id = ?').get(req.session.userId);
+  const players = db.prepare('SELECT id, username FROM users ORDER BY username COLLATE NOCASE').all();
+  const myVote = db.prepare('SELECT target_id FROM votes WHERE voter_id = ?').get(me.id);
+
+  const options = players
+    .filter(p => p.id !== me.id)
+    .map(p => `<option value="${p.id}" ${myVote && myVote.target_id === p.id ? 'selected' : ''}>${p.username}</option>`) 
+    .join('');
+
+  const body = `
+  <div class="grid">
+    <div class="card">
+      <h1>Welcome, ${me.username}</h1>
+      <p class="muted">Cast (or change) your single vote. You can also <a href="/clear-vote" class="danger">clear your vote</a> anytime.</p>
+      <form method="POST" action="/vote" class="row" style="gap:8px;">
+        <label for="target">Vote for</label>
+        <select id="target" name="target_id" required>
+          <option value="">— choose a player —</option>
+          ${options}
+        </select>
+        <button type="submit">Submit Vote</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>All Players</h2>
+      <ul class="list">
+        ${players.map(p => `<li><span>@${p.username}</span><span class="tag">${p.id === me.id ? 'you' : 'player'}</span></li>`).join('')}
+      </ul>
+    </div>
+  </div>`;
+  res.send(layout('Dashboard', body));
+});
+
+// Submit vote
+app.post('/vote', requireAuth, (req, res) => {
+  const voterId = req.session.userId;
+  const targetId = Number(req.body.target_id);
+  if (!targetId) return res.redirect('/dashboard');
+  const target = db.prepare('SELECT id FROM users WHERE id = ?').get(targetId);
+  if (!target || target.id === voterId) return res.redirect('/dashboard');
+  db.prepare('UPDATE votes SET target_id = ? WHERE voter_id = ?').run(targetId, voterId);
+  res.redirect('/meter');
+});
+
+// Clear vote
+app.get('/clear-vote', requireAuth, (req, res) => {
+  db.prepare('UPDATE votes SET target_id = NULL WHERE voter_id = ?').run(req.session.userId);
+  res.redirect('/dashboard');
+});
+
+// Suspicion Meter (leaderboard)
+app.get('/meter', requireAuth, (req, res) => {
+  const rows = db.prepare(`
+    SELECT u.id, u.username, COUNT(v.target_id) AS votes
+    FROM users u
+    LEFT JOIN votes v ON u.id = v.target_id
+    GROUP BY u.id
+    ORDER BY votes DESC, u.username COLLATE NOCASE ASC
+  `).all();
+
+  const body = `
+  <div class="card">
+    <h1>Suspicion Meter</h1>
+    <p class="muted">Total votes per player. Voters remain secret.</p>
+    <ul class="list">
+      ${rows.map(r => `<li><strong>@${r.username}</strong><span>${r.votes} vote${r.votes === 1 ? '' : 's'}</span></li>`).join('')}
+    </ul>
+  </div>`;
+  res.send(layout('Suspicion Meter', body));
+});
+
+// Private profile for current user
+app.get('/me', requireAuth, (req, res) => {
+  const me = db.prepare('SELECT id, username, created_at FROM users WHERE id = ?').get(req.session.userId);
+  const myVoteRow = db.prepare('SELECT target_id FROM votes WHERE voter_id = ?').get(me.id);
+  const target = myVoteRow && myVoteRow.target_id
+    ? db.prepare('SELECT username FROM users WHERE id = ?').get(myVoteRow.target_id)
+    : null;
+
+  const body = `
+  <div class="card">
+    <h1>My Secret Profile</h1>
+    <p class="muted">Only you can see this page.</p>
+    <div class="grid">
+      <div>
+        <label>Username</label>
+        <div style="padding:12px 0;">@${me.username}</div>
+      </div>
+      <div>
+        <label>Member Since</label>
+        <div style="padding:12px 0;">${me.created_at}</div>
+      </div>
+      <div>
+        <label>Your Current Vote</label>
+        <div style="padding:12px 0;">${target ? '@' + target.username : '<span class="muted">none</span>'}</div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:12px;">
+      <a href="/change-codeword" class="tag">Change code word</a>
+    </div>
+  </div>`;
+  res.send(layout('My Profile', body));
+});
+
+// Change code word (simple GET/POST)
+app.get('/change-codeword', requireAuth, (req, res) => {
+  const body = `
+  <div class="card">
+    <h1>Change Code Word</h1>
+    <form method="POST" action="/change-codeword">
+      <label>Current code word</label>
+      <input type="password" name="old" required />
+      <label style="margin-top:10px;">New code word</label>
+      <input type="password" name="nw" required minlength="4" maxlength="32" />
+      <button style="margin-top:12px;" type="submit">Update</button>
+    </form>
+  </div>`;
+  res.send(layout('Change Code Word', body));
+});
+
+app.post('/change-codeword', requireAuth, async (req, res) => {
+  const { old, nw } = req.body;
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.session.userId);
+  const ok = await bcrypt.compare(old, user.codeword_hash);
+  if (!ok) return res.status(401).send(layout('Nope', `<div class="card"><h1>Incorrect current code word.</h1><p><a href="/me">Back</a></p></div>`));
+  const hash = await bcrypt.hash(nw, 10);
+  db.prepare('UPDATE users SET codeword_hash = ? WHERE id = ?').run(hash, user.id);
+  res.redirect('/me');
+});
+
+// Logout
+app.get('/logout', (req, res) => {
+  req.session = null;
+  res.redirect('/');
+});
+
+// --- Start server ---
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Traitors-style app running on http://localhost:${PORT}`);
+});
