@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -47,6 +47,7 @@ export default function Dashboard() {
   const [, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   const { data: players = [], isLoading: playersLoading } = useQuery<Player[]>({
     queryKey: ["/api/players"],
@@ -104,8 +105,11 @@ export default function Dashboard() {
   const logoutMutation = useMutation({
     mutationFn: () => apiClient.post("/api/auth/logout", {}),
     onSuccess: () => {
-      // Force full page reload to logout page to clear all cached data
-      window.location.replace("/logout");
+      // Clear all cached data and navigate to logout page
+      queryClient.clear();
+      setTimeout(() => {
+        navigate("/logout");
+      }, 100);
     },
     onError: (error: any) => {
       toast({ title: "Logout failed", description: error.message, variant: "destructive" });
