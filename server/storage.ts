@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Vote, type InsertVote } from "@shared/schema";
+import { type User, type InsertUser, type Vote, type InsertVote, type Message, type Announcement } from "@shared/schema";
 import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
 
@@ -15,15 +15,28 @@ export interface IStorage {
   setVote(voterId: string, targetId: string | null): Promise<void>;
   getVoteCounts(): Promise<{ userId: string; username: string; voteCount: number }[]>;
   getAllVotes(): Promise<Vote[]>;
+
+  // Message operations
+  createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number }): Promise<Message>;
+  getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]>;
+  getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]>;
+  
+  // Announcement operations
+  createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement>;
+  getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; createdAt: Date }[]>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private votes: Map<string, Vote>;
+  private messages: Map<string, Message>;
+  private announcements: Map<string, Announcement>;
 
   constructor() {
     this.users = new Map();
     this.votes = new Map();
+    this.messages = new Map();
+    this.announcements = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -100,6 +113,87 @@ export class MemStorage implements IStorage {
 
   async getAllVotes(): Promise<Vote[]> {
     return Array.from(this.votes.values());
+  }
+
+  async createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number }): Promise<Message> {
+    const id = randomUUID();
+    const newMessage: Message = {
+      id,
+      senderId: message.senderId,
+      receiverId: message.receiverId || null,
+      content: message.content,
+      isPrivate: message.isPrivate || 0,
+      createdAt: new Date(),
+    };
+    this.messages.set(id, newMessage);
+    return newMessage;
+  }
+
+  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]> {
+    const publicMessages = Array.from(this.messages.values())
+      .filter(msg => !msg.isPrivate)
+      .sort((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime());
+    
+    return publicMessages.map(msg => {
+      const sender = this.users.get(msg.senderId);
+      return {
+        id: msg.id,
+        senderId: msg.senderId,
+        senderUsername: sender?.username || 'Unknown',
+        content: msg.content,
+        createdAt: msg.createdAt!,
+      };
+    });
+  }
+
+  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]> {
+    const privateMessages = Array.from(this.messages.values())
+      .filter(msg => 
+        msg.isPrivate && 
+        ((msg.senderId === userId && msg.receiverId === targetId) || 
+         (msg.senderId === targetId && msg.receiverId === userId))
+      )
+      .sort((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime());
+    
+    return privateMessages.map(msg => {
+      const sender = this.users.get(msg.senderId);
+      return {
+        id: msg.id,
+        senderId: msg.senderId,
+        senderUsername: sender?.username || 'Unknown',
+        content: msg.content,
+        createdAt: msg.createdAt!,
+      };
+    });
+  }
+
+  async createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement> {
+    const id = randomUUID();
+    const newAnnouncement: Announcement = {
+      id,
+      gameMasterId: announcement.gameMasterId,
+      title: announcement.title,
+      content: announcement.content,
+      createdAt: new Date(),
+    };
+    this.announcements.set(id, newAnnouncement);
+    return newAnnouncement;
+  }
+
+  async getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; createdAt: Date }[]> {
+    const announcements = Array.from(this.announcements.values())
+      .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
+    
+    return announcements.map(announcement => {
+      const gameMaster = this.users.get(announcement.gameMasterId);
+      return {
+        id: announcement.id,
+        gameMasterUsername: gameMaster?.username || 'Game Master',
+        title: announcement.title,
+        content: announcement.content,
+        createdAt: announcement.createdAt!,
+      };
+    });
   }
 }
 

@@ -12,6 +12,8 @@ import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 import GameMasterAuth from "@/pages/gamemaster-auth";
 import GameMaster from "@/pages/game-master";
+import Communications from "@/pages/communications";
+import Logout from "@/pages/logout";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, isLoading } = useAuth();
@@ -89,7 +91,9 @@ function Router() {
       <Route path="/game-master" component={() => <GameMasterRoute component={GameMaster} />} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/suspicion" component={() => <ProtectedRoute component={SuspicionMeter} />} />
+      <Route path="/communications" component={() => <ProtectedRoute component={Communications} />} />
       <Route path="/profile" component={() => <ProtectedRoute component={Profile} />} />
+      <Route path="/logout" component={Logout} />
       <Route component={NotFound} />
     </Switch>
   );

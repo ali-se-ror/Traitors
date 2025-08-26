@@ -4,7 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { VotingForm } from "@/components/voting-form";
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Activity, Gamepad2, Clock } from "lucide-react";
+import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut } from "lucide-react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
 
 interface Player {
   id: string;
@@ -195,6 +197,48 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Navigation */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+          >
+            <Card className="card-medieval">
+              <CardHeader>
+                <CardTitle className="font-semibold text-foreground flex items-center">
+                  <Activity className="mr-3 h-5 w-5 text-emerald-400" />
+                  Navigate
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Link href="/communications">
+                  <Button className="w-full justify-start bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30" data-testid="nav-communications">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Communications
+                  </Button>
+                </Link>
+                <Link href="/suspicion">
+                  <Button className="w-full justify-start bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30" data-testid="nav-suspicion">
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    Suspicion Meter
+                  </Button>
+                </Link>
+                <Link href="/profile">
+                  <Button className="w-full justify-start bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30" data-testid="nav-profile">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Button>
+                </Link>
+                <Link href="/logout">
+                  <Button className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30" data-testid="nav-logout">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Leave Castle
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </motion.div>

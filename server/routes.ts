@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { loginSchema, registerSchema, voteSchema, changeCodewordSchema, gameMasterSchema } from "@shared/schema";
+import { loginSchema, registerSchema, voteSchema, changeCodewordSchema, gameMasterSchema, messageSchema, announcementSchema } from "@shared/schema";
 import bcrypt from "bcrypt";
 import session from "express-session";
 import MemoryStore from "memorystore";
@@ -310,6 +310,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: error.errors[0]?.message || "Invalid input" });
       }
       console.error("Change codeword error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Send message
+  app.post("/api/messages", requireAuth, async (req, res) => {
+    try {
+      const { receiverId, content, isPrivate } = messageSchema.parse(req.body);
+      const senderId = req.session.userId;
+
+      const message = await storage.createMessage({
+        senderId,
+        receiverId: receiverId || undefined,
+        content,
+        isPrivate: isPrivate ? 1 : 0,
+      });
+
+      res.status(201).json({ message: "Message sent successfully", data: message });
+    } catch (error: any) {
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ message: error.errors[0]?.message || "Invalid input" });
+      }
+      console.error("Send message error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get public messages
+  app.get("/api/messages/public", requireAuth, async (req, res) => {
+    try {
+      const messages = await storage.getPublicMessages();
+      res.json(messages);
+    } catch (error) {
+      console.error("Get public messages error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get private messages with another user
+  app.get("/api/messages/private/:targetId", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const { targetId } = req.params;
+      const messages = await storage.getPrivateMessages(userId, targetId);
+      res.json(messages);
+    } catch (error) {
+      console.error("Get private messages error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create announcement (Game Master only)
+  app.post("/api/announcements", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const currentUser = await storage.getUser(userId);
+      
+      if (!currentUser || !currentUser.isGameMaster) {
+        return res.status(403).json({ message: "Game Master access required" });
+      }
+
+      const { title, content } = announcementSchema.parse(req.body);
+      const announcement = await storage.createAnnouncement({
+        gameMasterId: userId,
+        title,
+        content,
+      });
+
+      res.status(201).json({ message: "Announcement created successfully", data: announcement });
+    } catch (error: any) {
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ message: error.errors[0]?.message || "Invalid input" });
+      }
+      console.error("Create announcement error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get announcements
+  app.get("/api/announcements", requireAuth, async (req, res) => {
+    try {
+      const announcements = await storage.getAnnouncements();
+      res.json(announcements);
+    } catch (error) {
+      console.error("Get announcements error:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });

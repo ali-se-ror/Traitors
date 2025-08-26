@@ -16,6 +16,23 @@ export const votes = pgTable("votes", {
   targetId: varchar("target_id").references(() => users.id, { onDelete: "set null" }),
 });
 
+export const messages = pgTable("messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  senderId: varchar("sender_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  receiverId: varchar("receiver_id").references(() => users.id, { onDelete: "cascade" }),
+  content: text("content").notNull(),
+  isPrivate: integer("is_private").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const announcements = pgTable("announcements", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  gameMasterId: varchar("game_master_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   codewordHash: true,
@@ -41,7 +58,29 @@ export const gameMasterSchema = loginSchema.extend({
   secretKey: z.string().min(1, "Game master secret key is required"),
 });
 
+export const messageSchema = z.object({
+  receiverId: z.string().uuid().optional(),
+  content: z.string().min(1, "Message cannot be empty").max(500, "Message is too long"),
+  isPrivate: z.boolean().default(false),
+});
+
+export const announcementSchema = z.object({
+  title: z.string().min(1, "Title is required").max(100, "Title is too long"),
+  content: z.string().min(1, "Content is required").max(1000, "Content is too long"),
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Vote = typeof votes.$inferSelect;
 export type InsertVote = typeof votes.$inferInsert;
+export type VoteData = z.infer<typeof voteSchema>;
+export type Message = typeof messages.$inferSelect;
+export type InsertMessage = typeof messages.$inferInsert;
+export type MessageData = z.infer<typeof messageSchema>;
+export type Announcement = typeof announcements.$inferSelect;
+export type AnnouncementData = z.infer<typeof announcementSchema>;
+
+export type PublicUser = {
+  id: string;
+  username: string;
+};
