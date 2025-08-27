@@ -232,7 +232,7 @@ export default function Dashboard() {
             <Link to="/secret-messages">
               <Button variant="outline" className="border-purple-500 hover:bg-purple-500/10">
                 <MessageCircle className="w-4 h-4 mr-2" />
-                Messages
+                Secret Messages
               </Button>
             </Link>
             <Link to="/suspicion-meter">
