@@ -27,6 +27,7 @@ export interface IStorage {
   // Announcement operations
   createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement>;
   getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; createdAt: Date }[]>;
+  deleteAnnouncement(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -251,6 +252,10 @@ export class MemStorage implements IStorage {
         createdAt: announcement.createdAt!,
       };
     });
+  }
+
+  async deleteAnnouncement(id: string): Promise<boolean> {
+    return this.announcements.delete(id);
   }
 }
 

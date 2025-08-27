@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Send, Ghost, Skull, Crown, Eye, X, Upload, Paperclip, Info } from "lucide-react";
+import { Users, Send, Ghost, Skull, Crown, Eye, X, Upload, Paperclip, Info, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -130,6 +130,19 @@ export default function Dashboard() {
     },
     onError: (error: any) => {
       toast({ title: "Failed to send secret", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const deleteAnnouncementMutation = useMutation({
+    mutationFn: async (announcementId: string) => {
+      return await apiRequest("DELETE", `/api/announcements/${announcementId}`, {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/announcements"] });
+      toast({ title: "Announcement deleted!", description: "The proclamation has been removed from the shadows" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Failed to delete announcement", description: error.message, variant: "destructive" });
     },
   });
 
@@ -325,14 +338,28 @@ export default function Dashboard() {
                     transition={{ delay: index * 0.05 }}
                     className="p-3 rounded bg-gradient-to-r from-purple-800/20 to-green-800/20 border border-amber-500/30"
                   >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Crown className="w-4 h-4 text-amber-400" />
-                      <span className="text-amber-300 font-medium text-xs">
-                        Game Master
-                      </span>
-                      <span className="text-slate-400 text-xs">
-                        {formatTime(announcement.createdAt)}
-                      </span>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Crown className="w-4 h-4 text-amber-400" />
+                        <span className="text-amber-300 font-medium text-xs">
+                          Game Master
+                        </span>
+                        <span className="text-slate-400 text-xs">
+                          {formatTime(announcement.createdAt)}
+                        </span>
+                      </div>
+                      {user?.isGameMaster && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/30"
+                          onClick={() => deleteAnnouncementMutation.mutate(announcement.id)}
+                          disabled={deleteAnnouncementMutation.isPending}
+                          data-testid={`delete-announcement-${announcement.id}`}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      )}
                     </div>
                     <p className="text-amber-100 text-sm font-medium">{announcement.content}</p>
                   </motion.div>

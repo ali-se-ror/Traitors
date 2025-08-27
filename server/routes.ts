@@ -100,7 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate random spooky symbol
       const symbol = getRandomSpookySymbol();
       
-      // Generate deterministic profile image
+      // Generate deterministic profile image based on username
       const profileImage = getProfileImageForUser(username);
       
       // Create user with profile image
@@ -501,6 +501,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(announcements);
     } catch (error) {
       console.error("Get announcements error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Delete announcement (Game Master only)
+  app.delete("/api/announcements/:id", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const currentUser = await storage.getUser(userId);
+      
+      if (!currentUser || !currentUser.isGameMaster) {
+        return res.status(403).json({ message: "Game Master access required" });
+      }
+
+      const { id } = req.params;
+      const deleted = await storage.deleteAnnouncement(id);
+      
+      if (!deleted) {
+        return res.status(404).json({ message: "Announcement not found" });
+      }
+
+      res.json({ message: "Announcement deleted successfully" });
+    } catch (error) {
+      console.error("Delete announcement error:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
