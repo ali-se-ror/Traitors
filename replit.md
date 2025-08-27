@@ -2,7 +2,7 @@
 
 **The Traitors** is a comprehensive full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, communicate through public/private messaging, and view real-time suspicion metrics. The application features a React frontend with a dark medieval-themed UI design system and an Express backend with in-memory storage.
 
-## Recent Changes (January 27, 2025)
+## Recent Changes (August 27, 2025)
 - ✅ **Clean 80's Halloween Typography**: Implemented cohesive font system using Bebas Neue (capsule-shaped headers), Righteous (smooth retro script), Press Start 2P (VCR/tech), and Monoton (glow effects) for authentic retro feel without being over the top
 - ✅ **Harmonious Neon Color System**: Researched and implemented synthwave-inspired color palette with Electric Purple (#8a2be2), Hot Magenta (#ff1493), and Neon Orange (#ff4500) - removed cyan for better color harmony
 - ✅ **Consistent Gradient Typography**: All headings use matching purple-to-magenta gradients with proper letter-spacing for visual consistency
@@ -17,6 +17,7 @@
 - ✅ **Spooky Player Symbols**: Automatic random symbol assignment (👻💀🦇🕷️etc.) for each player profile
 - ✅ **Muted Green Accent Color**: Added muted green (#92b78c) as seventh accent color exclusively for dashboard sidebar navigation
 - ✅ **Streamlined UI**: Removed Recent Activity section from dashboard and Settings feature from profile page per user request
+- ✅ **Navigation Bug Fix**: Resolved mysterious "0" appearing between Suspicion Meter and Profile buttons in navigation bar
 
 # User Preferences
 
