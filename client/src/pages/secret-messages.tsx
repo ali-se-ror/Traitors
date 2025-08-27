@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { resolveProfileImage } from "@/lib/profileImages";
 
 interface Player {
@@ -44,7 +44,7 @@ export default function SecretMessages() {
   const [pendingMedia, setPendingMedia] = useState<{ url: string; type: string } | null>(null);
 
   // Check URL parameters for auto-selecting conversation
-  React.useEffect(() => {
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const conversationId = urlParams.get('conversation');
     if (conversationId) {

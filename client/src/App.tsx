@@ -54,6 +54,7 @@ function Router() {
       <Route path="/profile" component={Profile} />
       <Route path="/game-master" component={GameMaster} />
       <Route path="/secret-messages" component={SecretMessages} />
+      <Route path="/suspicion-meter" component={Voting} />
 
       <Route component={Dashboard} />
     </Switch>
