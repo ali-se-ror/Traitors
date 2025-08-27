@@ -222,7 +222,7 @@ export default function Dashboard() {
             <Skull className="mr-2 h-8 w-8 text-red-500" />
             The Traitors
           </h1>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
             <Link to="/voting">
               <Button variant="outline" className="border-red-500 hover:bg-red-500/10">
                 <Vote className="w-4 h-4 mr-2" />
