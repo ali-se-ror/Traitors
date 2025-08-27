@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost, Skull, Crown, Eye, X, Upload, Image, Video, Paperclip, Info } from "lucide-react";
+import { Users, Send, Ghost, Skull, Crown, Eye, X, Upload, Paperclip, Info } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -519,9 +519,7 @@ export default function Dashboard() {
         </Card>
       </motion.div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
+      <div className="space-y-8">
           {/* Voting Card - Big Button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -609,95 +607,6 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </motion.div>
-        </div>
-
-        {/* Sidebar Stats */}
-        <div className="space-y-6">
-          {/* Game Status */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-          >
-            <Card className="retro-card">
-              <CardHeader>
-                <CardTitle className="font-semibold flex items-center neon-gradient-card">
-                  <Gamepad2 className="mr-3 h-5 w-5 text-primary" />
-                  Game Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Active Players</span>
-                    <span className="text-foreground font-semibold" data-testid="text-active-players">{activePlayersCount}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Votes Cast</span>
-                    <span className="text-primary font-semibold" data-testid="text-votes-cast">{votedPlayersCount}/{activePlayersCount}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Round</span>
-                    <span className="text-secondary font-semibold" data-testid="text-round">#1</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-
-
-          {/* Navigation */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-          >
-            <Card className="retro-card border-[#92b78c]/20">
-              <CardHeader>
-                <CardTitle className="font-semibold flex items-center neon-gradient-card">
-                  <Activity className="mr-3 h-5 w-5 text-[#92b78c]" />
-                  Navigate
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Link href="/voting">
-                  <Button className="retro-button w-full justify-start hover:border-[#92b78c]/30" data-testid="nav-voting">
-                    <Skull className="mr-2 h-4 w-4" />
-                    Cast Your Vote
-                  </Button>
-                </Link>
-                <Link href="/communications">
-                  <Button className="retro-button w-full justify-start hover:border-[#92b78c]/30" data-testid="nav-communications">
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    Communications
-                  </Button>
-                </Link>
-                <Link href="/suspicion">
-                  <Button className="retro-button w-full justify-start hover:border-[#92b78c]/30" data-testid="nav-suspicion">
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    Suspicion Meter
-                  </Button>
-                </Link>
-                <Link href="/profile">
-                  <Button className="w-full justify-start bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 hover:border-[#92b78c]/30" data-testid="nav-profile">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
-                  </Button>
-                </Link>
-                <Link href="/logout">
-                  <Button 
-                    className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30 hover:border-[#92b78c]/30" 
-                    data-testid="nav-logout"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Leave Castle
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
       </div>
     </div>
   );
