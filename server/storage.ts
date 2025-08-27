@@ -10,6 +10,7 @@ export interface IStorage {
   updateUserCodeword(id: string, codewordHash: string): Promise<void>;
   updateUserProfileImage(id: string, profileImage: string | null): Promise<void>;
   getAllUsers(): Promise<User[]>;
+  getUsedProfileImages(): Promise<string[]>;
 
   // Vote operations
   getVoteByVoterId(voterId: string): Promise<Vote | undefined>;
@@ -109,6 +110,13 @@ export class MemStorage implements IStorage {
     return Array.from(this.users.values()).sort((a, b) => 
       a.username.localeCompare(b.username, undefined, { sensitivity: 'base' })
     );
+  }
+
+  async getUsedProfileImages(): Promise<string[]> {
+    const allUsers = Array.from(this.users.values());
+    return allUsers
+      .map(user => user.profileImage)
+      .filter((image): image is string => image !== null && image !== undefined);
   }
 
   async getVoteByVoterId(voterId: string): Promise<Vote | undefined> {

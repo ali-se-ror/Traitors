@@ -41,22 +41,26 @@ const PROFILE_IMAGE_PATHS = [
   '64',
 ];
 
-function getProfileImageForUser(userId: string): string | null {
+async function getAvailableProfileImageForUser(): Promise<string | null> {
   if (PROFILE_IMAGE_PATHS.length === 0) {
     return null;
   }
   
-  // Create a simple hash from the user ID for deterministic selection
-  let hash = 0;
-  for (let i = 0; i < userId.length; i++) {
-    const char = userId.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
+  // Get all currently used profile images
+  const usedImages = await storage.getUsedProfileImages();
   
-  const index = Math.abs(hash) % PROFILE_IMAGE_PATHS.length;
-  // Return the image identifier that the frontend can resolve
-  return `retro-${PROFILE_IMAGE_PATHS[index]}`;
+  // Create the full list of available images with proper prefix
+  const allAvailableImages = PROFILE_IMAGE_PATHS.map(path => `retro-${path}`);
+  
+  // Find unused images
+  const unusedImages = allAvailableImages.filter(image => !usedImages.includes(image));
+  
+  // If all images are used, allow reuse (but this shouldn't happen with enough images)
+  const availableImages = unusedImages.length > 0 ? unusedImages : allAvailableImages;
+  
+  // Return a random unused image
+  const randomIndex = Math.floor(Math.random() * availableImages.length);
+  return availableImages[randomIndex];
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -100,8 +104,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate random spooky symbol
       const symbol = getRandomSpookySymbol();
       
-      // Generate deterministic profile image based on username
-      const profileImage = getProfileImageForUser(username);
+      // Get an available profile image (not used by any other user)
+      const profileImage = await getAvailableProfileImageForUser();
       
       // Create user with profile image
       const user = await storage.createUser({ username, codewordHash, symbol, profileImage });
@@ -185,8 +189,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate random spooky symbol
       const symbol = getRandomSpookySymbol();
       
-      // Generate deterministic profile image
-      const profileImage = getProfileImageForUser(username);
+      // Get an available profile image (not used by any other user)
+      const profileImage = await getAvailableProfileImageForUser();
       
       // Create game master user
       const user = await storage.createUser({ username, codewordHash, symbol, profileImage, isGameMaster: 1 });
