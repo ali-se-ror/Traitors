@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Send, Ghost, Skull, Crown, Eye, X, Upload, Paperclip, Info, Trash2, MessageCircle } from "lucide-react";
+import { Users, Send, Ghost, Skull, Crown, Eye, X, Upload, Paperclip, Info, Trash2, MessageCircle, Vote, User, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -209,94 +209,55 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Secret Mailbox Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.6 }}
-        className="mb-6"
-      >
-        <Card className="retro-card border-red-500/30 bg-gradient-to-br from-red-900/10 to-purple-900/10">
-          <CardHeader>
-            <CardTitle className="text-2xl font-semibold flex items-center neon-gradient-title">
-              <Ghost className="mr-3 h-6 w-6 text-red-400" />
-              Secret Mailbox
-              {totalUnreadCount > 0 && (
-                <Badge variant="secondary" className="ml-2 bg-red-500/20 text-red-300 animate-pulse">
-                  {totalUnreadCount} New
-                </Badge>
-              )}
-            </CardTitle>
-            <CardDescription className="text-red-200/70">
-              {totalUnreadCount > 0 
-                ? `You have ${totalUnreadCount} secret message${totalUnreadCount > 1 ? 's' : ''} waiting in the shadows...`
-                : "Your secret messages will appear here when other players whisper to you..."
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {totalUnreadCount === 0 ? (
-              <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-red-500/20">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-slate-500 rounded-full"></div>
-                  <span className="text-slate-400">No secret messages yet</span>
-                </div>
-                <Link to="/secret-messages">
-                  <Button 
-                    size="sm"
-                    className="bg-slate-600 hover:bg-slate-700 text-white"
-                    data-testid="button-check-secret-mailbox"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Send Messages
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {inboxData.slice(0, 3).map((conversation) => (
-                  <div key={conversation.senderId} className="p-3 bg-slate-900/50 rounded-lg border border-red-500/20">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-red-300 font-medium">{conversation.senderUsername}</span>
-                          <Badge variant="secondary" className="bg-red-500/20 text-red-300 text-xs">
-                            {conversation.unreadCount} new
-                          </Badge>
-                        </div>
-                        <p className="text-slate-300 text-sm truncate">{conversation.lastMessage}</p>
-                      </div>
-                      <Link to={`/secret-messages?conversation=${conversation.senderId}`}>
-                        <Button
-                          size="sm"
-                          className="bg-red-600 hover:bg-red-700 text-white animate-pulse ml-3"
-                        >
-                          <Eye className="w-4 h-4 mr-1" />
-                          Read
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-                {inboxData.length > 3 && (
-                  <div className="text-center pt-2">
-                    <Link to="/secret-messages">
-                      <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300">
-                        View all conversations →
-                      </Button>
-                    </Link>
-                  </div>
-                )}
-              </div>
+    <div className="min-h-screen atmospheric-bg">
+      <div className="container mx-auto px-4 py-8">
+        {/* Navigation */}
+        <motion.nav
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex justify-between items-center mb-8"
+        >
+          <h1 className="text-2xl font-bold neon-gradient-title flex items-center">
+            <Skull className="mr-2 h-8 w-8 text-red-500" />
+            The Traitors
+          </h1>
+          <div className="flex gap-4">
+            <Link to="/voting">
+              <Button variant="outline" className="border-red-500 hover:bg-red-500/10">
+                <Vote className="w-4 h-4 mr-2" />
+                Vote
+              </Button>
+            </Link>
+            <Link to="/secret-messages">
+              <Button variant="outline" className="border-purple-500 hover:bg-purple-500/10">
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Messages
+              </Button>
+            </Link>
+            {user?.isGameMaster && (
+              <Link to="/game-master">
+                <Button variant="outline" className="border-amber-500 hover:bg-amber-500/10">
+                  <Crown className="w-4 h-4 mr-2" />
+                  Game Master
+                </Button>
+              </Link>
             )}
-          </CardContent>
-        </Card>
-      </motion.div>
+            <Link to="/profile">
+              <Button variant="outline" className="border-green-500 hover:bg-green-500/10">
+                <User className="w-4 h-4 mr-2" />
+                Profile
+              </Button>
+            </Link>
+            <Button onClick={handleLogout} variant="destructive" size="sm">
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+        </motion.nav>
 
-
-
-      {/* Welcome Section */}
+        <div className="space-y-8">
+          {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -552,7 +513,6 @@ export default function Dashboard() {
         </Card>
       </motion.div>
 
-      <div className="space-y-8">
           {/* Voting Card - Big Button */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -640,6 +600,91 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </motion.div>
+
+          {/* Secret Mailbox - Positioned over Whispers section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.6 }}
+            className="mb-6"
+          >
+            <Card className="retro-card border-red-500/30 bg-gradient-to-br from-red-900/10 to-purple-900/10">
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold flex items-center neon-gradient-title">
+                  <Ghost className="mr-3 h-6 w-6 text-red-400" />
+                  Secret Mailbox
+                  {totalUnreadCount > 0 && (
+                    <Badge variant="secondary" className="ml-2 bg-red-500/20 text-red-300 animate-pulse">
+                      {totalUnreadCount} New
+                    </Badge>
+                  )}
+                </CardTitle>
+                <CardDescription className="text-red-200/70">
+                  {totalUnreadCount > 0 
+                    ? `You have ${totalUnreadCount} secret message${totalUnreadCount > 1 ? 's' : ''} waiting in the shadows...`
+                    : "Your secret messages will appear here when other players whisper to you..."
+                  }
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {totalUnreadCount === 0 ? (
+                  <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-red-500/20">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-slate-500 rounded-full"></div>
+                      <span className="text-slate-400">No secret messages yet</span>
+                    </div>
+                    <Link to="/secret-messages">
+                      <Button 
+                        size="sm"
+                        className="bg-slate-600 hover:bg-slate-700 text-white"
+                        data-testid="button-check-secret-mailbox"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Send Messages
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {inboxData.slice(0, 3).map((conversation) => (
+                      <div key={conversation.senderId} className="p-3 bg-slate-900/50 rounded-lg border border-red-500/20">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-red-300 font-medium">{conversation.senderUsername}</span>
+                              <Badge variant="secondary" className="bg-red-500/20 text-red-300 text-xs">
+                                {conversation.unreadCount} new
+                              </Badge>
+                            </div>
+                            <p className="text-slate-300 text-sm truncate">{conversation.lastMessage}</p>
+                          </div>
+                          <Link to={`/secret-messages?conversation=${conversation.senderId}`}>
+                            <Button
+                              size="sm"
+                              className="bg-red-600 hover:bg-red-700 text-white animate-pulse ml-3"
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              Read
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                    {inboxData.length > 3 && (
+                      <div className="text-center pt-2">
+                        <Link to="/secret-messages">
+                          <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300">
+                            View all conversations →
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
