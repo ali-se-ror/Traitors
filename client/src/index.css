@@ -63,7 +63,7 @@
   --acid-purple: #a13fd3;           /* Headings, special buttons, hover glows */
   --neon-yellow: #f6f65f;           /* Badges, warning highlights, retro flash */
   --hot-pink: #ff4f9a;              /* Secondary buttons, playful highlights */
-  --teal-blue: #1ca9c9;             /* Navigation, banners, subtle contrasts */
+  --neon-green: #39ff14;            /* Bright retro green accent */
 }
 
 .dark {
@@ -177,6 +177,32 @@
     box-shadow: 0 0 10px currentColor;
   }
 
+  /* Neon gradient headings - retro Halloween vibes */
+  .neon-gradient-heading {
+    background: linear-gradient(45deg, var(--acid-purple), var(--witch-green), var(--acid-purple));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    text-shadow: 0 0 20px var(--acid-purple);
+  }
+
+  .neon-gradient-title {
+    background: linear-gradient(135deg, var(--witch-green), var(--acid-purple), var(--pumpkin-orange), var(--witch-green));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+  }
+
+  .neon-gradient-card {
+    background: linear-gradient(90deg, var(--acid-purple), var(--witch-green));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+  }
+
   /* Subtle retro styling - use sparingly */
   .retro-text {
     font-family: var(--font-retro);
@@ -187,12 +213,6 @@
   .retro-heading {
     font-family: var(--font-retro);
     color: var(--acid-purple);
-    font-weight: 600;
-  }
-
-  /* Regular heading style for most content */
-  .text-heading {
-    color: var(--foreground);
     font-weight: 600;
   }
 
@@ -348,12 +368,21 @@
   }
 
   /* Special accent styles */
-  .accent-teal {
-    color: var(--teal-blue);
+  .accent-green {
+    color: var(--neon-green);
   }
 
   .accent-purple {
     color: var(--acid-purple);
+  }
+
+  /* Neon glow effects */
+  .neon-glow-purple {
+    text-shadow: 0 0 10px var(--acid-purple), 0 0 20px var(--acid-purple);
+  }
+
+  .neon-glow-green {
+    text-shadow: 0 0 10px var(--witch-green), 0 0 20px var(--witch-green);
   }
 
   .player-card {

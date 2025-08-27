@@ -44,7 +44,7 @@ export function Layout({ children }: LayoutProps) {
           >
             <Skull className="text-primary text-3xl animate-pulse-ember" />
             <Link href="/dashboard">
-              <h1 className="retro-text text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform" style={{ fontFamily: 'var(--font-retro)' }}>
+              <h1 className="text-xl md:text-2xl font-bold neon-gradient-title cursor-pointer hover:scale-105 transition-transform">
                 The Traitors: A Game of Shadows
               </h1>
             </Link>

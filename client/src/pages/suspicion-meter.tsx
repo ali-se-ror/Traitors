@@ -37,7 +37,7 @@ export default function SuspicionMeter() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="retro-text text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-horror)' }}>
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 neon-gradient-heading">
           Suspicion Meter
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -53,7 +53,7 @@ export default function SuspicionMeter() {
       >
         <Card className="card-medieval border-red-400/30 bg-gradient-to-br from-red-900/10 to-red-800/10">
           <CardHeader>
-            <CardTitle className="font-serif text-xl font-semibold text-red-300 flex items-center">
+            <CardTitle className="text-xl font-semibold neon-gradient-card flex items-center">
               <Info className="mr-3 h-5 w-5 text-red-400" />
               How Voting Works
             </CardTitle>

@@ -284,7 +284,7 @@ export default function Dashboard() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-foreground">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 neon-gradient-heading">
           Welcome, <span className="text-primary neon-glow">{user?.username}</span>
         </h1>
         <p className="text-xl text-muted-foreground">
@@ -301,7 +301,7 @@ export default function Dashboard() {
       >
         <Card className="retro-card border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold flex items-center text-foreground accent-teal">
+            <CardTitle className="text-2xl font-semibold flex items-center neon-gradient-title">
               <Crown className="mr-3 h-6 w-6 text-amber-400" />
               Game Master Announcements
               {announcements.length > 0 && (
@@ -621,7 +621,7 @@ export default function Dashboard() {
           >
             <Card className="retro-card">
               <CardHeader>
-                <CardTitle className="font-semibold flex items-center text-foreground">
+                <CardTitle className="font-semibold flex items-center neon-gradient-card">
                   <Gamepad2 className="mr-3 h-5 w-5 text-primary" />
                   Game Status
                 </CardTitle>
@@ -653,7 +653,7 @@ export default function Dashboard() {
           >
             <Card className="retro-card">
               <CardHeader>
-                <CardTitle className="font-semibold flex items-center text-foreground">
+                <CardTitle className="font-semibold flex items-center neon-gradient-card">
                   <Clock className="mr-3 h-5 w-5 text-secondary" />
                   Recent Activity
                 </CardTitle>
@@ -700,8 +700,8 @@ export default function Dashboard() {
           >
             <Card className="retro-card">
               <CardHeader>
-                <CardTitle className="font-semibold flex items-center text-foreground">
-                  <Activity className="mr-3 h-5 w-5 accent-teal" />
+                <CardTitle className="font-semibold flex items-center neon-gradient-card">
+                  <Activity className="mr-3 h-5 w-5 text-secondary" />
                   Navigate
                 </CardTitle>
               </CardHeader>
