@@ -299,7 +299,7 @@ export default function Dashboard() {
         transition={{ delay: 0.08, duration: 0.6 }}
         className="mb-6"
       >
-        <Card className="retro-card scanlines vhs-effect border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
+        <Card className="retro-card border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-amber-300 flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
               <Crown className="mr-3 h-6 w-6 text-amber-400" />
@@ -619,7 +619,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <Card className="retro-card scanlines vhs-effect">
+            <Card className="retro-card">
               <CardHeader>
                 <CardTitle className="font-semibold text-foreground flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
                   <Gamepad2 className="mr-3 h-5 w-5 text-primary neon-glow" />
@@ -651,7 +651,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
-            <Card className="retro-card scanlines vhs-effect">
+            <Card className="retro-card">
               <CardHeader>
                 <CardTitle className="font-semibold text-foreground flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
                   <Clock className="mr-3 h-5 w-5 text-secondary neon-glow" />
@@ -698,7 +698,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.7, duration: 0.6 }}
           >
-            <Card className="retro-card scanlines vhs-effect">
+            <Card className="retro-card">
               <CardHeader>
                 <CardTitle className="font-semibold text-foreground flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
                   <Activity className="mr-3 h-5 w-5 text-emerald-400 neon-glow" />

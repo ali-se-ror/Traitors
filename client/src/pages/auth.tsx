@@ -90,7 +90,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen atmospheric-bg retro-grid scanlines vhs-effect relative">
+    <div className="min-h-screen atmospheric-bg retro-grid relative">
       {/* Floating Particles Background */}
       <div className="floating-particles">
         <div className="particle w-2 h-2 animate-float" style={{ left: "10%", animationDelay: "0s", animationDuration: "6s" }}></div>
@@ -142,7 +142,7 @@ export default function Auth() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
-              <Card className={`retro-card scanlines vhs-effect border-2 transition-all duration-300 ${!isLogin ? 'border-primary shadow-lg shadow-primary/25' : 'border-border'}`}>
+              <Card className={`retro-card border-2 transition-all duration-300 ${!isLogin ? 'border-primary shadow-lg shadow-primary/25' : 'border-border'}`}>
                 <CardHeader className="text-center">
                   <motion.div
                     whileHover={{ scale: 1.1 }}
