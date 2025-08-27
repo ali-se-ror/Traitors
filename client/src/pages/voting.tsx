@@ -86,7 +86,7 @@ export default function Voting() {
             </Button>
           </Link>
           <Skull className="w-10 h-10 text-red-400 mr-4" />
-          <h1 className="font-serif text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
+          <h1 className="retro-text text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-horror)' }}>
             Cast Your Suspicion
           </h1>
         </div>

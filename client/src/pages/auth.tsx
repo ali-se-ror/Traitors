@@ -90,7 +90,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen atmospheric-bg relative">
+    <div className="min-h-screen atmospheric-bg retro-grid scanlines vhs-effect relative">
       {/* Floating Particles Background */}
       <div className="floating-particles">
         <div className="particle w-2 h-2 animate-float" style={{ left: "10%", animationDelay: "0s", animationDuration: "6s" }}></div>
@@ -112,7 +112,7 @@ export default function Auth() {
           >
             <div className="flex items-center justify-center space-x-4 mb-6">
               <Skull className="text-primary text-4xl animate-pulse-ember" />
-              <h1 className="font-serif text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-500 via-green-400 to-purple-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
+              <h1 className="retro-text text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-500 via-green-400 to-purple-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]" style={{ fontFamily: 'var(--font-horror)' }}>
                 The Traitors: A Game of Shadows
               </h1>
             </div>
@@ -142,7 +142,7 @@ export default function Auth() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
-              <Card className={`card-medieval border-2 transition-all duration-300 ${!isLogin ? 'border-primary shadow-lg shadow-primary/25' : 'border-border'}`}>
+              <Card className={`retro-card scanlines vhs-effect border-2 transition-all duration-300 ${!isLogin ? 'border-primary shadow-lg shadow-primary/25' : 'border-border'}`}>
                 <CardHeader className="text-center">
                   <motion.div
                     whileHover={{ scale: 1.1 }}
@@ -150,7 +150,7 @@ export default function Auth() {
                   >
                     <UserPlus className="text-primary text-4xl animate-glow" />
                   </motion.div>
-                  <CardTitle className="font-serif text-2xl font-semibold text-foreground">Join the Shadows</CardTitle>
+                  <CardTitle className="text-2xl font-semibold text-foreground chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>Join the Shadows</CardTitle>
                   <CardDescription className="text-muted-foreground">Create your mysterious identity</CardDescription>
                 </CardHeader>
                 <CardContent>

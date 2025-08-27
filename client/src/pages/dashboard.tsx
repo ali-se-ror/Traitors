@@ -284,8 +284,8 @@ export default function Dashboard() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
-          Welcome, <span className="text-primary">{user?.username}</span>
+        <h1 className="retro-text text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-horror)' }}>
+          Welcome, <span className="text-primary neon-glow">{user?.username}</span>
         </h1>
         <p className="text-xl text-muted-foreground">
           The shadows whisper secrets. Choose wisely.
@@ -299,9 +299,9 @@ export default function Dashboard() {
         transition={{ delay: 0.08, duration: 0.6 }}
         className="mb-6"
       >
-        <Card className="card-medieval border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
+        <Card className="retro-card scanlines vhs-effect border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
           <CardHeader>
-            <CardTitle className="font-serif text-2xl font-semibold text-amber-300 flex items-center">
+            <CardTitle className="text-2xl font-semibold text-amber-300 flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
               <Crown className="mr-3 h-6 w-6 text-amber-400" />
               Game Master Announcements
               {announcements.length > 0 && (
@@ -619,10 +619,10 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <Card className="card-medieval">
+            <Card className="retro-card scanlines vhs-effect">
               <CardHeader>
-                <CardTitle className="font-semibold text-foreground flex items-center">
-                  <Gamepad2 className="mr-3 h-5 w-5 text-primary" />
+                <CardTitle className="font-semibold text-foreground flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
+                  <Gamepad2 className="mr-3 h-5 w-5 text-primary neon-glow" />
                   Game Status
                 </CardTitle>
               </CardHeader>
@@ -651,10 +651,10 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
-            <Card className="card-medieval">
+            <Card className="retro-card scanlines vhs-effect">
               <CardHeader>
-                <CardTitle className="font-semibold text-foreground flex items-center">
-                  <Clock className="mr-3 h-5 w-5 text-secondary" />
+                <CardTitle className="font-semibold text-foreground flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
+                  <Clock className="mr-3 h-5 w-5 text-secondary neon-glow" />
                   Recent Activity
                 </CardTitle>
               </CardHeader>
@@ -698,28 +698,28 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.7, duration: 0.6 }}
           >
-            <Card className="card-medieval">
+            <Card className="retro-card scanlines vhs-effect">
               <CardHeader>
-                <CardTitle className="font-semibold text-foreground flex items-center">
-                  <Activity className="mr-3 h-5 w-5 text-emerald-400" />
+                <CardTitle className="font-semibold text-foreground flex items-center chrome-text" style={{ fontFamily: 'var(--font-retro)' }}>
+                  <Activity className="mr-3 h-5 w-5 text-emerald-400 neon-glow" />
                   Navigate
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Link href="/voting">
-                  <Button className="w-full justify-start bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30" data-testid="nav-voting">
+                  <Button className="retro-button w-full justify-start" data-testid="nav-voting">
                     <Skull className="mr-2 h-4 w-4" />
                     Cast Your Vote
                   </Button>
                 </Link>
                 <Link href="/communications">
-                  <Button className="w-full justify-start bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30" data-testid="nav-communications">
+                  <Button className="retro-button w-full justify-start" data-testid="nav-communications">
                     <MessageCircle className="mr-2 h-4 w-4" />
                     Communications
                   </Button>
                 </Link>
                 <Link href="/suspicion">
-                  <Button className="w-full justify-start bg-red-600/20 hover:bg-red-600/30 text-red-300 border border-red-500/30" data-testid="nav-suspicion">
+                  <Button className="retro-button w-full justify-start" data-testid="nav-suspicion">
                     <BarChart3 className="mr-2 h-4 w-4" />
                     Suspicion Meter
                   </Button>

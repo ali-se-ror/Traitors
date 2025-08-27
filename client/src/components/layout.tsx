@@ -22,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen atmospheric-bg">
+    <div className="min-h-screen atmospheric-bg retro-grid scanlines">
       {/* Floating Particles Background */}
       <div className="floating-particles">
         <div className="particle w-2 h-2 animate-float" style={{ left: "10%", animationDelay: "0s", animationDuration: "6s" }}></div>
@@ -44,7 +44,7 @@ export function Layout({ children }: LayoutProps) {
           >
             <Skull className="text-primary text-3xl animate-pulse-ember" />
             <Link href="/dashboard">
-              <h1 className="font-serif text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform">
+              <h1 className="retro-text text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform" style={{ fontFamily: 'var(--font-retro)' }}>
                 The Traitors: A Game of Shadows
               </h1>
             </Link>
