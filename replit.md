@@ -3,15 +3,17 @@
 **The Traitors** is a comprehensive full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, communicate through public/private messaging, and view real-time suspicion metrics. The application features a React frontend with a dark medieval-themed UI design system and an Express backend with in-memory storage.
 
 ## Recent Changes (January 27, 2025)
-- ✅ **80s Horror Film Aesthetic**: Refined retro styling to match 80s horror films - subtle neon effects against predominantly black backgrounds, vintage typography (Orbitron, Bungee), and atmospheric lighting
+- ✅ **80s Horror Dark Fantasy Aesthetic**: Complete transformation to Boris Vallejo/Frank Frazetta inspired styling with Blood Crimson, Electric Blue, Phantom Violet, and Demon Amber color palette
+- ✅ **VHS Gritty Texture Effects**: Added repeating scanline patterns and film grain for authentic 80s horror movie atmosphere
+- ✅ **Gothic Typography**: Implemented Nosifer and Creepster fonts with Hellraiser-style multi-colored glow effects (crimson/blue/violet shadows)
+- ✅ **Heavy Metal Magazine Styling**: Copper rust borders, aged bone text, and metallic amber accents against deep shadow blacks
+- ✅ **Cinematic Horror Lighting**: Atmospheric backgrounds with subtle red/blue/violet radial gradients inspired by The Gate, Legend, Evil Dead II
 - ✅ **Profile Image System**: Fixed and integrated 9 retro Halloween profile avatars (RETRO-HALLOWEEN-38 through RETRO-HALLOWEEN-64) with deterministic assignment based on username
-- ✅ **Subtle VHS Effects**: Reduced brightness of scanlines, VHS distortion, and neon glows for authentic 80s horror atmosphere rather than bright arcade aesthetic
 - ✅ **Complete Communications Hub**: Full-featured "Whispers in the Dark" section with tabbed interface (Public Board, Private Messages, Announcements) and live updates
 - ✅ **Game Master Dashboard**: Comprehensive admin interface with voting analytics, message monitoring, and announcement broadcasting  
 - ✅ **Enhanced Branding**: Changed app name to "The Traitors" with custom skull logo throughout
 - ✅ **Private Message Notifications**: Top-level notification system for received private messages with reply functionality
 - ✅ **Spooky Player Symbols**: Automatic random symbol assignment (👻💀🦇🕷️etc.) for each player profile
-- ✅ **Retro Halloween Color Scheme**: Complete visual transformation with Pumpkin Orange, Witch Green, Midnight Black, and Parchment Beige base colors plus subtle retro accents
 
 # User Preferences
 

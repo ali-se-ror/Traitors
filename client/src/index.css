@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Bungee:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Bungee:wght@400&family=Nosifer:wght@400&family=Creepster:wght@400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,7 +41,8 @@
   --font-serif: 'Cinzel', serif;
   --font-mono: 'JetBrains Mono', monospace;
   --font-retro: 'Orbitron', monospace;
-  --font-horror: 'Bungee', cursive;
+  --font-horror: 'Nosifer', cursive;
+  --font-gothic: 'Creepster', cursive;
   --radius: 1rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(0, 0%, 0% / 0.05);
   --shadow-xs: 0px 2px 0px 0px hsl(0, 0%, 0% / 0.05);
@@ -54,7 +55,17 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   
-  /* Custom retro Halloween colors */
+  /* 80s Horror Fantasy Colors - Boris Vallejo/Frazetta inspired */
+  --blood-crimson: hsl(0, 85%, 45%);         /* Deep blood red */
+  --electric-blue: hsl(220, 100%, 60%);      /* Hellraiser blue */
+  --phantom-violet: hsl(270, 70%, 35%);      /* Deep gothic purple */
+  --demon-amber: hsl(35, 90%, 55%);          /* Glowing amber */
+  --mist-gray: hsl(240, 5%, 25%);            /* Foggy gray */
+  --shadow-black: hsl(0, 0%, 8%);            /* Deeper black */
+  --bone-white: hsl(45, 15%, 85%);           /* Aged bone */
+  --copper-rust: hsl(15, 60%, 45%);          /* Oxidized copper */
+  
+  /* Legacy Retro Colors */
   --retro-neon-yellow: hsl(60, 100%, 67%);   /* Neon Yellow */
   --retro-hot-pink: hsl(343, 100%, 65%);     /* Hot Pink */
   --retro-teal: hsl(192, 78%, 44%);          /* Teal Blue */
@@ -126,9 +137,9 @@
   .atmospheric-bg {
     background: linear-gradient(135deg, 
       var(--midnight-black) 0%, 
-      hsl(14, 40%, 5%) 25%, 
+      var(--shadow-black) 25%, 
       var(--midnight-black) 50%, 
-      hsl(275, 40%, 5%) 75%, 
+      var(--mist-gray) 75%, 
       var(--midnight-black) 100%
     );
     position: relative;
@@ -143,22 +154,24 @@
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(circle at 25% 25%, rgba(138, 43, 226, 0.03) 0%, transparent 70%),
-      radial-gradient(circle at 75% 75%, rgba(255, 107, 0, 0.02) 0%, transparent 70%),
-      linear-gradient(45deg, transparent 45%, rgba(138, 43, 226, 0.01) 50%, transparent 55%);
-    animation: subtle-horror-atmosphere 12s ease-in-out infinite alternate;
+      radial-gradient(circle at 15% 15%, var(--blood-crimson) 0%, transparent 50%),
+      radial-gradient(circle at 85% 25%, var(--electric-blue) 0%, transparent 60%),
+      radial-gradient(circle at 50% 85%, var(--phantom-violet) 0%, transparent 70%),
+      linear-gradient(45deg, transparent 40%, rgba(220, 100, 60, 0.05) 50%, transparent 60%);
+    animation: horror-atmosphere 15s ease-in-out infinite alternate;
     pointer-events: none;
     z-index: 0;
+    opacity: 0.08;
   }
 
-  @keyframes subtle-horror-atmosphere {
+  @keyframes horror-atmosphere {
     0% { 
-      opacity: 0.8;
-      transform: scale(1);
+      opacity: 0.06;
+      transform: scale(1) rotate(0deg);
     }
     100% { 
-      opacity: 1;
-      transform: scale(1.01);
+      opacity: 0.1;
+      transform: scale(1.02) rotate(0.5deg);
     }
   }
 
@@ -213,30 +226,42 @@
     box-shadow: 0 0 10px currentColor;
   }
 
-  /* 80s Horror Film Effects */
+  /* 80s Horror Fantasy Effects - Hellraiser/Heavy Metal aesthetic */
   .retro-text {
-    font-family: 'Cinzel', serif;
+    font-family: var(--font-horror);
     text-shadow: 
-      0 0 3px currentColor,
-      0 0 6px currentColor,
-      2px 2px 0px rgba(0,0,0,0.8);
-    animation: subtle-horror-glow 4s ease-in-out infinite alternate;
+      0 0 4px var(--blood-crimson),
+      0 0 8px var(--electric-blue),
+      3px 3px 0px var(--shadow-black),
+      0 0 12px var(--phantom-violet);
+    animation: hellraiser-glow 6s ease-in-out infinite alternate;
+    filter: contrast(1.2);
   }
 
-  @keyframes subtle-horror-glow {
+  @keyframes hellraiser-glow {
     from {
       text-shadow: 
-        0 0 3px currentColor,
-        0 0 6px currentColor,
-        2px 2px 0px rgba(0,0,0,0.8);
+        0 0 4px var(--blood-crimson),
+        0 0 8px var(--electric-blue),
+        3px 3px 0px var(--shadow-black),
+        0 0 12px var(--phantom-violet);
     }
     to {
       text-shadow: 
-        0 0 2px currentColor,
-        0 0 4px currentColor,
-        0 0 8px var(--retro-acid-purple),
-        2px 2px 0px rgba(0,0,0,0.9);
+        0 0 6px var(--blood-crimson),
+        0 0 12px var(--electric-blue),
+        3px 3px 0px var(--shadow-black),
+        0 0 18px var(--phantom-violet),
+        0 0 24px var(--demon-amber);
     }
+  }
+
+  .gothic-text {
+    font-family: var(--font-gothic);
+    text-shadow: 
+      0 0 2px var(--blood-crimson),
+      2px 2px 0px var(--shadow-black);
+    letter-spacing: 2px;
   }
 
   .scanlines {
@@ -325,15 +350,16 @@
   }
 
   .retro-button {
-    background: linear-gradient(135deg, var(--midnight-black), hsl(0, 0%, 8%));
-    border: 1px solid var(--pumpkin-orange);
-    color: var(--pumpkin-orange);
+    background: linear-gradient(135deg, var(--midnight-black), var(--shadow-black));
+    border: 1px solid var(--copper-rust);
+    color: var(--demon-amber);
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    font-family: var(--font-retro);
   }
 
   .retro-button::before {
@@ -343,8 +369,9 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 107, 0, 0.2), transparent);
-    transition: left 0.5s;
+    background: linear-gradient(90deg, transparent, var(--blood-crimson), var(--electric-blue), transparent);
+    transition: left 0.6s;
+    opacity: 0.3;
   }
 
   .retro-button:hover::before {
@@ -352,29 +379,32 @@
   }
 
   .retro-button:hover {
-    background: linear-gradient(135deg, hsl(0, 0%, 5%), hsl(0, 0%, 12%));
-    border-color: var(--retro-acid-purple);
-    color: var(--retro-acid-purple);
+    background: linear-gradient(135deg, var(--shadow-black), var(--mist-gray));
+    border-color: var(--electric-blue);
+    color: var(--bone-white);
     box-shadow: 
-      0 0 8px rgba(138, 43, 226, 0.3),
-      inset 0 0 8px rgba(138, 43, 226, 0.1);
+      0 0 12px var(--electric-blue),
+      inset 0 0 12px var(--phantom-violet);
+    text-shadow: 0 0 6px var(--electric-blue);
   }
 
   .chrome-text {
-    background: linear-gradient(45deg, #999, #ccc, #999);
+    background: linear-gradient(45deg, var(--copper-rust), var(--demon-amber), var(--bone-white), var(--copper-rust));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(1px 1px 0px #222) drop-shadow(-0.5px -0.5px 0px #666);
+    filter: drop-shadow(2px 2px 0px var(--shadow-black)) drop-shadow(0 0 4px var(--electric-blue));
+    font-family: var(--font-retro);
   }
 
   .retro-card {
     background: linear-gradient(135deg, 
       var(--midnight-black) 0%,
-      hsl(0, 0%, 3%) 50%,
+      var(--shadow-black) 30%,
+      var(--mist-gray) 70%,
       var(--midnight-black) 100%
     );
-    border: 1px solid var(--pumpkin-orange);
+    border: 1px solid var(--copper-rust);
     border-radius: 0;
     position: relative;
     overflow: hidden;
@@ -388,20 +418,57 @@
     right: -1px;
     bottom: -1px;
     background: linear-gradient(45deg, 
-      rgba(138, 43, 226, 0.3),
-      rgba(255, 107, 0, 0.3),
-      rgba(138, 43, 226, 0.3)
+      var(--blood-crimson),
+      var(--electric-blue),
+      var(--phantom-violet),
+      var(--demon-amber)
     );
     z-index: -1;
     border-radius: 0;
-    opacity: 0.6;
+    opacity: 0.15;
+  }
+
+  .retro-card:hover::before {
+    opacity: 0.25;
   }
 
   .retro-grid {
     background-image: 
-      linear-gradient(rgba(138, 43, 226, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(138, 43, 226, 0.03) 1px, transparent 1px);
-    background-size: 25px 25px;
+      linear-gradient(var(--phantom-violet) 1px, transparent 1px),
+      linear-gradient(90deg, var(--phantom-violet) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.05;
+  }
+
+  /* VHS Gritty Texture */
+  .vhs-texture {
+    position: relative;
+  }
+
+  .vhs-texture::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.01) 2px,
+        rgba(255, 255, 255, 0.01) 4px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.02) 2px,
+        rgba(0, 0, 0, 0.02) 4px
+      );
+    pointer-events: none;
+    z-index: 1;
   }
 
   .player-card {
