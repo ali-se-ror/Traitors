@@ -76,7 +76,7 @@ export default function Dashboard() {
   const { data: receivedPrivateMessages = [] } = useQuery<Message[]>({
     queryKey: ["/api/messages/private/received"],
     refetchInterval: 2000,
-    enabled: !!user && !user.isGameMaster, // Only fetch for regular players
+    enabled: !!user, // Fetch for all logged-in users including game masters
   });
 
   const { data: announcements = [], refetch: refetchAnnouncements } = useQuery<Announcement[]>({
@@ -181,8 +181,8 @@ export default function Dashboard() {
     );
   }
 
-  // Handle private message notification logic  
-  const hasNewPrivateMessages = receivedPrivateMessages.length > 0 && !user?.isGameMaster;
+  // Handle private message notification logic - Show for ALL players including game masters
+  const hasNewPrivateMessages = receivedPrivateMessages.length > 0;
   const latestPrivateMessage = receivedPrivateMessages[0];
   
   // Debug log
@@ -190,7 +190,8 @@ export default function Dashboard() {
     isGameMaster: user?.isGameMaster,
     messageCount: receivedPrivateMessages.length,
     hasNewPrivateMessages,
-    latestMessage: latestPrivateMessage
+    latestMessage: latestPrivateMessage,
+    receivedPrivateMessages: receivedPrivateMessages
   });
 
   const handleViewPrivateMessage = (senderId: string, senderUsername: string) => {
