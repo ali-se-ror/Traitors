@@ -95,8 +95,6 @@ export default function Dashboard() {
   });
 
   const currentVote = (authData as any)?.user?.currentVote || (authData as any)?.currentVote;
-  const activePlayersCount = players.length;
-  // Removed votedPlayersCount - was causing stray "0" in navigation
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
@@ -229,18 +227,21 @@ export default function Dashboard() {
                 Vote
               </Button>
             </Link>
+
             <Link to="/secret-messages">
               <Button variant="outline" className="border-purple-500 hover:bg-purple-500/10">
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Secret Messages
               </Button>
             </Link>
+
             <Link to="/suspicion-meter">
               <Button variant="outline" className="border-orange-500 hover:bg-orange-500/10">
                 <Eye className="w-4 h-4 mr-2" />
                 Suspicion Meter
               </Button>
             </Link>
+
             {user?.isGameMaster && (
               <Link to="/game-master">
                 <Button variant="outline" className="border-amber-500 hover:bg-amber-500/10">
@@ -249,12 +250,14 @@ export default function Dashboard() {
                 </Button>
               </Link>
             )}
+
             <Link to="/profile">
               <Button variant="outline" className="border-green-500 hover:bg-green-500/10">
                 <User className="w-4 h-4 mr-2" />
                 Profile
               </Button>
             </Link>
+
             <Button onClick={handleLogout} variant="destructive" size="sm">
               <LogOut className="w-4 h-4 mr-2" />
               Logout
