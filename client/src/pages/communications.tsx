@@ -126,7 +126,7 @@ export default function Communications() {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <MessageCircle className="w-8 h-8 text-amber-400" />
-            <h1 className="text-3xl font-bold text-white">Shadow Communications</h1>
+            <h1 className="text-3xl font-bold neon-gradient-heading">Shadow Communications</h1>
             <Skull className="w-8 h-8 text-red-400" />
           </div>
           <p className="text-amber-200">Exchange whispers and secrets in the darkness...</p>

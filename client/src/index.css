@@ -53,27 +53,35 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   
-  /* Base Retro Halloween Colors */
-  --pumpkin-orange: #ef4523;        /* Primary buttons, highlights, key accents */
-  --witch-green: #089976;           /* Links, secondary accents, hover states */
-  --midnight-black: #000000;        /* Page background, card backgrounds */
-  --parchment-beige: #e2e1d5;       /* Main text, borders, dividers */
+  /* Unified neon color system for consistency */
+  --neon-purple: #bb86fc;           /* Primary neon purple */
+  --neon-cyan: #03dac6;             /* Primary neon cyan/teal */
+  --neon-orange: #ff6b35;           /* Primary neon orange */
+  --neon-pink: #ff4081;             /* Secondary neon pink */
+  --neon-yellow: #ffeb3b;           /* Accent neon yellow */
   
-  /* Complimentary Retro Flashy Colors */
-  --acid-purple: #a13fd3;           /* Headings, special buttons, hover glows */
-  --neon-yellow: #f6f65f;           /* Badges, warning highlights, retro flash */
-  --hot-pink: #ff4f9a;              /* Secondary buttons, playful highlights */
-  --neon-green: #39ff14;            /* Bright retro green accent */
+  /* Base colors */
+  --midnight-black: #000000;        /* Page background, card backgrounds */
+  --dark-gray: #121212;             /* Card backgrounds, elevated surfaces */
+  --light-text: #e0e0e0;            /* Main text color */
+  --muted-text: #a0a0a0;            /* Secondary text */
+  
+  /* Alias for backwards compatibility */
+  --pumpkin-orange: var(--neon-orange);
+  --witch-green: var(--neon-cyan);
+  --acid-purple: var(--neon-purple);
+  --parchment-beige: var(--light-text);
+  --hot-pink: var(--neon-pink);
 }
 
 .dark {
   /* Minimalist retro theme */
   --background: var(--midnight-black);       /* Midnight Black */
-  --foreground: var(--parchment-beige);      /* Parchment Beige */
+  --foreground: var(--light-text);           /* Light text */
   --card: var(--midnight-black);             /* Midnight Black */
-  --card-foreground: var(--parchment-beige); /* Parchment Beige */
+  --card-foreground: var(--light-text);      /* Light text */
   --popover: var(--midnight-black);          /* Midnight Black */
-  --popover-foreground: var(--parchment-beige); /* Parchment Beige */
+  --popover-foreground: var(--light-text);   /* Light text */
   --primary: var(--pumpkin-orange);          /* Pumpkin Orange */
   --primary-foreground: var(--midnight-black); /* Black text */
   --secondary: var(--witch-green);           /* Witch Green */
@@ -177,42 +185,60 @@
     box-shadow: 0 0 10px currentColor;
   }
 
-  /* Neon gradient headings - retro Halloween vibes */
+  /* Consistent neon gradient system - retro Halloween vibes */
   .neon-gradient-heading {
-    background: linear-gradient(45deg, var(--acid-purple), var(--witch-green), var(--acid-purple));
+    background: linear-gradient(135deg, #bb86fc, #03dac6, #bb86fc);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 700;
-    text-shadow: 0 0 20px var(--acid-purple);
+    text-shadow: 0 0 30px rgba(187, 134, 252, 0.5);
+    font-family: 'Inter', sans-serif;
   }
 
   .neon-gradient-title {
-    background: linear-gradient(135deg, var(--witch-green), var(--acid-purple), var(--pumpkin-orange), var(--witch-green));
+    background: linear-gradient(90deg, #03dac6, #bb86fc, #ff6b35);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 600;
+    font-family: 'Inter', sans-serif;
   }
 
   .neon-gradient-card {
-    background: linear-gradient(90deg, var(--acid-purple), var(--witch-green));
+    background: linear-gradient(45deg, #bb86fc, #03dac6);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 600;
+    font-family: 'Inter', sans-serif;
   }
 
-  /* Subtle retro styling - use sparingly */
+  .neon-gradient-accent {
+    background: linear-gradient(45deg, #ff6b35, #bb86fc);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Subtle retro styling - use sparingly for special elements */
   .retro-text {
     font-family: var(--font-retro);
-    color: var(--acid-purple);
-    text-shadow: 0 0 8px var(--acid-purple);
+    background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 15px var(--neon-purple);
   }
 
   .retro-heading {
     font-family: var(--font-retro);
-    color: var(--acid-purple);
+    background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     font-weight: 600;
   }
 
@@ -327,14 +353,11 @@
   }
 
   .retro-card-title {
-    color: var(--acid-purple);
     font-family: var(--font-retro);
-    font-weight: 600;
-  }
-
-  /* Regular card title style */
-  .card-title {
-    color: var(--foreground);
+    background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     font-weight: 600;
   }
 
@@ -367,22 +390,37 @@
     font-weight: 600;
   }
 
-  /* Special accent styles */
-  .accent-green {
-    color: var(--neon-green);
+  /* Consistent neon accent styles */
+  .accent-cyan {
+    color: var(--neon-cyan);
   }
 
   .accent-purple {
-    color: var(--acid-purple);
+    color: var(--neon-purple);
   }
 
-  /* Neon glow effects */
+  .accent-orange {
+    color: var(--neon-orange);
+  }
+
+  /* Unified neon glow effects */
+  .neon-glow {
+    text-shadow: 0 0 15px currentColor, 0 0 30px currentColor;
+  }
+
   .neon-glow-purple {
-    text-shadow: 0 0 10px var(--acid-purple), 0 0 20px var(--acid-purple);
+    color: var(--neon-purple);
+    text-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-purple);
   }
 
-  .neon-glow-green {
-    text-shadow: 0 0 10px var(--witch-green), 0 0 20px var(--witch-green);
+  .neon-glow-cyan {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+  }
+
+  .neon-glow-orange {
+    color: var(--neon-orange);
+    text-shadow: 0 0 15px var(--neon-orange), 0 0 30px var(--neon-orange);
   }
 
   .player-card {
