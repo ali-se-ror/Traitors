@@ -479,6 +479,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get inbox view with conversation previews
+  app.get("/api/messages/inbox", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const inbox = await storage.getUnreadMessagesInboxForUser(userId);
+      res.json(inbox);
+    } catch (error) {
+      console.error("Get inbox error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Create announcement (Game Master only)
   app.post("/api/announcements", requireAuth, async (req, res) => {
     try {

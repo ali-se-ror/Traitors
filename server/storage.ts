@@ -23,6 +23,7 @@ export interface IStorage {
   getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
   getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]>;
   getPrivateMessagesForUser(userId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
+  getUnreadMessagesInboxForUser(userId: string): Promise<{ senderId: string; senderUsername: string; senderProfileImage: string | null; lastMessage: string; lastMessageTime: Date; unreadCount: number }[]>;
   
   // Announcement operations
   createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement>;
@@ -221,6 +222,33 @@ export class MemStorage implements IStorage {
         createdAt: msg.createdAt!,
       };
     });
+  }
+
+  async getUnreadMessagesInboxForUser(userId: string): Promise<{ senderId: string; senderUsername: string; senderProfileImage: string | null; lastMessage: string; lastMessageTime: Date; unreadCount: number }[]> {
+    const privateMessages = Array.from(this.messages.values())
+      .filter(msg => msg.isPrivate && msg.receiverId === userId)
+      .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
+    
+    // Group by sender
+    const conversationMap = new Map<string, { messages: any[]; sender: any }>();
+    
+    privateMessages.forEach(msg => {
+      const sender = this.users.get(msg.senderId);
+      if (!conversationMap.has(msg.senderId)) {
+        conversationMap.set(msg.senderId, { messages: [], sender });
+      }
+      conversationMap.get(msg.senderId)!.messages.push(msg);
+    });
+    
+    // Create inbox entries
+    return Array.from(conversationMap.entries()).map(([senderId, data]) => ({
+      senderId,
+      senderUsername: data.sender?.username || 'Unknown',
+      senderProfileImage: data.sender?.profileImage || null,
+      lastMessage: data.messages[0].content,
+      lastMessageTime: data.messages[0].createdAt!,
+      unreadCount: data.messages.length, // All messages are unread in this simple system
+    })).sort((a, b) => b.lastMessageTime.getTime() - a.lastMessageTime.getTime());
   }
 
   async createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement> {
