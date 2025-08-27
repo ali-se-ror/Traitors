@@ -8,6 +8,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: { username: string; codewordHash: string; symbol: string; isGameMaster?: number }): Promise<User>;
   updateUserCodeword(id: string, codewordHash: string): Promise<void>;
+  updateUserProfileImage(id: string, profileImage: string | null): Promise<void>;
   getAllUsers(): Promise<User[]>;
 
   // Vote operations
@@ -74,6 +75,13 @@ export class MemStorage implements IStorage {
     const user = this.users.get(id);
     if (user) {
       this.users.set(id, { ...user, codewordHash });
+    }
+  }
+
+  async updateUserProfileImage(id: string, profileImage: string | null): Promise<void> {
+    const user = this.users.get(id);
+    if (user) {
+      this.users.set(id, { ...user, profileImage });
     }
   }
 

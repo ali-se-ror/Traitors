@@ -28,36 +28,17 @@ function getRandomSpookySymbol(): string {
   return SPOOKY_SYMBOLS[Math.floor(Math.random() * SPOOKY_SYMBOLS.length)];
 }
 
-// Profile image paths - These should match the ones imported in client
+// Profile image paths - These should match the actual files in attached_assets
 const PROFILE_IMAGE_PATHS = [
-  '/assets/profile-images/avatar1.png',
-  '/assets/profile-images/avatar2.png',
-  '/assets/profile-images/avatar3.png',
-  '/assets/profile-images/avatar4.png',
-  '/assets/profile-images/avatar5.png',
-  '/assets/profile-images/avatar6.png',
-  '/assets/profile-images/avatar7.png',
-  '/assets/profile-images/avatar8.png',
-  '/assets/profile-images/avatar9.png',
-  '/assets/profile-images/avatar10.png',
-  '/assets/profile-images/avatar11.png',
-  '/assets/profile-images/avatar12.png',
-  '/assets/profile-images/avatar13.png',
-  '/assets/profile-images/avatar14.png',
-  '/assets/profile-images/avatar15.png',
-  '/assets/profile-images/avatar16.png',
-  '/assets/profile-images/avatar17.png',
-  '/assets/profile-images/avatar18.png',
-  '/assets/profile-images/avatar19.png',
-  '/assets/profile-images/avatar20.png',
-  '/assets/profile-images/avatar21.png',
-  '/assets/profile-images/avatar22.png',
-  '/assets/profile-images/avatar23.png',
-  '/assets/profile-images/avatar24.png',
-  '/assets/profile-images/avatar25.png',
-  '/assets/profile-images/avatar26.png',
-  '/assets/profile-images/avatar27.png',
-  '/assets/profile-images/avatar28.png',
+  '/assets/RETRO-HALLOWEEN-38_1756253370945.png',
+  '/assets/RETRO-HALLOWEEN-39_1756253370945.png',
+  '/assets/RETRO-HALLOWEEN-41_1756253370946.png',
+  '/assets/RETRO-HALLOWEEN-44_1756253370946.png',
+  '/assets/RETRO-HALLOWEEN-48_1756253370946.png',
+  '/assets/RETRO-HALLOWEEN-49_1756253370946.png',
+  '/assets/RETRO-HALLOWEEN-55_1756253370947.png',
+  '/assets/RETRO-HALLOWEEN-56_1756253370947.png',
+  '/assets/RETRO-HALLOWEEN-64_1756253370947.png',
 ];
 
 function getProfileImageForUser(userId: string): string | null {
@@ -132,6 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: user.id, 
           username: user.username, 
           symbol: user.symbol,
+          profileImage: user.profileImage,
           createdAt: user.createdAt 
         } 
       });
@@ -166,6 +148,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: user.id, 
           username: user.username, 
           symbol: user.symbol,
+          profileImage: user.profileImage,
           createdAt: user.createdAt 
         } 
       });
@@ -201,8 +184,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate random spooky symbol
       const symbol = getRandomSpookySymbol();
       
+      // Generate deterministic profile image
+      const profileImage = getProfileImageForUser(username);
+      
       // Create game master user
-      const user = await storage.createUser({ username, codewordHash, symbol, isGameMaster: 1 });
+      const user = await storage.createUser({ username, codewordHash, symbol, profileImage, isGameMaster: 1 });
       
       // Set session
       req.session.userId = user.id;
@@ -212,6 +198,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: user.id, 
           username: user.username, 
           symbol: user.symbol,
+          profileImage: user.profileImage,
           isGameMaster: user.isGameMaster,
           createdAt: user.createdAt 
         } 
@@ -256,6 +243,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user: { 
           id: user.id, 
           username: user.username, 
+          symbol: user.symbol,
+          profileImage: user.profileImage,
           isGameMaster: user.isGameMaster,
           createdAt: user.createdAt 
         },
@@ -274,6 +263,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const players = users.map(user => ({
         id: user.id,
         username: user.username,
+        symbol: user.symbol,
+        profileImage: user.profileImage,
         createdAt: user.createdAt
       }));
       res.json(players);
