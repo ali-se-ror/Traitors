@@ -417,7 +417,7 @@ export default function Communications() {
               </div>
 
               {/* Create Announcement (Game Master Only) */}
-              {user?.isGameMaster && (
+              {user?.isGameMaster ? (
                 <div>
                   <Card className="bg-slate-800/90 border-red-500/30">
                     <CardHeader>
@@ -460,7 +460,7 @@ export default function Communications() {
                     </CardContent>
                   </Card>
                 </div>
-              )}
+              ) : null}
             </div>
           </TabsContent>
         </Tabs>

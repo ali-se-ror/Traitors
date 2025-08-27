@@ -245,14 +245,14 @@ export default function Dashboard() {
                 THE DARK DECK
               </Button>
             </Link>
-            {user?.isGameMaster && (
+            {user?.isGameMaster ? (
               <Link to="/game-master">
                 <Button variant="outline" className="border-amber-500 hover:bg-amber-500/10">
                   <Crown className="w-4 h-4 mr-2" />
                   Game Master
                 </Button>
               </Link>
-            )}
+            ) : null}
             <Link to="/profile">
               <Button variant="outline" className="border-green-500 hover:bg-green-500/10">
                 <User className="w-4 h-4 mr-2" />
