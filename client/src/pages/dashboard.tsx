@@ -96,7 +96,7 @@ export default function Dashboard() {
 
   const currentVote = (authData as any)?.user?.currentVote || (authData as any)?.currentVote;
   const activePlayersCount = players.length;
-  const votedPlayersCount = currentVote ? 1 : ""; // Prevent showing 0
+  // Removed votedPlayersCount - was causing stray "0" in navigation
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
