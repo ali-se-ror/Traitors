@@ -150,10 +150,10 @@ export default function AuthForm({ type }: AuthFormProps) {
                 <Button 
                   type="submit" 
                   disabled={mutation.isPending}
-                  className={`w-full py-4 rounded-xl font-bold text-midnight text-lg transition-all duration-300 ${
+                  className={`w-full py-4 rounded-xl font-bold text-parchment-beige text-lg transition-all duration-300 ${
                     isRegister 
-                      ? "btn-primary hover:shadow-lg hover:shadow-ember/25" 
-                      : "bg-gradient-to-r from-gold to-ember hover:shadow-lg hover:shadow-gold/25"
+                      ? "btn-primary hover:shadow-lg hover:shadow-purple-500/25" 
+                      : "btn-primary hover:shadow-lg hover:shadow-purple-500/25"
                   }`}
                   data-testid={`button-${type}`}
                 >

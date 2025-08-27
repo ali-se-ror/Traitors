@@ -63,7 +63,7 @@
   --hot-magenta: #ff1493;           /* Vibrant magenta pink */
   --neon-orange: #ff4500;           /* Bright orange-red */
   --electric-lime: #32cd32;         /* Electric lime green */
-  --gold-yellow: #ffd700;           /* Bright gold */
+  --electric-violet: #9d4edd;       /* Electric violet instead of yellow */
   
   /* Base colors */
   --midnight-black: #000000;        /* Page background, card backgrounds */
@@ -158,10 +158,12 @@
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, var(--ember) 0%, var(--gold) 100%);
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    color: var(--parchment-beige);
+    border: none;
   }
 
   .btn-primary::before {
@@ -181,13 +183,13 @@
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px hsla(15, 100%, 60%, 0.4);
+    box-shadow: 0 10px 20px rgba(138, 43, 226, 0.4);
   }
 
   .suspicion-bar {
-    background: linear-gradient(90deg, #10B981 0%, #A855F7 50%, #EF4444 100%);
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-violet));
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 10px currentColor;
+    box-shadow: 0 0 10px var(--electric-purple);
   }
 
   /* 80s Halloween retro font system - clean and cohesive */
@@ -203,7 +205,7 @@
   }
 
   .neon-gradient-title {
-    background: linear-gradient(90deg, var(--hot-magenta), var(--electric-purple), var(--neon-orange));
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -213,7 +215,7 @@
   }
 
   .neon-gradient-card {
-    background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -222,7 +224,7 @@
   }
 
   .neon-gradient-accent {
-    background: linear-gradient(45deg, var(--neon-orange), var(--hot-magenta));
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -243,7 +245,7 @@
 
   .retro-heading {
     font-family: var(--font-script);
-    background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -344,33 +346,33 @@
   }
 
   .btn-primary {
-    background: var(--pumpkin-orange);
-    color: var(--midnight-black);
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta));
+    color: var(--parchment-beige);
     border: none;
     transition: all 0.2s ease;
   }
 
   .btn-primary:hover {
-    background: var(--acid-purple);
+    background: linear-gradient(135deg, var(--hot-magenta), var(--electric-purple));
     color: var(--parchment-beige);
-    box-shadow: 0 0 12px var(--acid-purple);
+    box-shadow: 0 0 12px var(--electric-purple);
   }
 
   .btn-secondary {
-    background: var(--witch-green);
+    background: linear-gradient(135deg, var(--electric-violet), var(--hot-magenta));
     color: var(--parchment-beige);
     border: none;
     transition: all 0.2s ease;
   }
 
   .btn-secondary:hover {
-    background: var(--hot-pink);
-    color: var(--midnight-black);
+    background: linear-gradient(135deg, var(--hot-magenta), var(--electric-violet));
+    color: var(--parchment-beige);
   }
 
   .retro-card-title {
     font-family: var(--font-display);
-    background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
