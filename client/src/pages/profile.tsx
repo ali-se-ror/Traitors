@@ -21,10 +21,7 @@ import {
   BarChart3, 
   Vote, 
   TrendingUp, 
-  Settings,
-  Palette,
-  Bell,
-  Lock,
+
   X
 } from "lucide-react";
 import { useState } from "react";
@@ -359,37 +356,7 @@ export default function Profile() {
             </Card>
           </motion.div>
 
-          {/* Settings */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-          >
-            <Card className="card-medieval">
-              <CardHeader>
-                <CardTitle className="font-semibold text-foreground flex items-center">
-                  <Settings className="mr-3 h-5 w-5 text-secondary" />
-                  Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <button className="w-full text-left text-foreground hover:text-primary py-2 px-3 rounded-lg hover:bg-primary/10 transition-all duration-200 flex items-center">
-                    <Palette className="mr-3 h-4 w-4" />
-                    Theme Settings
-                  </button>
-                  <button className="w-full text-left text-foreground hover:text-secondary py-2 px-3 rounded-lg hover:bg-secondary/10 transition-all duration-200 flex items-center">
-                    <Bell className="mr-3 h-4 w-4" />
-                    Notifications
-                  </button>
-                  <button className="w-full text-left text-foreground hover:text-muted-foreground py-2 px-3 rounded-lg hover:bg-muted/10 transition-all duration-200 flex items-center">
-                    <Lock className="mr-3 h-4 w-4" />
-                    Privacy
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+
         </div>
       </div>
     </div>

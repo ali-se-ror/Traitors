@@ -15,6 +15,8 @@
 - ✅ **Enhanced Branding**: Changed app name to "The Traitors" with custom skull logo throughout
 - ✅ **Private Message Notifications**: Top-level notification system for received private messages with reply functionality
 - ✅ **Spooky Player Symbols**: Automatic random symbol assignment (👻💀🦇🕷️etc.) for each player profile
+- ✅ **Muted Green Accent Color**: Added muted green (#92b78c) as seventh accent color exclusively for dashboard sidebar navigation
+- ✅ **Streamlined UI**: Removed Recent Activity section from dashboard and Settings feature from profile page per user request
 
 # User Preferences
 

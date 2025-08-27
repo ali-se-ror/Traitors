@@ -645,58 +645,13 @@ export default function Dashboard() {
             </Card>
           </motion.div>
 
-          {/* Recent Activity */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-          >
-            <Card className="retro-card">
-              <CardHeader>
-                <CardTitle className="font-semibold flex items-center neon-gradient-card">
-                  <Clock className="mr-3 h-5 w-5 text-secondary" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 text-sm" data-testid="activity-feed">
-                  {currentVote && (
-                    <motion.div 
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="flex items-start space-x-3"
-                    >
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 animate-pulse"></div>
-                      <div>
-                        <p className="text-foreground">You cast a vote for {currentVote.username}</p>
-                        <p className="text-muted-foreground text-xs">Just now</p>
-                      </div>
-                    </motion.div>
-                  )}
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
-                    <div>
-                      <p className="text-foreground">Game round started</p>
-                      <p className="text-muted-foreground text-xs">Few minutes ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-[#92b78c] rounded-full mt-2"></div>
-                    <div>
-                      <p className="text-foreground">Players have joined</p>
-                      <p className="text-muted-foreground text-xs">Recently</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+
 
           {/* Navigation */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
           >
             <Card className="retro-card border-[#92b78c]/20">
               <CardHeader>
