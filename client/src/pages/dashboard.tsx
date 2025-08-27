@@ -191,17 +191,8 @@ export default function Dashboard() {
     );
   }
 
-  // Simple notification logic using the count endpoint
-  const hasNewPrivateMessages = notificationData.hasMessages;
-  const messageCount = notificationData.count;
-  
-  // Debug log
-  console.log('Simple notification debug:', {
-    notificationData,
-    hasNewPrivateMessages,
-    messageCount,
-    user: user?.username
-  });
+  // Simple notification logic using the inbox data
+  const hasNewPrivateMessages = totalUnreadCount > 0;
 
   const handleViewPrivateMessage = (senderId: string, senderUsername: string) => {
     setSelectedMessageSender(senderId);
