@@ -43,6 +43,13 @@ export default function SecretMessages() {
   const [selectedConversation, setSelectedConversation] = useState("");
   const [pendingMedia, setPendingMedia] = useState<{ url: string; type: string } | null>(null);
 
+  // Get notification count for this page
+  const { data: notificationData = { count: 0, hasMessages: false } } = useQuery<{ count: number; hasMessages: boolean }>({
+    queryKey: ["/api/messages/private/count"],
+    refetchInterval: 3000,
+    enabled: !!user,
+  });
+
   // Fetch all players
   const { data: players = [] } = useQuery<Player[]>({
     queryKey: ["/api/players"],
@@ -112,6 +119,25 @@ export default function SecretMessages() {
             </div>
           </div>
         </motion.div>
+
+        {/* New Messages Notification */}
+        {notificationData.hasMessages && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-r from-red-800/30 to-purple-800/30 border border-red-500/50 rounded-lg p-4 mb-6 max-w-4xl mx-auto"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
+              <div>
+                <h3 className="text-red-300 font-medium">
+                  📬 You have {notificationData.count} new secret message{notificationData.count > 1 ? 's' : ''}!
+                </h3>
+                <p className="text-red-400/80 text-sm">Select a conversation below to read and reply to your messages</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {!selectedConversation ? (
           /* Player Selection */

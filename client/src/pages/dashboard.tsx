@@ -217,34 +217,63 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Simple Secret Message Notification Banner */}
-      {(hasNewPrivateMessages || messageCount > 0) && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-red-800/30 to-purple-800/30 border border-red-500/50 rounded-lg p-4 mb-6"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              <div>
-                <h3 className="text-red-300 font-medium">You have {messageCount} secret message{messageCount > 1 ? 's' : ''}!</h3>
-                <p className="text-red-400/80 text-sm">Someone has sent you a whisper in the shadows...</p>
+      {/* Secret Mailbox Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.6 }}
+        className="mb-6"
+      >
+        <Card className="retro-card border-red-500/30 bg-gradient-to-br from-red-900/10 to-purple-900/10">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold flex items-center neon-gradient-title">
+              <Ghost className="mr-3 h-6 w-6 text-red-400" />
+              Secret Mailbox
+              {messageCount > 0 && (
+                <Badge variant="secondary" className="ml-2 bg-red-500/20 text-red-300 animate-pulse">
+                  {messageCount} New
+                </Badge>
+              )}
+            </CardTitle>
+            <CardDescription className="text-red-200/70">
+              {messageCount > 0 
+                ? `You have ${messageCount} secret message${messageCount > 1 ? 's' : ''} waiting in the shadows...`
+                : "Your secret messages will appear here when other players whisper to you..."
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-red-500/20">
+              <div className="flex items-center gap-3">
+                {messageCount > 0 ? (
+                  <>
+                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                    <span className="text-red-300 font-medium">New messages await your attention</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-3 h-3 bg-slate-500 rounded-full"></div>
+                    <span className="text-slate-400">No secret messages yet</span>
+                  </>
+                )}
               </div>
+              <Link to="/secret-messages">
+                <Button 
+                  size="sm"
+                  className={messageCount > 0 
+                    ? "bg-red-600 hover:bg-red-700 text-white animate-pulse" 
+                    : "bg-slate-600 hover:bg-slate-700 text-white"
+                  }
+                  data-testid="button-check-secret-mailbox"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Check Mailbox
+                </Button>
+              </Link>
             </div>
-            <Link to="/secret-messages">
-              <Button 
-                size="sm"
-                className="bg-red-600 hover:bg-red-700 text-white"
-                data-testid="button-view-secret-messages"
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                View Messages
-              </Button>
-            </Link>
-          </div>
-        </motion.div>
-      )}
+          </CardContent>
+        </Card>
+      </motion.div>
 
 
 
