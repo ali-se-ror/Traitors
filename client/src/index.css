@@ -179,7 +179,7 @@
   }
 
   .suspicion-bar {
-    background: linear-gradient(90deg, #4ADE80 0%, var(--ember) 50%, #EF4444 100%);
+    background: linear-gradient(90deg, #10B981 0%, #A855F7 50%, #EF4444 100%);
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
   }
 

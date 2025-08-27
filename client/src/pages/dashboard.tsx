@@ -284,7 +284,7 @@ export default function Dashboard() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
           Welcome, <span className="text-primary">{user?.username}</span>
         </h1>
         <p className="text-xl text-muted-foreground">
@@ -323,7 +323,7 @@ export default function Dashboard() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="p-3 rounded bg-gradient-to-r from-amber-800/20 to-yellow-800/20 border border-amber-500/30"
+                    className="p-3 rounded bg-gradient-to-r from-purple-800/20 to-green-800/20 border border-amber-500/30"
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <Crown className="w-4 h-4 text-amber-400" />
@@ -528,7 +528,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <Card className="card-medieval border-red-500/30 bg-gradient-to-br from-red-900/10 to-red-800/10">
+            <Card className="card-medieval border-red-500/30 bg-gradient-to-br from-purple-900/10 to-green-800/10">
               <CardHeader>
                 <CardTitle className="font-serif text-2xl font-semibold text-red-300 flex items-center">
                   <Skull className="mr-3 h-6 w-6 text-red-400" />

@@ -111,7 +111,7 @@ export default function Profile() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
           Your Secret Profile
         </h1>
         <p className="text-xl text-muted-foreground">

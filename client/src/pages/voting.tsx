@@ -63,7 +63,7 @@ export default function Voting() {
     );
   }
 
-  const otherPlayers = players.filter((player: any) => player.id !== user?.id);
+  const otherPlayers = (players as any[]).filter((player: any) => player.id !== user?.id);
 
   return (
     <div className="space-y-8">
@@ -86,7 +86,7 @@ export default function Voting() {
             </Button>
           </Link>
           <Skull className="w-10 h-10 text-red-400 mr-4" />
-          <h1 className="font-serif text-4xl md:text-6xl font-bold bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+          <h1 className="font-serif text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
             Cast Your Suspicion
           </h1>
         </div>
