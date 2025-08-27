@@ -86,7 +86,7 @@ export default function Voting() {
             </Button>
           </Link>
           <Skull className="w-10 h-10 text-red-400 mr-4" />
-          <h1 className="text-4xl md:text-6xl font-bold neon-gradient-heading">
+          <h1 className="text-4xl md:text-6xl font-bold neon-gradient-title">
             Cast Your Suspicion
           </h1>
         </div>

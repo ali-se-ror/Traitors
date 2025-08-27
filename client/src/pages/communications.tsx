@@ -126,7 +126,7 @@ export default function Communications() {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <MessageCircle className="w-8 h-8 text-primary" />
-            <h1 className="text-3xl font-bold neon-gradient-heading">Shadow Communications</h1>
+            <h1 className="text-3xl font-bold neon-gradient-title">Shadow Communications</h1>
             <Skull className="w-8 h-8 text-destructive" />
           </div>
           <p className="text-soft-cream/80">Exchange whispers and secrets in the darkness...</p>
@@ -219,7 +219,7 @@ export default function Communications() {
                           key={emoji}
                           variant="ghost"
                           size="sm"
-                          className="text-lg hover:bg-amber-900/30"
+                          className="text-lg hover:bg-[#92b78c]/20"
                           onClick={() => insertEmoji(emoji)}
                           data-testid={`emoji-${emoji}`}
                         >
@@ -231,7 +231,7 @@ export default function Communications() {
                     <Button
                       onClick={() => sendPublicMutation.mutate(newMessage)}
                       disabled={!newMessage.trim() || sendPublicMutation.isPending}
-                      className="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold"
+                      className="w-full bg-accent hover:bg-accent/80 text-black font-semibold"
                       data-testid="button-send-public"
                     >
                       <Send className="w-4 h-4 mr-2" />
