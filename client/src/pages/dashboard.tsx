@@ -73,12 +73,14 @@ export default function Dashboard() {
     refetchInterval: 3000,
   });
 
-  // Simple notification count query
-  const { data: notificationData = { count: 0, hasMessages: false } } = useQuery<{ count: number; hasMessages: boolean }>({
-    queryKey: ["/api/messages/private/count"],
-    refetchInterval: 1000, // Check every second for quick notifications
+  // Get inbox data for notifications
+  const { data: inboxData = [] } = useQuery<{ senderId: string; senderUsername: string; lastMessage: string; unreadCount: number }[]>({
+    queryKey: ["/api/messages/inbox"],
+    refetchInterval: 2000,
     enabled: !!user,
   });
+
+  const totalUnreadCount = inboxData.reduce((sum, conv) => sum + conv.unreadCount, 0);
 
   // Keep original query for backward compatibility
   const { data: receivedPrivateMessages = [] } = useQuery<Message[]>({
@@ -229,48 +231,74 @@ export default function Dashboard() {
             <CardTitle className="text-2xl font-semibold flex items-center neon-gradient-title">
               <Ghost className="mr-3 h-6 w-6 text-red-400" />
               Secret Mailbox
-              {messageCount > 0 && (
+              {totalUnreadCount > 0 && (
                 <Badge variant="secondary" className="ml-2 bg-red-500/20 text-red-300 animate-pulse">
-                  {messageCount} New
+                  {totalUnreadCount} New
                 </Badge>
               )}
             </CardTitle>
             <CardDescription className="text-red-200/70">
-              {messageCount > 0 
-                ? `You have ${messageCount} secret message${messageCount > 1 ? 's' : ''} waiting in the shadows...`
+              {totalUnreadCount > 0 
+                ? `You have ${totalUnreadCount} secret message${totalUnreadCount > 1 ? 's' : ''} waiting in the shadows...`
                 : "Your secret messages will appear here when other players whisper to you..."
               }
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-red-500/20">
-              <div className="flex items-center gap-3">
-                {messageCount > 0 ? (
-                  <>
-                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <span className="text-red-300 font-medium">New messages await your attention</span>
-                  </>
-                ) : (
-                  <>
-                    <div className="w-3 h-3 bg-slate-500 rounded-full"></div>
-                    <span className="text-slate-400">No secret messages yet</span>
-                  </>
+            {totalUnreadCount === 0 ? (
+              <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-red-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-slate-500 rounded-full"></div>
+                  <span className="text-slate-400">No secret messages yet</span>
+                </div>
+                <Link to="/secret-messages">
+                  <Button 
+                    size="sm"
+                    className="bg-slate-600 hover:bg-slate-700 text-white"
+                    data-testid="button-check-secret-mailbox"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    Send Messages
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {inboxData.slice(0, 3).map((conversation) => (
+                  <div key={conversation.senderId} className="p-3 bg-slate-900/50 rounded-lg border border-red-500/20">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-red-300 font-medium">{conversation.senderUsername}</span>
+                          <Badge variant="secondary" className="bg-red-500/20 text-red-300 text-xs">
+                            {conversation.unreadCount} new
+                          </Badge>
+                        </div>
+                        <p className="text-slate-300 text-sm truncate">{conversation.lastMessage}</p>
+                      </div>
+                      <Link to={`/secret-messages?conversation=${conversation.senderId}`}>
+                        <Button
+                          size="sm"
+                          className="bg-red-600 hover:bg-red-700 text-white animate-pulse ml-3"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          Read
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+                {inboxData.length > 3 && (
+                  <div className="text-center pt-2">
+                    <Link to="/secret-messages">
+                      <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300">
+                        View all conversations →
+                      </Button>
+                    </Link>
+                  </div>
                 )}
               </div>
-              <Link to="/secret-messages">
-                <Button 
-                  size="sm"
-                  className={messageCount > 0 
-                    ? "bg-red-600 hover:bg-red-700 text-white animate-pulse" 
-                    : "bg-slate-600 hover:bg-slate-700 text-white"
-                  }
-                  data-testid="button-check-secret-mailbox"
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  Check Mailbox
-                </Button>
-              </Link>
-            </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>

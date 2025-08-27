@@ -43,6 +43,15 @@ export default function SecretMessages() {
   const [selectedConversation, setSelectedConversation] = useState("");
   const [pendingMedia, setPendingMedia] = useState<{ url: string; type: string } | null>(null);
 
+  // Check URL parameters for auto-selecting conversation
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const conversationId = urlParams.get('conversation');
+    if (conversationId) {
+      setSelectedConversation(conversationId);
+    }
+  }, []);
+
   // Get notification count for this page
   const { data: notificationData = { count: 0, hasMessages: false } } = useQuery<{ count: number; hasMessages: boolean }>({
     queryKey: ["/api/messages/private/count"],
