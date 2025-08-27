@@ -7,6 +7,13 @@ import session from "express-session";
 import MemoryStore from "memorystore";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
+// Extend session type to include userId
+declare module "express-session" {
+  interface SessionData {
+    userId: string;
+  }
+}
+
 const MemoryStoreSession = MemoryStore(session);
 
 // Spooky symbols for player avatars
@@ -19,6 +26,55 @@ const SPOOKY_SYMBOLS = [
 
 function getRandomSpookySymbol(): string {
   return SPOOKY_SYMBOLS[Math.floor(Math.random() * SPOOKY_SYMBOLS.length)];
+}
+
+// Profile image paths - These should match the ones imported in client
+const PROFILE_IMAGE_PATHS = [
+  '/assets/profile-images/avatar1.png',
+  '/assets/profile-images/avatar2.png',
+  '/assets/profile-images/avatar3.png',
+  '/assets/profile-images/avatar4.png',
+  '/assets/profile-images/avatar5.png',
+  '/assets/profile-images/avatar6.png',
+  '/assets/profile-images/avatar7.png',
+  '/assets/profile-images/avatar8.png',
+  '/assets/profile-images/avatar9.png',
+  '/assets/profile-images/avatar10.png',
+  '/assets/profile-images/avatar11.png',
+  '/assets/profile-images/avatar12.png',
+  '/assets/profile-images/avatar13.png',
+  '/assets/profile-images/avatar14.png',
+  '/assets/profile-images/avatar15.png',
+  '/assets/profile-images/avatar16.png',
+  '/assets/profile-images/avatar17.png',
+  '/assets/profile-images/avatar18.png',
+  '/assets/profile-images/avatar19.png',
+  '/assets/profile-images/avatar20.png',
+  '/assets/profile-images/avatar21.png',
+  '/assets/profile-images/avatar22.png',
+  '/assets/profile-images/avatar23.png',
+  '/assets/profile-images/avatar24.png',
+  '/assets/profile-images/avatar25.png',
+  '/assets/profile-images/avatar26.png',
+  '/assets/profile-images/avatar27.png',
+  '/assets/profile-images/avatar28.png',
+];
+
+function getProfileImageForUser(userId: string): string | null {
+  if (PROFILE_IMAGE_PATHS.length === 0) {
+    return null;
+  }
+  
+  // Create a simple hash from the user ID for deterministic selection
+  let hash = 0;
+  for (let i = 0; i < userId.length; i++) {
+    const char = userId.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  
+  const index = Math.abs(hash) % PROFILE_IMAGE_PATHS.length;
+  return PROFILE_IMAGE_PATHS[index];
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -62,8 +118,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate random spooky symbol
       const symbol = getRandomSpookySymbol();
       
-      // Create user with optional profile image (will be added after you upload images)
-      const user = await storage.createUser({ username, codewordHash, symbol });
+      // Generate deterministic profile image
+      const profileImage = getProfileImageForUser(username);
+      
+      // Create user with profile image
+      const user = await storage.createUser({ username, codewordHash, symbol, profileImage });
       
       // Set session
       req.session.userId = user.id;

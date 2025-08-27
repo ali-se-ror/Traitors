@@ -18,10 +18,10 @@ export interface IStorage {
 
   // Message operations
   createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number }): Promise<Message>;
-  getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]>;
-  getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]>;
-  getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]>;
-  getPrivateMessagesForUser(userId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]>;
+  getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
+  getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
+  getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]>;
+  getPrivateMessagesForUser(userId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
   
   // Announcement operations
   createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement>;
@@ -51,7 +51,7 @@ export class MemStorage implements IStorage {
     );
   }
 
-  async createUser(user: { username: string; codewordHash: string; symbol: string; profileImage?: string; isGameMaster?: number }): Promise<User> {
+  async createUser(user: { username: string; codewordHash: string; symbol: string; profileImage?: string | null; isGameMaster?: number }): Promise<User> {
     const id = randomUUID();
     const newUser: User = {
       id,
@@ -135,7 +135,7 @@ export class MemStorage implements IStorage {
     return newMessage;
   }
 
-  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; content: string; mediaUrl: string | null; mediaType: string | null; createdAt: Date }[]> {
+  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
     const publicMessages = Array.from(this.messages.values())
       .filter(msg => !msg.isPrivate)
       .sort((a, b) => a.createdAt!.getTime() - b.createdAt!.getTime());
@@ -146,15 +146,14 @@ export class MemStorage implements IStorage {
         id: msg.id,
         senderId: msg.senderId,
         senderUsername: sender?.username || 'Unknown',
+        senderProfileImage: sender?.profileImage || null,
         content: msg.content,
-        mediaUrl: msg.mediaUrl,
-        mediaType: msg.mediaType,
         createdAt: msg.createdAt!,
       };
     });
   }
 
-  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; mediaUrl: string | null; mediaType: string | null; createdAt: Date }[]> {
+  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
     const privateMessages = Array.from(this.messages.values())
       .filter(msg => 
         msg.isPrivate && 
@@ -169,15 +168,14 @@ export class MemStorage implements IStorage {
         id: msg.id,
         senderId: msg.senderId,
         senderUsername: sender?.username || 'Unknown',
+        senderProfileImage: sender?.profileImage || null,
         content: msg.content,
-        mediaUrl: msg.mediaUrl,
-        mediaType: msg.mediaType,
         createdAt: msg.createdAt!,
       };
     });
   }
 
-  async getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]> {
+  async getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]> {
     const privateMessages = Array.from(this.messages.values())
       .filter(msg => msg.isPrivate && msg.receiverId)
       .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
@@ -189,6 +187,7 @@ export class MemStorage implements IStorage {
         id: msg.id,
         senderId: msg.senderId,
         senderUsername: sender?.username || 'Unknown',
+        senderProfileImage: sender?.profileImage || null,
         receiverId: msg.receiverId!,
         receiverUsername: receiver?.username || 'Unknown',
         content: msg.content,
@@ -197,7 +196,7 @@ export class MemStorage implements IStorage {
     });
   }
 
-  async getPrivateMessagesForUser(userId: string): Promise<{ id: string; senderId: string; senderUsername: string; content: string; createdAt: Date }[]> {
+  async getPrivateMessagesForUser(userId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
     const privateMessages = Array.from(this.messages.values())
       .filter(msg => msg.isPrivate && msg.receiverId === userId)
       .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
@@ -208,6 +207,7 @@ export class MemStorage implements IStorage {
         id: msg.id,
         senderId: msg.senderId,
         senderUsername: sender?.username || 'Unknown',
+        senderProfileImage: sender?.profileImage || null,
         content: msg.content,
         createdAt: msg.createdAt!,
       };
@@ -221,6 +221,8 @@ export class MemStorage implements IStorage {
       gameMasterId: announcement.gameMasterId,
       title: announcement.title,
       content: announcement.content,
+      mediaUrl: null,
+      mediaType: null,
       createdAt: new Date(),
     };
     this.announcements.set(id, newAnnouncement);

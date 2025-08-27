@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { Link } from "wouter";
@@ -23,7 +23,7 @@ export default function Voting() {
   });
 
   const voteMutation = useMutation({
-    mutationFn: (suspectedId: string) => apiClient.post("/api/votes", { suspectedId }),
+    mutationFn: (suspectedId: string) => apiRequest("POST", "/api/votes", { suspectedId }),
     onSuccess: (_, suspectedId) => {
       setVotedFor(suspectedId);
       queryClient.invalidateQueries({ queryKey: ["/api/votes"] });

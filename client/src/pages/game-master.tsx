@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Crown, Users, MessageCircle, Eye, BarChart3, Shield, Skull, Swords } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { apiClient } from "@/lib/api";
-import { queryClient } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 
@@ -34,6 +33,7 @@ interface Message {
   id: string;
   senderId: string;
   senderUsername: string;
+  senderProfileImage?: string | null;
   content: string;
   createdAt: string;
 }
@@ -42,6 +42,7 @@ interface PrivateMessage {
   id: string;
   senderId: string;
   senderUsername: string;
+  senderProfileImage?: string | null;
   receiverId: string;
   receiverUsername: string;
   content: string;
@@ -93,7 +94,7 @@ export default function GameMaster() {
   });
 
   const createAnnouncementMutation = useMutation({
-    mutationFn: (data: { title: string; content: string }) => apiClient.post("/api/announcements", data),
+    mutationFn: (data: { title: string; content: string }) => apiRequest("POST", "/api/announcements", data),
     onSuccess: () => {
       setAnnouncementTitle("");
       setAnnouncementContent("");

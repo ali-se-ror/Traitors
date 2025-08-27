@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
 import { Users, Activity, Gamepad2, Clock, MessageCircle, User, BarChart3, LogOut, Send, Ghost, Skull, Crown, Eye, X, Upload, Image, Video, Paperclip, Info } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,6 +29,7 @@ interface Message {
   id: string;
   senderId: string;
   senderUsername: string;
+  senderProfileImage?: string | null;
   content: string;
   createdAt: string;
   isPrivate?: boolean;
@@ -401,6 +403,14 @@ export default function Dashboard() {
                         }`}
                       >
                         <div className="flex items-center gap-2 mb-1">
+                          <Avatar className="w-6 h-6 border border-purple-400/30">
+                            {msg.senderProfileImage && (
+                              <AvatarImage src={msg.senderProfileImage} alt={`${msg.senderUsername}'s avatar`} />
+                            )}
+                            <AvatarFallback className="bg-purple-800 text-xs">
+                              {players.find(p => p.id === msg.senderId)?.symbol || msg.senderUsername.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
                           <span className="text-purple-300 font-medium text-xs">
                             {msg.senderUsername}
                           </span>

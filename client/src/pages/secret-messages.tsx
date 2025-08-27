@@ -24,6 +24,7 @@ interface Message {
   id: string;
   senderId: string;
   senderUsername: string;
+  senderProfileImage?: string | null;
   content: string;
   createdAt: string;
   receiverId?: string;
@@ -146,9 +147,14 @@ export default function SecretMessages() {
                         <Card className="card-medieval hover:border-red-400/50 transition-colors h-full">
                           <CardContent className="p-6">
                             <div className="text-center">
-                              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full flex items-center justify-center text-3xl border-2 border-slate-600 group-hover:border-red-400/50 transition-colors">
-                                {playerSymbol}
-                              </div>
+                              <Avatar className="w-20 h-20 mx-auto mb-4 border-2 border-slate-600 group-hover:border-red-400/50 transition-colors">
+                                {player.profileImage && (
+                                  <AvatarImage src={player.profileImage} alt={`${player.username}'s avatar`} />
+                                )}
+                                <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-3xl">
+                                  {player.symbol || playerSymbol}
+                                </AvatarFallback>
+                              </Avatar>
                               <h3 className="font-semibold text-white mb-2 group-hover:text-red-300 transition-colors text-lg">
                                 {player.username}
                               </h3>
@@ -194,13 +200,23 @@ export default function SecretMessages() {
                   </Button>
                   
                   <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full flex items-center justify-center text-2xl border-2 border-slate-600">
-                      {(() => {
-                        const spookySymbols = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️", "🏴‍☠️", "🦹", "🎭", "🔥"];
-                        const symbolIndex = selectedConversation.charCodeAt(0) % spookySymbols.length;
-                        return spookySymbols[symbolIndex];
-                      })()}
-                    </div>
+                    {(() => {
+                      const targetPlayer = players.find(p => p.id === selectedConversation);
+                      const spookySymbols = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️", "🏴‍☠️", "🦹", "🎭", "🔥"];
+                      const symbolIndex = selectedConversation.charCodeAt(0) % spookySymbols.length;
+                      const playerSymbol = spookySymbols[symbolIndex];
+                      
+                      return (
+                        <Avatar className="w-16 h-16 mx-auto mb-3 border-2 border-slate-600">
+                          {targetPlayer?.profileImage && (
+                            <AvatarImage src={targetPlayer.profileImage} alt={`${targetPlayer.username}'s avatar`} />
+                          )}
+                          <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-2xl">
+                            {targetPlayer?.symbol || playerSymbol}
+                          </AvatarFallback>
+                        </Avatar>
+                      );
+                    })()}
                     <h3 className="font-semibold text-white mb-1">
                       {players.find(p => p.id === selectedConversation)?.username || 'Unknown'}
                     </h3>
@@ -241,6 +257,14 @@ export default function SecretMessages() {
                             }`}
                           >
                             <div className="flex items-center gap-2 mb-1">
+                              <Avatar className="w-6 h-6 border border-red-400/30">
+                                {msg.senderProfileImage && (
+                                  <AvatarImage src={msg.senderProfileImage} alt={`${msg.senderUsername}'s avatar`} />
+                                )}
+                                <AvatarFallback className="bg-red-800 text-xs">
+                                  {msg.senderId === user?.id ? '👤' : (players.find(p => p.id === msg.senderId)?.symbol || msg.senderUsername.slice(0, 2).toUpperCase())}
+                                </AvatarFallback>
+                              </Avatar>
                               <span className="text-red-300 font-medium text-xs">
                                 {msg.senderId === user?.id ? 'You' : msg.senderUsername}
                               </span>
