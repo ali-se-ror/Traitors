@@ -3,11 +3,12 @@
 **The Traitors** is a comprehensive full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, communicate through public/private messaging, and view real-time suspicion metrics. The application features a React frontend with a dark medieval-themed UI design system and an Express backend with in-memory storage.
 
 ## Recent Changes (January 27, 2025)
+- ✅ **Clean 80's Halloween Typography**: Implemented cohesive font system using Bebas Neue (capsule-shaped headers), Righteous (smooth retro script), Press Start 2P (VCR/tech), and Monoton (glow effects) for authentic retro feel without being over the top
 - ✅ **Harmonious Neon Color System**: Researched and implemented synthwave-inspired color palette with Electric Purple (#8a2be2), Hot Magenta (#ff1493), and Neon Orange (#ff4500) - removed cyan for better color harmony
-- ✅ **Consistent Gradient Typography**: All headings now use Inter font with matching purple-to-magenta gradients for visual consistency
+- ✅ **Consistent Gradient Typography**: All headings use matching purple-to-magenta gradients with proper letter-spacing for visual consistency
 - ✅ **Profile Image System**: Fixed PNG avatar system - users now get assigned real uploaded Halloween profile images instead of emoji symbols
 - ✅ **Unified Visual Language**: Standardized all neon effects and glow styles across the entire application
-- ✅ **Simplified Card Design**: Midnight black backgrounds with consistent gradient titles
+- ✅ **Simplified Card Design**: Midnight black backgrounds with consistent gradient titles using clean retro fonts
 - ✅ **Enhanced Button Styling**: Primary buttons in Neon Orange, secondary actions in Hot Magenta, special effects in Electric Purple
 - ✅ **Complete Communications Hub**: Full-featured "Whispers in the Dark" section with tabbed interface (Public Board, Private Messages, Announcements) and live updates
 - ✅ **Game Master Dashboard**: Comprehensive admin interface with voting analytics, message monitoring, and announcement broadcasting  
