@@ -319,6 +319,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all votes
+  app.get("/api/votes", requireAuth, async (req, res) => {
+    try {
+      const votes = await storage.getAllVotes();
+      res.json(votes);
+    } catch (error) {
+      console.error("Get votes error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Get suspicion meter (vote counts)
   app.get("/api/suspicion", requireAuth, async (req, res) => {
     try {

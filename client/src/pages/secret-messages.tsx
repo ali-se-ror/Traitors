@@ -116,7 +116,7 @@ export default function SecretMessages() {
           className="mb-8"
         >
           <div className="flex items-center gap-4 mb-4">
-            <Link href="/">
+            <Link to="/">
               <Button variant="outline" size="sm" className="border-slate-600 hover:bg-slate-700">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
@@ -184,9 +184,10 @@ export default function SecretMessages() {
                           <CardContent className="p-6">
                             <div className="text-center">
                               <Avatar className="w-20 h-20 mx-auto mb-4 border-2 border-slate-600 group-hover:border-red-400/50 transition-colors">
-                                {player.profileImage && resolveProfileImage(player.profileImage) && (
-                                  <AvatarImage src={resolveProfileImage(player.profileImage)!} alt={`${player.username}'s avatar`} />
-                                )}
+                                <AvatarImage 
+                                  src={resolveProfileImage(player.profileImage)} 
+                                  alt={`${player.username}'s avatar`} 
+                                />
                                 <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-3xl">
                                   {player.symbol || playerSymbol}
                                 </AvatarFallback>
@@ -244,9 +245,10 @@ export default function SecretMessages() {
                       
                       return (
                         <Avatar className="w-16 h-16 mx-auto mb-3 border-2 border-slate-600">
-                          {targetPlayer?.profileImage && (
-                            <AvatarImage src={targetPlayer.profileImage} alt={`${targetPlayer.username}'s avatar`} />
-                          )}
+                          <AvatarImage 
+                            src={resolveProfileImage(targetPlayer?.profileImage)} 
+                            alt={`${targetPlayer?.username}'s avatar`} 
+                          />
                           <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-2xl">
                             {targetPlayer?.symbol || playerSymbol}
                           </AvatarFallback>
@@ -294,11 +296,12 @@ export default function SecretMessages() {
                           >
                             <div className="flex items-center gap-2 mb-1">
                               <Avatar className="w-6 h-6 border border-red-400/30">
-                                {msg.senderProfileImage && (
-                                  <AvatarImage src={msg.senderProfileImage} alt={`${msg.senderUsername}'s avatar`} />
-                                )}
+                                <AvatarImage 
+                                  src={resolveProfileImage(msg.senderProfileImage)} 
+                                  alt={`${msg.senderUsername}'s avatar`} 
+                                />
                                 <AvatarFallback className="bg-red-800 text-xs">
-                                  {msg.senderId === user?.id ? '👤' : (players.find(p => p.id === msg.senderId)?.symbol || msg.senderUsername.slice(0, 2).toUpperCase())}
+                                  {msg.senderId === user?.id ? user?.symbol : (players.find(p => p.id === msg.senderId)?.symbol || msg.senderUsername.slice(0, 2).toUpperCase())}
                                 </AvatarFallback>
                               </Avatar>
                               <span className="text-red-300 font-medium text-xs">
