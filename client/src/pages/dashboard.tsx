@@ -96,7 +96,7 @@ export default function Dashboard() {
 
   const currentVote = (authData as any)?.user?.currentVote || (authData as any)?.currentVote;
   const activePlayersCount = players.length;
-  const votedPlayersCount = currentVote ? 1 : 0; // This would be improved with real vote counting
+  const votedPlayersCount = currentVote ? 1 : ""; // Prevent showing 0
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
@@ -369,7 +369,7 @@ export default function Dashboard() {
           <CardContent>
             <div className="flex justify-between items-center mb-4">
               <div className="text-lg font-medium text-white">Public Board</div>
-              <Link href="/secret-messages">
+              <Link to="/secret-messages">
                 <Button 
                   variant="outline" 
                   size="sm"
@@ -377,9 +377,9 @@ export default function Dashboard() {
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Secret Messages
-                  {receivedPrivateMessages.length > 0 && (
+                  {totalUnreadCount > 0 && (
                     <Badge variant="secondary" className="ml-2 text-xs bg-red-600/80">
-                      {receivedPrivateMessages.length}
+                      {totalUnreadCount}
                     </Badge>
                   )}
                 </Button>
@@ -635,7 +635,7 @@ export default function Dashboard() {
                     <p>• Voting helps identify potential traitors</p>
                   </div>
                 </div>
-                <Link href="/voting">
+                <Link to="/voting">
                   <motion.div
                     whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(220, 38, 38, 0.5)" }}
                     whileTap={{ scale: 0.98 }}

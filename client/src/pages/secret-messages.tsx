@@ -68,6 +68,15 @@ export default function SecretMessages() {
   // Fetch conversation with selected user
   const { data: conversationMessages = [] } = useQuery<Message[]>({
     queryKey: ["/api/messages/private", selectedConversation],
+    queryFn: async () => {
+      const response = await fetch(`/api/messages/private/${selectedConversation}`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch messages');
+      }
+      return response.json();
+    },
     refetchInterval: 3000,
     enabled: !!selectedConversation,
   });
