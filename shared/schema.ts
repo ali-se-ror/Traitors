@@ -55,7 +55,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 });
 
 export const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters").max(18, "Username must be at most 18 characters"),
+  username: z.string().min(3, "Name must be at least 3 characters").max(18, "Name must be at most 18 characters"),
   codeword: z.string().min(4, "Code word must be at least 4 characters").max(32, "Code word must be at most 32 characters"),
 });
 

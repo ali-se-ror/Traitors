@@ -38,7 +38,7 @@ export default function Profile() {
     queryKey: ["/api/auth/me"],
   });
 
-  const currentVote = authData?.currentVote;
+  const currentVote = (authData as any)?.currentVote;
 
   const changeCodewordForm = useForm<ChangeCodewordForm>({
     resolver: zodResolver(changeCodewordSchema),
@@ -151,10 +151,10 @@ export default function Profile() {
                       <CardContent className="p-6">
                         <Label className="flex items-center text-muted-foreground mb-2 uppercase tracking-wide">
                           <User className="mr-2 h-4 w-4" />
-                          Alias
+                          Name
                         </Label>
                         <p className="text-foreground font-mono text-lg" data-testid="text-alias">
-                          @{user?.username}
+                          {user?.username}
                         </p>
                       </CardContent>
                     </Card>

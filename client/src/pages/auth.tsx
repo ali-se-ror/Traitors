@@ -163,12 +163,12 @@ export default function Auth() {
                           <FormItem>
                             <FormLabel className="flex items-center text-muted-foreground uppercase tracking-wide">
                               <VenetianMask className="mr-2 h-4 w-4" />
-                              Choose Your Alias
+                              Enter Your Name
                             </FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
-                                placeholder="e.g., MoonRaven, ShadowWhisper"
+                                placeholder="e.g., Sarah, Michael, Alex"
                                 className="bg-input border-border focus:border-primary focus:ring-primary/20"
                                 data-testid="input-register-username"
                               />
@@ -272,12 +272,12 @@ export default function Auth() {
                           <FormItem>
                             <FormLabel className="flex items-center text-muted-foreground uppercase tracking-wide">
                               <VenetianMask className="mr-2 h-4 w-4" />
-                              Your Alias
+                              Your Name
                             </FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
-                                placeholder="Enter your chosen name"
+                                placeholder="Enter your name"
                                 className="bg-input border-border focus:border-secondary focus:ring-secondary/20"
                                 data-testid="input-login-username"
                               />

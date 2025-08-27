@@ -11,7 +11,7 @@ import { login, register } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { UserPlus, LogIn, VenetianMask, Key, DoorOpen, DoorClosed, AlertTriangle } from "lucide-react";
-import type { LoginData, RegisterData } from "@shared/schema";
+import type { z } from "zod";
 
 interface AuthFormProps {
   type: "login" | "register";
@@ -24,7 +24,7 @@ export default function AuthForm({ type }: AuthFormProps) {
   const isRegister = type === "register";
   const schema = isRegister ? registerSchema : loginSchema;
   
-  const form = useForm<LoginData | RegisterData>({
+  const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       username: "",
@@ -34,12 +34,12 @@ export default function AuthForm({ type }: AuthFormProps) {
 
   const mutation = useMutation({
     mutationFn: isRegister 
-      ? (data: RegisterData) => register(data)
-      : (data: LoginData) => login(data),
+      ? (data: z.infer<typeof registerSchema>) => register(data)
+      : (data: z.infer<typeof loginSchema>) => login(data),
     onSuccess: (data) => {
       toast({
-        title: isRegister ? "Account created" : "Welcome back",
-        description: `Welcome ${data.user.username}! Entering the shadows...`,
+        title: isRegister ? "Account created" : "Welcome back", 
+        description: "Entering the shadows...",
       });
       navigate("/dashboard");
     },
@@ -52,7 +52,7 @@ export default function AuthForm({ type }: AuthFormProps) {
     },
   });
 
-  const onSubmit = (data: LoginData | RegisterData) => {
+  const onSubmit = (data: z.infer<typeof schema>) => {
     mutation.mutate(data);
   };
 
@@ -101,12 +101,12 @@ export default function AuthForm({ type }: AuthFormProps) {
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-mist uppercase tracking-wide flex items-center">
                       <VenetianMask className="mr-2 h-4 w-4" />
-                      {isRegister ? "Choose Your Alias" : "Your Alias"}
+                      {isRegister ? "Enter Your Name" : "Your Name"}
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder={isRegister ? "e.g., MoonRaven, ShadowWhisper" : "Enter your chosen name"}
+                        placeholder={isRegister ? "e.g., Sarah, Michael, Alex" : "Enter your name"}
                         className="bg-obsidian border-shadow text-white placeholder-mist focus:border-primary focus:ring-primary/20"
                         data-testid="input-username"
                       />
