@@ -22,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen atmospheric-bg retro-grid vhs-texture">
+    <div className="min-h-screen atmospheric-bg">
       {/* Floating Particles Background */}
       <div className="floating-particles">
         <div className="particle w-2 h-2 animate-float" style={{ left: "10%", animationDelay: "0s", animationDuration: "6s" }}></div>

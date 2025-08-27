@@ -90,7 +90,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen atmospheric-bg retro-grid vhs-texture relative">
+    <div className="min-h-screen atmospheric-bg relative">
       {/* Floating Particles Background */}
       <div className="floating-particles">
         <div className="particle w-2 h-2 animate-float" style={{ left: "10%", animationDelay: "0s", animationDuration: "6s" }}></div>
@@ -150,7 +150,7 @@ export default function Auth() {
                   >
                     <UserPlus className="text-primary text-4xl animate-glow" />
                   </motion.div>
-                  <CardTitle className="text-2xl font-semibold text-foreground chrome-text gothic-text">Join the Shadows</CardTitle>
+                  <CardTitle className="text-2xl font-semibold retro-heading">Join the Shadows</CardTitle>
                   <CardDescription className="text-muted-foreground">Create your mysterious identity</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -259,7 +259,7 @@ export default function Auth() {
                   >
                     <LogIn className="text-secondary text-4xl" />
                   </motion.div>
-                  <CardTitle className="text-2xl font-semibold text-foreground chrome-text gothic-text">Return to Shadows</CardTitle>
+                  <CardTitle className="text-2xl font-semibold retro-heading">Return to Shadows</CardTitle>
                   <CardDescription className="text-muted-foreground">Welcome back, traitor</CardDescription>
                 </CardHeader>
                 <CardContent>

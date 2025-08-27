@@ -284,7 +284,7 @@ export default function Dashboard() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="retro-text gothic-text text-4xl md:text-6xl font-bold mb-4">
+        <h1 className="retro-text text-4xl md:text-6xl font-bold mb-4">
           Welcome, <span className="text-primary neon-glow">{user?.username}</span>
         </h1>
         <p className="text-xl text-muted-foreground">
@@ -301,7 +301,7 @@ export default function Dashboard() {
       >
         <Card className="retro-card border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-amber-300 flex items-center chrome-text gothic-text">
+            <CardTitle className="text-2xl font-semibold flex items-center retro-card-title accent-teal">
               <Crown className="mr-3 h-6 w-6 text-amber-400" />
               Game Master Announcements
               {announcements.length > 0 && (
@@ -621,8 +621,8 @@ export default function Dashboard() {
           >
             <Card className="retro-card">
               <CardHeader>
-                <CardTitle className="font-semibold text-foreground flex items-center chrome-text gothic-text">
-                  <Gamepad2 className="mr-3 h-5 w-5 text-primary neon-glow" />
+                <CardTitle className="font-semibold flex items-center retro-card-title">
+                  <Gamepad2 className="mr-3 h-5 w-5 text-primary" />
                   Game Status
                 </CardTitle>
               </CardHeader>
@@ -653,8 +653,8 @@ export default function Dashboard() {
           >
             <Card className="retro-card">
               <CardHeader>
-                <CardTitle className="font-semibold text-foreground flex items-center chrome-text gothic-text">
-                  <Clock className="mr-3 h-5 w-5 text-secondary neon-glow" />
+                <CardTitle className="font-semibold flex items-center retro-card-title">
+                  <Clock className="mr-3 h-5 w-5 text-secondary" />
                   Recent Activity
                 </CardTitle>
               </CardHeader>
@@ -700,8 +700,8 @@ export default function Dashboard() {
           >
             <Card className="retro-card">
               <CardHeader>
-                <CardTitle className="font-semibold text-foreground flex items-center chrome-text gothic-text">
-                  <Activity className="mr-3 h-5 w-5 text-emerald-400 neon-glow" />
+                <CardTitle className="font-semibold flex items-center retro-card-title">
+                  <Activity className="mr-3 h-5 w-5 accent-teal" />
                   Navigate
                 </CardTitle>
               </CardHeader>

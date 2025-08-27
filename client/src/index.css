@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Bungee:wght@400&family=Nosifer:wght@400&family=Creepster:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,8 +41,6 @@
   --font-serif: 'Cinzel', serif;
   --font-mono: 'JetBrains Mono', monospace;
   --font-retro: 'Orbitron', monospace;
-  --font-horror: 'Nosifer', cursive;
-  --font-gothic: 'Creepster', cursive;
   --radius: 1rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(0, 0%, 0% / 0.05);
   --shadow-xs: 0px 2px 0px 0px hsl(0, 0%, 0% / 0.05);
@@ -55,48 +53,40 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   
-  /* 80s Horror Fantasy Colors - Boris Vallejo/Frazetta inspired */
-  --blood-crimson: hsl(0, 85%, 45%);         /* Deep blood red */
-  --electric-blue: hsl(220, 100%, 60%);      /* Hellraiser blue */
-  --phantom-violet: hsl(270, 70%, 35%);      /* Deep gothic purple */
-  --demon-amber: hsl(35, 90%, 55%);          /* Glowing amber */
-  --mist-gray: hsl(240, 5%, 25%);            /* Foggy gray */
-  --shadow-black: hsl(0, 0%, 8%);            /* Deeper black */
-  --bone-white: hsl(45, 15%, 85%);           /* Aged bone */
-  --copper-rust: hsl(15, 60%, 45%);          /* Oxidized copper */
+  /* Base Retro Halloween Colors */
+  --pumpkin-orange: #ef4523;        /* Primary buttons, highlights, key accents */
+  --witch-green: #089976;           /* Links, secondary accents, hover states */
+  --midnight-black: #000000;        /* Page background, card backgrounds */
+  --parchment-beige: #e2e1d5;       /* Main text, borders, dividers */
   
-  /* Legacy Retro Colors */
-  --retro-neon-yellow: hsl(60, 100%, 67%);   /* Neon Yellow */
-  --retro-hot-pink: hsl(343, 100%, 65%);     /* Hot Pink */
-  --retro-teal: hsl(192, 78%, 44%);          /* Teal Blue */
-  --retro-acid-purple: hsl(275, 68%, 54%);   /* Acid Purple */
-  --pumpkin-orange: hsl(14, 91%, 54%);       /* Pumpkin Orange */
-  --witch-green: hsl(158, 91%, 30%);         /* Witch Green */
-  --midnight-black: hsl(0, 0%, 0%);          /* Midnight Black */
-  --parchment-beige: hsl(48, 20%, 87%);      /* Parchment Beige */
+  /* Complimentary Retro Flashy Colors */
+  --acid-purple: #a13fd3;           /* Headings, special buttons, hover glows */
+  --neon-yellow: #f6f65f;           /* Badges, warning highlights, retro flash */
+  --hot-pink: #ff4f9a;              /* Secondary buttons, playful highlights */
+  --teal-blue: #1ca9c9;             /* Navigation, banners, subtle contrasts */
 }
 
 .dark {
-  /* Dark mode uses same retro Halloween theme */
-  --background: hsl(0, 0%, 0%);              /* Midnight Black */
-  --foreground: hsl(48, 20%, 87%);           /* Parchment Beige */
-  --card: hsl(0, 0%, 0%);                    /* Midnight Black */
-  --card-foreground: hsl(48, 20%, 87%);      /* Parchment Beige */
-  --popover: hsl(0, 0%, 0%);                 /* Midnight Black */
-  --popover-foreground: hsl(48, 20%, 87%);   /* Parchment Beige */
-  --primary: hsl(14, 91%, 54%);              /* Pumpkin Orange */
-  --primary-foreground: hsl(0, 0%, 0%);      /* Black text */
-  --secondary: hsl(158, 91%, 30%);           /* Witch Green */
-  --secondary-foreground: hsl(48, 20%, 87%); /* Parchment Beige */
-  --muted: hsl(0, 0%, 10%);                  /* Dark variant */
-  --muted-foreground: hsl(48, 15%, 65%);     /* Muted parchment */
-  --accent: hsl(275, 68%, 54%);              /* Acid Purple */
-  --accent-foreground: hsl(48, 20%, 87%);    /* Parchment Beige */
-  --destructive: hsl(343, 81%, 65%);         /* Hot Pink */
-  --destructive-foreground: hsl(0, 0%, 0%);  /* Black text */
-  --border: hsl(48, 20%, 20%);               /* Darker parchment borders */
-  --input: hsl(0, 0%, 5%);                   /* Slightly lighter black */
-  --ring: hsl(14, 91%, 54%);                 /* Pumpkin Orange ring */
+  /* Minimalist retro theme */
+  --background: var(--midnight-black);       /* Midnight Black */
+  --foreground: var(--parchment-beige);      /* Parchment Beige */
+  --card: var(--midnight-black);             /* Midnight Black */
+  --card-foreground: var(--parchment-beige); /* Parchment Beige */
+  --popover: var(--midnight-black);          /* Midnight Black */
+  --popover-foreground: var(--parchment-beige); /* Parchment Beige */
+  --primary: var(--pumpkin-orange);          /* Pumpkin Orange */
+  --primary-foreground: var(--midnight-black); /* Black text */
+  --secondary: var(--witch-green);           /* Witch Green */
+  --secondary-foreground: var(--parchment-beige); /* Parchment Beige */
+  --muted: #1a1a1a;                          /* Subtle dark variant */
+  --muted-foreground: #b8b7aa;               /* Muted parchment */
+  --accent: var(--acid-purple);              /* Acid Purple */
+  --accent-foreground: var(--parchment-beige); /* Parchment Beige */
+  --destructive: var(--hot-pink);            /* Hot Pink */
+  --destructive-foreground: var(--midnight-black); /* Black text */
+  --border: #333333;                         /* Subtle borders */
+  --input: #1a1a1a;                          /* Slightly lighter black */
+  --ring: var(--pumpkin-orange);             /* Pumpkin Orange ring */
 }
 
 @layer base {
@@ -106,12 +96,7 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    background: linear-gradient(135deg, 
-      var(--midnight-black) 0%, 
-      hsl(14, 30%, 5%) 30%, 
-      var(--midnight-black) 60%, 
-      hsl(275, 30%, 5%) 100%
-    );
+    background: var(--midnight-black);
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
@@ -135,45 +120,11 @@
 
 @layer components {
   .atmospheric-bg {
-    background: linear-gradient(135deg, 
-      var(--midnight-black) 0%, 
-      var(--shadow-black) 25%, 
-      var(--midnight-black) 50%, 
-      var(--mist-gray) 75%, 
-      var(--midnight-black) 100%
-    );
+    background: var(--midnight-black);
     position: relative;
-    overflow: hidden;
   }
 
-  .atmospheric-bg::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 15% 15%, var(--blood-crimson) 0%, transparent 50%),
-      radial-gradient(circle at 85% 25%, var(--electric-blue) 0%, transparent 60%),
-      radial-gradient(circle at 50% 85%, var(--phantom-violet) 0%, transparent 70%),
-      linear-gradient(45deg, transparent 40%, rgba(220, 100, 60, 0.05) 50%, transparent 60%);
-    animation: horror-atmosphere 15s ease-in-out infinite alternate;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.08;
-  }
 
-  @keyframes horror-atmosphere {
-    0% { 
-      opacity: 0.06;
-      transform: scale(1) rotate(0deg);
-    }
-    100% { 
-      opacity: 0.1;
-      transform: scale(1.02) rotate(0.5deg);
-    }
-  }
 
   .card-medieval {
     background: linear-gradient(145deg, var(--midnight-black) 0%, hsl(14, 30%, 3%) 100%);
@@ -226,42 +177,17 @@
     box-shadow: 0 0 10px currentColor;
   }
 
-  /* 80s Horror Fantasy Effects - Hellraiser/Heavy Metal aesthetic */
+  /* Clean retro styling */
   .retro-text {
-    font-family: var(--font-horror);
-    text-shadow: 
-      0 0 4px var(--blood-crimson),
-      0 0 8px var(--electric-blue),
-      3px 3px 0px var(--shadow-black),
-      0 0 12px var(--phantom-violet);
-    animation: hellraiser-glow 6s ease-in-out infinite alternate;
-    filter: contrast(1.2);
+    font-family: var(--font-retro);
+    color: var(--acid-purple);
+    text-shadow: 0 0 8px var(--acid-purple);
   }
 
-  @keyframes hellraiser-glow {
-    from {
-      text-shadow: 
-        0 0 4px var(--blood-crimson),
-        0 0 8px var(--electric-blue),
-        3px 3px 0px var(--shadow-black),
-        0 0 12px var(--phantom-violet);
-    }
-    to {
-      text-shadow: 
-        0 0 6px var(--blood-crimson),
-        0 0 12px var(--electric-blue),
-        3px 3px 0px var(--shadow-black),
-        0 0 18px var(--phantom-violet),
-        0 0 24px var(--demon-amber);
-    }
-  }
-
-  .gothic-text {
-    font-family: var(--font-gothic);
-    text-shadow: 
-      0 0 2px var(--blood-crimson),
-      2px 2px 0px var(--shadow-black);
-    letter-spacing: 2px;
+  .retro-heading {
+    font-family: var(--font-retro);
+    color: var(--acid-purple);
+    font-weight: 600;
   }
 
   .scanlines {
@@ -349,126 +275,73 @@
     filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 8px currentColor) drop-shadow(0 0 12px var(--retro-acid-purple));
   }
 
-  .retro-button {
-    background: linear-gradient(135deg, var(--midnight-black), var(--shadow-black));
-    border: 1px solid var(--copper-rust);
-    color: var(--demon-amber);
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s ease;
+  .btn-primary {
+    background: var(--pumpkin-orange);
+    color: var(--midnight-black);
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--acid-purple);
+    color: var(--parchment-beige);
+    box-shadow: 0 0 12px var(--acid-purple);
+  }
+
+  .btn-secondary {
+    background: var(--witch-green);
+    color: var(--parchment-beige);
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background: var(--hot-pink);
+    color: var(--midnight-black);
+  }
+
+  .retro-card-title {
+    color: var(--acid-purple);
     font-family: var(--font-retro);
-  }
-
-  .retro-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, var(--blood-crimson), var(--electric-blue), transparent);
-    transition: left 0.6s;
-    opacity: 0.3;
-  }
-
-  .retro-button:hover::before {
-    left: 100%;
-  }
-
-  .retro-button:hover {
-    background: linear-gradient(135deg, var(--shadow-black), var(--mist-gray));
-    border-color: var(--electric-blue);
-    color: var(--bone-white);
-    box-shadow: 
-      0 0 12px var(--electric-blue),
-      inset 0 0 12px var(--phantom-violet);
-    text-shadow: 0 0 6px var(--electric-blue);
-  }
-
-  .chrome-text {
-    background: linear-gradient(45deg, var(--copper-rust), var(--demon-amber), var(--bone-white), var(--copper-rust));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(2px 2px 0px var(--shadow-black)) drop-shadow(0 0 4px var(--electric-blue));
-    font-family: var(--font-retro);
+    font-weight: 600;
   }
 
   .retro-card {
-    background: linear-gradient(135deg, 
-      var(--midnight-black) 0%,
-      var(--shadow-black) 30%,
-      var(--mist-gray) 70%,
-      var(--midnight-black) 100%
-    );
-    border: 1px solid var(--copper-rust);
-    border-radius: 0;
-    position: relative;
-    overflow: hidden;
+    background: var(--midnight-black);
+    border: 1px solid var(--parchment-beige);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
   }
 
-  .retro-card::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
-    background: linear-gradient(45deg, 
-      var(--blood-crimson),
-      var(--electric-blue),
-      var(--phantom-violet),
-      var(--demon-amber)
-    );
-    z-index: -1;
-    border-radius: 0;
-    opacity: 0.15;
+  .retro-card:hover {
+    border-color: var(--acid-purple);
   }
 
-  .retro-card:hover::before {
-    opacity: 0.25;
+  /* Link styles */
+  .retro-link {
+    color: var(--witch-green);
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
 
-  .retro-grid {
-    background-image: 
-      linear-gradient(var(--phantom-violet) 1px, transparent 1px),
-      linear-gradient(90deg, var(--phantom-violet) 1px, transparent 1px);
-    background-size: 30px 30px;
-    opacity: 0.05;
+  .retro-link:hover {
+    color: var(--neon-yellow);
   }
 
-  /* VHS Gritty Texture */
-  .vhs-texture {
-    position: relative;
+  /* Badge styles */
+  .retro-badge {
+    background: var(--neon-yellow);
+    color: var(--midnight-black);
+    font-weight: 600;
   }
 
-  .vhs-texture::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(255, 255, 255, 0.01) 2px,
-        rgba(255, 255, 255, 0.01) 4px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.02) 2px,
-        rgba(0, 0, 0, 0.02) 4px
-      );
-    pointer-events: none;
-    z-index: 1;
+  /* Special accent styles */
+  .accent-teal {
+    color: var(--teal-blue);
+  }
+
+  .accent-purple {
+    color: var(--acid-purple);
   }
 
   .player-card {
