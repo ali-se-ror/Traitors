@@ -28,17 +28,17 @@ function getRandomSpookySymbol(): string {
   return SPOOKY_SYMBOLS[Math.floor(Math.random() * SPOOKY_SYMBOLS.length)];
 }
 
-// Profile image paths - These should match the actual files in attached_assets
+// Profile image identifiers that the frontend can resolve
 const PROFILE_IMAGE_PATHS = [
-  '/assets/RETRO-HALLOWEEN-38_1756253370945.png',
-  '/assets/RETRO-HALLOWEEN-39_1756253370945.png',
-  '/assets/RETRO-HALLOWEEN-41_1756253370946.png',
-  '/assets/RETRO-HALLOWEEN-44_1756253370946.png',
-  '/assets/RETRO-HALLOWEEN-48_1756253370946.png',
-  '/assets/RETRO-HALLOWEEN-49_1756253370946.png',
-  '/assets/RETRO-HALLOWEEN-55_1756253370947.png',
-  '/assets/RETRO-HALLOWEEN-56_1756253370947.png',
-  '/assets/RETRO-HALLOWEEN-64_1756253370947.png',
+  '38',
+  '39', 
+  '41',
+  '44',
+  '48',
+  '49',
+  '55',
+  '56',
+  '64',
 ];
 
 function getProfileImageForUser(userId: string): string | null {
@@ -55,7 +55,8 @@ function getProfileImageForUser(userId: string): string | null {
   }
   
   const index = Math.abs(hash) % PROFILE_IMAGE_PATHS.length;
-  return PROFILE_IMAGE_PATHS[index];
+  // Return the image identifier that the frontend can resolve
+  return `retro-${PROFILE_IMAGE_PATHS[index]}`;
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {

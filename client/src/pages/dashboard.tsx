@@ -284,7 +284,7 @@ export default function Dashboard() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="retro-text text-4xl md:text-6xl font-bold mb-4">
+        <h1 className="retro-heading text-4xl md:text-6xl font-bold mb-4">
           Welcome, <span className="text-primary neon-glow">{user?.username}</span>
         </h1>
         <p className="text-xl text-muted-foreground">

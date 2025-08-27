@@ -11,31 +11,39 @@ import avatar7 from '@assets/RETRO-HALLOWEEN-55_1756253370947.png';
 import avatar8 from '@assets/RETRO-HALLOWEEN-56_1756253370947.png';
 import avatar9 from '@assets/RETRO-HALLOWEEN-64_1756253370947.png';
 
-const profileImages: string[] = [
-  avatar1,  // Retro Halloween 38
-  avatar2,  // Retro Halloween 39
-  avatar3,  // Retro Halloween 41
-  avatar4,  // Retro Halloween 44
-  avatar5,  // Retro Halloween 48
-  avatar6,  // Retro Halloween 49
-  avatar7,  // Retro Halloween 55
-  avatar8,  // Retro Halloween 56
-  avatar9,  // Retro Halloween 64
-];
+const profileImages: Record<string, string> = {
+  'retro-38': avatar1,  // Retro Halloween 38
+  'retro-39': avatar2,  // Retro Halloween 39
+  'retro-41': avatar3,  // Retro Halloween 41
+  'retro-44': avatar4,  // Retro Halloween 44
+  'retro-48': avatar5,  // Retro Halloween 48
+  'retro-49': avatar6,  // Retro Halloween 49
+  'retro-55': avatar7,  // Retro Halloween 55
+  'retro-56': avatar8,  // Retro Halloween 56
+  'retro-64': avatar9,  // Retro Halloween 64
+};
+
+// Resolve profile image by identifier
+export function resolveProfileImage(identifier: string | null): string | null {
+  if (!identifier) return null;
+  return profileImages[identifier] || null;
+}
 
 // Get random profile image from our retro Halloween collection
 export function getRandomProfileImage(): string | null {
-  if (profileImages.length === 0) {
+  const keys = Object.keys(profileImages);
+  if (keys.length === 0) {
     return null; // Will fall back to initials
   }
   
-  const randomIndex = Math.floor(Math.random() * profileImages.length);
-  return profileImages[randomIndex];
+  const randomIndex = Math.floor(Math.random() * keys.length);
+  return profileImages[keys[randomIndex]];
 }
 
 // Get deterministic image based on user ID (consistent for each user)
 export function getProfileImageForUser(userId: string): string | null {
-  if (profileImages.length === 0) {
+  const keys = Object.keys(profileImages);
+  if (keys.length === 0) {
     return null; // Will fall back to initials
   }
   
@@ -47,10 +55,10 @@ export function getProfileImageForUser(userId: string): string | null {
     hash = hash & hash; // Convert to 32-bit integer
   }
   
-  const index = Math.abs(hash) % profileImages.length;
-  return profileImages[index];
+  const index = Math.abs(hash) % keys.length;
+  return profileImages[keys[index]];
 }
 
 export function getAllProfileImages(): string[] {
-  return [...profileImages];
+  return Object.values(profileImages);
 }

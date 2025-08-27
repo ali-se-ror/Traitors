@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Crown, User } from "lucide-react";
+import { resolveProfileImage } from "@/lib/profileImages";
 
 interface Player {
   id: string;
@@ -35,8 +36,8 @@ export function PlayerCard({ player, isCurrentUser, selected = false, onClick, "
     >
       <div className="flex items-center space-x-4">
         <Avatar className="w-12 h-12 border border-border">
-          {player.profileImage && (
-            <AvatarImage src={player.profileImage} alt={`${player.username}'s avatar`} />
+          {player.profileImage && resolveProfileImage(player.profileImage) && (
+            <AvatarImage src={resolveProfileImage(player.profileImage)!} alt={`${player.username}'s avatar`} />
           )}
           <AvatarFallback className="bg-slate-800 text-2xl">
             {player.symbol || player.username.slice(0, 2).toUpperCase()}
