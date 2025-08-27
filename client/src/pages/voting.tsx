@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { Link } from "wouter";
 import { Skull, Crown, Users, ArrowLeft, Check } from "lucide-react";
+import { resolveProfileImage } from "@/lib/profileImages";
 // Player type will be inferred from the API response
 
 export default function Voting() {
@@ -157,8 +158,8 @@ export default function Voting() {
                       <CardContent className="p-6 text-center">
                         <div className="relative mb-4">
                           <Avatar className="w-16 h-16 mx-auto border-2 border-slate-600">
-                            {player.profileImage && (
-                              <AvatarImage src={player.profileImage} alt={`${player.username}'s avatar`} />
+                            {player.profileImage && resolveProfileImage(player.profileImage) && (
+                              <AvatarImage src={resolveProfileImage(player.profileImage)!} alt={`${player.username}'s avatar`} />
                             )}
                             <AvatarFallback className="bg-slate-800 text-3xl">
                               {player.symbol || player.username.substring(0, 2).toUpperCase()}
