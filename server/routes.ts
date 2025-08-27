@@ -605,6 +605,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Check if user can draw a card (weekly limit)
+  app.get("/api/cards/can-draw", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const canDraw = await storage.canUserDrawCard(userId);
+      const lastDraw = await storage.getLastCardDraw(userId);
+      res.json({ canDraw, lastDraw });
+    } catch (error) {
+      console.error("Check card draw eligibility error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Draw a card
+  app.post("/api/cards/draw", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const { cardId, cardTitle, cardType, cardEffect } = req.body;
+
+      // Check if user can draw
+      const canDraw = await storage.canUserDrawCard(userId);
+      if (!canDraw) {
+        return res.status(403).json({ message: "You can only draw one card per week" });
+      }
+
+      // Record the card draw
+      const cardDraw = await storage.recordCardDraw({
+        userId,
+        cardId,
+        cardTitle,
+        cardType,
+        cardEffect,
+      });
+
+      // Send notification to Game Master
+      const user = await storage.getUser(userId);
+      const gameMasters = await storage.getGameMasters();
+      
+      if (gameMasters.length > 0 && user) {
+        const notificationContent = `🎴 THE DARK DECK WHISPERS: ${user.username} has drawn "${cardTitle}" (${cardType.toUpperCase()}) - Effect: ${cardEffect}`;
+        
+        for (const gm of gameMasters) {
+          await storage.createMessage({
+            senderId: "system", // Special system sender
+            receiverId: gm.id,
+            content: notificationContent,
+            isPrivate: 1,
+          });
+        }
+      }
+
+      res.status(201).json({ message: "Card drawn successfully", data: cardDraw });
+    } catch (error) {
+      console.error("Draw card error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

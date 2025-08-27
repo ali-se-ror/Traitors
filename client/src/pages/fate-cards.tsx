@@ -1,8 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Skull, Zap, Shield, Target, Hourglass, Eye, Crown, Ghost } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Skull, Zap, Shield, Target, Hourglass, Eye, Crown, Ghost, AlertCircle } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface FateCard {
   id: string;
@@ -95,9 +98,42 @@ export default function FateCards() {
   const [selectedCard, setSelectedCard] = useState<FateCard | null>(null);
   const [isFlipping, setIsFlipping] = useState(false);
   const [hasDrawnCard, setHasDrawnCard] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Check if user can draw a card
+  const { data: drawStatus, isLoading } = useQuery({
+    queryKey: ["/api/cards/can-draw"],
+    refetchOnWindowFocus: false,
+  });
+
+  // Card draw mutation
+  const drawCardMutation = useMutation({
+    mutationFn: async (cardData: { cardId: string; cardTitle: string; cardType: string; cardEffect: string }) => {
+      const response = await apiRequest("POST", "/api/cards/draw", cardData);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/cards/can-draw"] });
+      toast({
+        title: "Card Drawn!",
+        description: "Your fate has been sealed... The Game Master has been notified.",
+        variant: "default",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Cannot Draw Card",
+        description: error.message || "You can only draw one card per week",
+        variant: "destructive",
+      });
+      setIsFlipping(false);
+      setHasDrawnCard(false);
+    },
+  });
 
   const drawCard = () => {
-    if (hasDrawnCard) return;
+    if (hasDrawnCard || !drawStatus?.canDraw) return;
     
     setIsFlipping(true);
     const randomCard = FATE_CARDS[Math.floor(Math.random() * FATE_CARDS.length)];
@@ -106,6 +142,14 @@ export default function FateCards() {
       setSelectedCard(randomCard);
       setHasDrawnCard(true);
       setIsFlipping(false);
+      
+      // Record the card draw on the backend
+      drawCardMutation.mutate({
+        cardId: randomCard.id,
+        cardTitle: randomCard.title,
+        cardType: randomCard.type,
+        cardEffect: randomCard.effect,
+      });
     }, 800);
   };
 
@@ -152,11 +196,25 @@ export default function FateCards() {
           className="text-center mb-12"
         >
           <h1 className="text-5xl md:text-7xl font-bold mb-4 neon-gradient-title">
-            Pull a Card, Seal your FATE
+            THE DARK DECK
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             The ancient deck holds your destiny. One card will change the course of your game...
           </p>
+          {!isLoading && drawStatus && !drawStatus.canDraw && (
+            <div className="mt-4 p-4 bg-red-900/20 border border-red-500/30 rounded-lg max-w-md mx-auto">
+              <div className="flex items-center gap-2 text-red-300">
+                <AlertCircle className="w-5 h-5" />
+                <span className="font-medium">Card Already Drawn</span>
+              </div>
+              <p className="text-sm text-red-200/80 mt-1">
+                {drawStatus.lastDraw 
+                  ? `Last drawn: ${new Date(drawStatus.lastDraw.drawnAt).toLocaleDateString()}. You can draw again in one week.`
+                  : "You can only draw one card per week."
+                }
+              </p>
+            </div>
+          )}
         </motion.div>
 
         {/* Card Area */}
@@ -256,7 +314,7 @@ export default function FateCards() {
             ) : (
               <Button
                 onClick={drawCard}
-                disabled={isFlipping}
+                disabled={isFlipping || !drawStatus?.canDraw || isLoading}
                 className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-3 text-lg disabled:opacity-50"
                 data-testid="button-draw-card"
               >
@@ -264,6 +322,11 @@ export default function FateCards() {
                   <>
                     <Hourglass className="w-5 h-5 mr-2 animate-spin" />
                     Revealing...
+                  </>
+                ) : !drawStatus?.canDraw ? (
+                  <>
+                    <AlertCircle className="w-5 h-5 mr-2" />
+                    Card Already Drawn
                   </>
                 ) : (
                   <>

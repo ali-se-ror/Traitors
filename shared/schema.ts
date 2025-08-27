@@ -39,6 +39,16 @@ export const announcements = pgTable("announcements", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const cardDraws = pgTable("card_draws", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  cardId: text("card_id").notNull(),
+  cardTitle: text("card_title").notNull(),
+  cardType: text("card_type").notNull(),
+  cardEffect: text("card_effect").notNull(),
+  drawnAt: timestamp("drawn_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   codewordHash: true,
@@ -89,6 +99,9 @@ export type InsertMessage = typeof messages.$inferInsert;
 export type MessageData = z.infer<typeof messageSchema>;
 export type Announcement = typeof announcements.$inferSelect;
 export type AnnouncementData = z.infer<typeof announcementSchema>;
+
+export type CardDraw = typeof cardDraws.$inferSelect;
+export type InsertCardDraw = typeof cardDraws.$inferInsert;
 
 export type PublicUser = {
   id: string;

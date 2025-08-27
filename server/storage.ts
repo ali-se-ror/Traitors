@@ -29,6 +29,22 @@ export interface IStorage {
   createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement>;
   getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; createdAt: Date }[]>;
   deleteAnnouncement(id: string): Promise<boolean>;
+
+  // Card draw operations
+  canUserDrawCard(userId: string): Promise<boolean>;
+  getLastCardDraw(userId: string): Promise<{ drawnAt: Date } | null>;
+  recordCardDraw(cardDraw: { userId: string; cardId: string; cardTitle: string; cardType: string; cardEffect: string }): Promise<{ id: string; drawnAt: Date }>;
+  getGameMasters(): Promise<User[]>;
+}
+
+interface CardDrawRecord {
+  id: string;
+  userId: string;
+  cardId: string;
+  cardTitle: string;
+  cardType: string;
+  cardEffect: string;
+  drawnAt: Date;
 }
 
 export class MemStorage implements IStorage {
@@ -36,12 +52,14 @@ export class MemStorage implements IStorage {
   private votes: Map<string, Vote>;
   private messages: Map<string, Message>;
   private announcements: Map<string, Announcement>;
+  private cardDraws: Map<string, CardDrawRecord>;
 
   constructor() {
     this.users = new Map();
     this.votes = new Map();
     this.messages = new Map();
     this.announcements = new Map();
+    this.cardDraws = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -284,6 +302,56 @@ export class MemStorage implements IStorage {
 
   async deleteAnnouncement(id: string): Promise<boolean> {
     return this.announcements.delete(id);
+  }
+
+  async canUserDrawCard(userId: string): Promise<boolean> {
+    const userDraws = Array.from(this.cardDraws.values())
+      .filter(draw => draw.userId === userId)
+      .sort((a, b) => b.drawnAt.getTime() - a.drawnAt.getTime());
+    
+    if (userDraws.length === 0) {
+      return true; // First draw
+    }
+    
+    const lastDraw = userDraws[0];
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    
+    return lastDraw.drawnAt < oneWeekAgo;
+  }
+
+  async getLastCardDraw(userId: string): Promise<{ drawnAt: Date } | null> {
+    const userDraws = Array.from(this.cardDraws.values())
+      .filter(draw => draw.userId === userId)
+      .sort((a, b) => b.drawnAt.getTime() - a.drawnAt.getTime());
+    
+    if (userDraws.length === 0) {
+      return null;
+    }
+    
+    return { drawnAt: userDraws[0].drawnAt };
+  }
+
+  async recordCardDraw(cardDraw: { userId: string; cardId: string; cardTitle: string; cardType: string; cardEffect: string }): Promise<{ id: string; drawnAt: Date }> {
+    const id = randomUUID();
+    const drawnAt = new Date();
+    
+    const record: CardDrawRecord = {
+      id,
+      userId: cardDraw.userId,
+      cardId: cardDraw.cardId,
+      cardTitle: cardDraw.cardTitle,
+      cardType: cardDraw.cardType,
+      cardEffect: cardDraw.cardEffect,
+      drawnAt,
+    };
+    
+    this.cardDraws.set(id, record);
+    return { id, drawnAt };
+  }
+
+  async getGameMasters(): Promise<User[]> {
+    return Array.from(this.users.values()).filter(user => user.isGameMaster === 1);
   }
 }
 

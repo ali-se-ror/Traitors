@@ -242,7 +242,7 @@ export default function Dashboard() {
             <Link to="/fate-cards">
               <Button variant="outline" className="border-purple-600 hover:bg-purple-600/10">
                 <Skull className="w-4 h-4 mr-2" />
-                Seal your FATE
+                THE DARK DECK
               </Button>
             </Link>
             {user?.isGameMaster && (
