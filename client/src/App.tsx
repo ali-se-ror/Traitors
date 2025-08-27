@@ -8,6 +8,7 @@ import Dashboard from "@/pages/dashboard";
 import Voting from "@/pages/voting";
 import Profile from "@/pages/profile";
 import GameMaster from "@/pages/game-master";
+import GameMasterAuth from "@/pages/gamemaster-auth";
 import SecretMessages from "@/pages/secret-messages";
 import SuspicionMeter from "@/pages/suspicion-meter";
 import FateCards from "@/pages/fate-cards";
@@ -45,6 +46,7 @@ function Router() {
   if (!user) {
     return (
       <Switch>
+        <Route path="/gamemaster-auth" component={GameMasterAuth} />
         <Route component={Auth} />
       </Switch>
     );

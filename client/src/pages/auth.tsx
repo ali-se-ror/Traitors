@@ -371,7 +371,7 @@ export default function Auth() {
               <p className="text-amber-200/80 text-sm mb-4">
                 Monitor and control the game from behind the shadows
               </p>
-              <Link href="/gamemaster-auth">
+              <Link to="/gamemaster-auth">
                 <Button 
                   variant="outline" 
                   className="border-amber-500/50 text-amber-300 hover:bg-amber-900/30"
