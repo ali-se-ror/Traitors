@@ -239,6 +239,12 @@ export default function Dashboard() {
                 Suspicion Meter
               </Button>
             </Link>
+            <Link to="/fate-cards">
+              <Button variant="outline" className="border-purple-600 hover:bg-purple-600/10">
+                <Skull className="w-4 h-4 mr-2" />
+                Seal your FATE
+              </Button>
+            </Link>
             {user?.isGameMaster && (
               <Link to="/game-master">
                 <Button variant="outline" className="border-amber-500 hover:bg-amber-500/10">

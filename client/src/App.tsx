@@ -10,6 +10,7 @@ import Profile from "@/pages/profile";
 import GameMaster from "@/pages/game-master";
 import SecretMessages from "@/pages/secret-messages";
 import SuspicionMeter from "@/pages/suspicion-meter";
+import FateCards from "@/pages/fate-cards";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -56,6 +57,7 @@ function Router() {
       <Route path="/game-master" component={GameMaster} />
       <Route path="/secret-messages" component={SecretMessages} />
       <Route path="/suspicion-meter" component={SuspicionMeter} />
+      <Route path="/fate-cards" component={FateCards} />
 
       <Route component={Dashboard} />
     </Switch>
