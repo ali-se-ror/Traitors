@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { resolveProfileImage } from "@/lib/profileImages";
 
 interface Player {
   id: string;
@@ -148,8 +149,8 @@ export default function SecretMessages() {
                           <CardContent className="p-6">
                             <div className="text-center">
                               <Avatar className="w-20 h-20 mx-auto mb-4 border-2 border-slate-600 group-hover:border-red-400/50 transition-colors">
-                                {player.profileImage && (
-                                  <AvatarImage src={player.profileImage} alt={`${player.username}'s avatar`} />
+                                {player.profileImage && resolveProfileImage(player.profileImage) && (
+                                  <AvatarImage src={resolveProfileImage(player.profileImage)!} alt={`${player.username}'s avatar`} />
                                 )}
                                 <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-3xl">
                                   {player.symbol || playerSymbol}
