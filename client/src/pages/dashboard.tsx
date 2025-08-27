@@ -73,10 +73,18 @@ export default function Dashboard() {
     refetchInterval: 3000,
   });
 
+  // Simple notification count query
+  const { data: notificationData = { count: 0, hasMessages: false } } = useQuery<{ count: number; hasMessages: boolean }>({
+    queryKey: ["/api/messages/private/count"],
+    refetchInterval: 1000, // Check every second for quick notifications
+    enabled: !!user,
+  });
+
+  // Keep original query for backward compatibility
   const { data: receivedPrivateMessages = [] } = useQuery<Message[]>({
     queryKey: ["/api/messages/private/received"],
     refetchInterval: 2000,
-    enabled: !!user, // Fetch for all logged-in users including game masters
+    enabled: !!user,
   });
 
   const { data: announcements = [], refetch: refetchAnnouncements } = useQuery<Announcement[]>({
@@ -181,17 +189,16 @@ export default function Dashboard() {
     );
   }
 
-  // Handle private message notification logic - Show for ALL players including game masters
-  const hasNewPrivateMessages = receivedPrivateMessages.length > 0;
-  const latestPrivateMessage = receivedPrivateMessages[0];
+  // Simple notification logic using the count endpoint
+  const hasNewPrivateMessages = notificationData.hasMessages;
+  const messageCount = notificationData.count;
   
   // Debug log
-  console.log('Private messages debug:', {
-    isGameMaster: user?.isGameMaster,
-    messageCount: receivedPrivateMessages.length,
+  console.log('Simple notification debug:', {
+    notificationData,
     hasNewPrivateMessages,
-    latestMessage: latestPrivateMessage,
-    receivedPrivateMessages: receivedPrivateMessages
+    messageCount,
+    user: user?.username
   });
 
   const handleViewPrivateMessage = (senderId: string, senderUsername: string) => {
@@ -211,7 +218,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Simple Secret Message Notification Banner */}
-      {hasNewPrivateMessages && (
+      {(hasNewPrivateMessages || messageCount > 0) && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -221,7 +228,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
               <div>
-                <h3 className="text-red-300 font-medium">You have {receivedPrivateMessages.length} secret message{receivedPrivateMessages.length > 1 ? 's' : ''}!</h3>
+                <h3 className="text-red-300 font-medium">You have {messageCount} secret message{messageCount > 1 ? 's' : ''}!</h3>
                 <p className="text-red-400/80 text-sm">Someone has sent you a whisper in the shadows...</p>
               </div>
             </div>

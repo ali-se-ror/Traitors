@@ -467,6 +467,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get count of unread private messages
+  app.get("/api/messages/private/count", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId;
+      const messages = await storage.getPrivateMessagesForUser(userId);
+      res.json({ count: messages.length, hasMessages: messages.length > 0 });
+    } catch (error) {
+      console.error("Get private messages count error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Create announcement (Game Master only)
   app.post("/api/announcements", requireAuth, async (req, res) => {
     try {
