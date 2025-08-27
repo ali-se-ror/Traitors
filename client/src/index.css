@@ -177,7 +177,7 @@
     box-shadow: 0 0 10px currentColor;
   }
 
-  /* Clean retro styling */
+  /* Subtle retro styling - use sparingly */
   .retro-text {
     font-family: var(--font-retro);
     color: var(--acid-purple);
@@ -187,6 +187,12 @@
   .retro-heading {
     font-family: var(--font-retro);
     color: var(--acid-purple);
+    font-weight: 600;
+  }
+
+  /* Regular heading style for most content */
+  .text-heading {
+    color: var(--foreground);
     font-weight: 600;
   }
 
@@ -303,6 +309,12 @@
   .retro-card-title {
     color: var(--acid-purple);
     font-family: var(--font-retro);
+    font-weight: 600;
+  }
+
+  /* Regular card title style */
+  .card-title {
+    color: var(--foreground);
     font-weight: 600;
   }
 

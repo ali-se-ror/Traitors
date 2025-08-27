@@ -112,7 +112,7 @@ export default function Auth() {
           >
             <div className="flex items-center justify-center space-x-4 mb-6">
               <Skull className="text-primary text-4xl animate-pulse-ember" />
-              <h1 className="retro-text text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-500 via-green-400 to-purple-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]" style={{ fontFamily: 'var(--font-horror)' }}>
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground">
                 The Traitors: A Game of Shadows
               </h1>
             </div>
@@ -150,7 +150,7 @@ export default function Auth() {
                   >
                     <UserPlus className="text-primary text-4xl animate-glow" />
                   </motion.div>
-                  <CardTitle className="text-2xl font-semibold retro-heading">Join the Shadows</CardTitle>
+                  <CardTitle className="text-2xl font-semibold text-foreground">Join the Shadows</CardTitle>
                   <CardDescription className="text-muted-foreground">Create your mysterious identity</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -259,7 +259,7 @@ export default function Auth() {
                   >
                     <LogIn className="text-secondary text-4xl" />
                   </motion.div>
-                  <CardTitle className="text-2xl font-semibold retro-heading">Return to Shadows</CardTitle>
+                  <CardTitle className="text-2xl font-semibold text-foreground">Return to Shadows</CardTitle>
                   <CardDescription className="text-muted-foreground">Welcome back, traitor</CardDescription>
                 </CardHeader>
                 <CardContent>

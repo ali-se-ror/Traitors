@@ -5,10 +5,10 @@
 ## Recent Changes (January 27, 2025)
 - ✅ **Minimalist Retro Design**: Reverted to clean, tasteful retro styling with the original color palette - Pumpkin Orange, Witch Green, Midnight Black, Parchment Beige
 - ✅ **Enhanced Purple/Green Focus**: Emphasized Acid Purple and Witch Green accents while keeping Pumpkin Orange for primary actions
-- ✅ **Clean Typography**: Using Orbitron font for retro headings with subtle purple glow effects
+- ✅ **Typography Balance**: Changed main titles and card headings to use regular fonts instead of retro fonts, keeping retro fonts only for special accents
+- ✅ **Profile Image System**: Fixed PNG avatar system - users now get assigned real uploaded Halloween profile images instead of emoji symbols
 - ✅ **Simplified Card Design**: Midnight black backgrounds with parchment borders that turn purple on hover
 - ✅ **Tasteful Button Styling**: Primary buttons in Pumpkin Orange, secondary in Witch Green, special actions in Acid Purple with smooth transitions
-- ✅ **Profile Image System**: Fixed and integrated 9 retro Halloween profile avatars (RETRO-HALLOWEEN-38 through RETRO-HALLOWEEN-64) with deterministic assignment based on username
 - ✅ **Complete Communications Hub**: Full-featured "Whispers in the Dark" section with tabbed interface (Public Board, Private Messages, Announcements) and live updates
 - ✅ **Game Master Dashboard**: Comprehensive admin interface with voting analytics, message monitoring, and announcement broadcasting  
 - ✅ **Enhanced Branding**: Changed app name to "The Traitors" with custom skull logo throughout
