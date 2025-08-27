@@ -200,7 +200,7 @@ export default function SuspicionMeter() {
                         <div className="flex justify-between text-sm">
                           <span className="text-slate-400">Suspicion Level</span>
                           <span className="text-orange-300 font-medium">
-                            {data.voteCount} vote{data.voteCount !== 1 ? 's' : ''} ({data.percentage.toFixed(1)}%)
+                            {data.voteCount} vote{data.voteCount !== 1 ? 's' : ''}
                           </span>
                         </div>
                         <Progress 
