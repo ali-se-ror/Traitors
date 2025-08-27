@@ -3,12 +3,12 @@
 **The Traitors** is a comprehensive full-stack social deduction game application inspired by "Traitors" game mechanics. The app enables players to create accounts with username/codeword authentication (no email required), join a shared game space, vote on who they suspect of being a traitor, communicate through public/private messaging, and view real-time suspicion metrics. The application features a React frontend with a dark medieval-themed UI design system and an Express backend with in-memory storage.
 
 ## Recent Changes (January 27, 2025)
-- ✅ **Minimalist Retro Design**: Reverted to clean, tasteful retro styling with the original color palette - Pumpkin Orange, Witch Green, Midnight Black, Parchment Beige
-- ✅ **Enhanced Purple/Green Focus**: Emphasized Acid Purple and Witch Green accents while keeping Pumpkin Orange for primary actions
-- ✅ **Typography Balance**: Changed main titles and card headings to use regular fonts instead of retro fonts, keeping retro fonts only for special accents
+- ✅ **Harmonious Neon Color System**: Researched and implemented synthwave-inspired color palette with Electric Purple (#8a2be2), Hot Magenta (#ff1493), and Neon Orange (#ff4500) - removed cyan for better color harmony
+- ✅ **Consistent Gradient Typography**: All headings now use Inter font with matching purple-to-magenta gradients for visual consistency
 - ✅ **Profile Image System**: Fixed PNG avatar system - users now get assigned real uploaded Halloween profile images instead of emoji symbols
-- ✅ **Simplified Card Design**: Midnight black backgrounds with parchment borders that turn purple on hover
-- ✅ **Tasteful Button Styling**: Primary buttons in Pumpkin Orange, secondary in Witch Green, special actions in Acid Purple with smooth transitions
+- ✅ **Unified Visual Language**: Standardized all neon effects and glow styles across the entire application
+- ✅ **Simplified Card Design**: Midnight black backgrounds with consistent gradient titles
+- ✅ **Enhanced Button Styling**: Primary buttons in Neon Orange, secondary actions in Hot Magenta, special effects in Electric Purple
 - ✅ **Complete Communications Hub**: Full-featured "Whispers in the Dark" section with tabbed interface (Public Board, Private Messages, Announcements) and live updates
 - ✅ **Game Master Dashboard**: Comprehensive admin interface with voting analytics, message monitoring, and announcement broadcasting  
 - ✅ **Enhanced Branding**: Changed app name to "The Traitors" with custom skull logo throughout

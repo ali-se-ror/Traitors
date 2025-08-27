@@ -53,25 +53,25 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   
-  /* Unified neon color system for consistency */
-  --neon-purple: #bb86fc;           /* Primary neon purple */
-  --neon-cyan: #03dac6;             /* Primary neon cyan/teal */
-  --neon-orange: #ff6b35;           /* Primary neon orange */
-  --neon-pink: #ff4081;             /* Secondary neon pink */
-  --neon-yellow: #ffeb3b;           /* Accent neon yellow */
+  /* Harmonious retro neon color system */
+  --electric-purple: #8a2be2;       /* Primary electric purple */
+  --hot-magenta: #ff1493;           /* Vibrant magenta pink */
+  --neon-orange: #ff4500;           /* Bright orange-red */
+  --electric-lime: #32cd32;         /* Electric lime green */
+  --gold-yellow: #ffd700;           /* Bright gold */
   
   /* Base colors */
   --midnight-black: #000000;        /* Page background, card backgrounds */
-  --dark-gray: #121212;             /* Card backgrounds, elevated surfaces */
-  --light-text: #e0e0e0;            /* Main text color */
-  --muted-text: #a0a0a0;            /* Secondary text */
+  --dark-gray: #0a0a0a;             /* Card backgrounds, elevated surfaces */
+  --light-text: #e8e8e8;            /* Main text color */
+  --muted-text: #999999;            /* Secondary text */
   
   /* Alias for backwards compatibility */
   --pumpkin-orange: var(--neon-orange);
-  --witch-green: var(--neon-cyan);
-  --acid-purple: var(--neon-purple);
+  --witch-green: var(--electric-lime);
+  --acid-purple: var(--electric-purple);
   --parchment-beige: var(--light-text);
-  --hot-pink: var(--neon-pink);
+  --hot-pink: var(--hot-magenta);
 }
 
 .dark {
@@ -185,19 +185,19 @@
     box-shadow: 0 0 10px currentColor;
   }
 
-  /* Consistent neon gradient system - retro Halloween vibes */
+  /* Harmonious neon gradient system - synthwave inspired */
   .neon-gradient-heading {
-    background: linear-gradient(135deg, #bb86fc, #03dac6, #bb86fc);
+    background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 700;
-    text-shadow: 0 0 30px rgba(187, 134, 252, 0.5);
+    text-shadow: 0 0 25px rgba(138, 43, 226, 0.6);
     font-family: 'Inter', sans-serif;
   }
 
   .neon-gradient-title {
-    background: linear-gradient(90deg, #03dac6, #bb86fc, #ff6b35);
+    background: linear-gradient(90deg, var(--hot-magenta), var(--electric-purple), var(--neon-orange));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -206,7 +206,7 @@
   }
 
   .neon-gradient-card {
-    background: linear-gradient(45deg, #bb86fc, #03dac6);
+    background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -215,7 +215,7 @@
   }
 
   .neon-gradient-accent {
-    background: linear-gradient(45deg, #ff6b35, #bb86fc);
+    background: linear-gradient(45deg, var(--neon-orange), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -226,16 +226,16 @@
   /* Subtle retro styling - use sparingly for special elements */
   .retro-text {
     font-family: var(--font-retro);
-    background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+    background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 15px var(--neon-purple);
+    text-shadow: 0 0 15px var(--electric-purple);
   }
 
   .retro-heading {
     font-family: var(--font-retro);
-    background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+    background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -354,7 +354,7 @@
 
   .retro-card-title {
     font-family: var(--font-retro);
-    background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+    background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -390,17 +390,21 @@
     font-weight: 600;
   }
 
-  /* Consistent neon accent styles */
-  .accent-cyan {
-    color: var(--neon-cyan);
+  /* Harmonious neon accent styles */
+  .accent-purple {
+    color: var(--electric-purple);
   }
 
-  .accent-purple {
-    color: var(--neon-purple);
+  .accent-magenta {
+    color: var(--hot-magenta);
   }
 
   .accent-orange {
     color: var(--neon-orange);
+  }
+
+  .accent-lime {
+    color: var(--electric-lime);
   }
 
   /* Unified neon glow effects */
@@ -409,18 +413,23 @@
   }
 
   .neon-glow-purple {
-    color: var(--neon-purple);
-    text-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-purple);
+    color: var(--electric-purple);
+    text-shadow: 0 0 15px var(--electric-purple), 0 0 30px var(--electric-purple);
   }
 
-  .neon-glow-cyan {
-    color: var(--neon-cyan);
-    text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+  .neon-glow-magenta {
+    color: var(--hot-magenta);
+    text-shadow: 0 0 15px var(--hot-magenta), 0 0 30px var(--hot-magenta);
   }
 
   .neon-glow-orange {
     color: var(--neon-orange);
     text-shadow: 0 0 15px var(--neon-orange), 0 0 30px var(--neon-orange);
+  }
+
+  .neon-glow-lime {
+    color: var(--electric-lime);
+    text-shadow: 0 0 15px var(--electric-lime), 0 0 30px var(--electric-lime);
   }
 
   .player-card {

@@ -285,7 +285,7 @@ export default function Dashboard() {
         className="text-center"
       >
         <h1 className="text-4xl md:text-6xl font-bold mb-4 neon-gradient-heading">
-          Welcome, <span className="neon-glow-orange">{user?.username}</span>
+          Welcome, <span className="neon-glow-magenta">{user?.username}</span>
         </h1>
         <p className="text-xl text-muted-foreground">
           The shadows whisper secrets. Choose wisely.
