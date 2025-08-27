@@ -681,7 +681,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2"></div>
+                    <div className="w-2 h-2 bg-[#92b78c] rounded-full mt-2"></div>
                     <div>
                       <p className="text-foreground">Players have joined</p>
                       <p className="text-muted-foreground text-xs">Recently</p>
@@ -698,41 +698,41 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.7, duration: 0.6 }}
           >
-            <Card className="retro-card">
+            <Card className="retro-card border-[#92b78c]/20">
               <CardHeader>
                 <CardTitle className="font-semibold flex items-center neon-gradient-card">
-                  <Activity className="mr-3 h-5 w-5 text-secondary" />
+                  <Activity className="mr-3 h-5 w-5 text-[#92b78c]" />
                   Navigate
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Link href="/voting">
-                  <Button className="retro-button w-full justify-start" data-testid="nav-voting">
+                  <Button className="retro-button w-full justify-start hover:border-[#92b78c]/30" data-testid="nav-voting">
                     <Skull className="mr-2 h-4 w-4" />
                     Cast Your Vote
                   </Button>
                 </Link>
                 <Link href="/communications">
-                  <Button className="retro-button w-full justify-start" data-testid="nav-communications">
+                  <Button className="retro-button w-full justify-start hover:border-[#92b78c]/30" data-testid="nav-communications">
                     <MessageCircle className="mr-2 h-4 w-4" />
                     Communications
                   </Button>
                 </Link>
                 <Link href="/suspicion">
-                  <Button className="retro-button w-full justify-start" data-testid="nav-suspicion">
+                  <Button className="retro-button w-full justify-start hover:border-[#92b78c]/30" data-testid="nav-suspicion">
                     <BarChart3 className="mr-2 h-4 w-4" />
                     Suspicion Meter
                   </Button>
                 </Link>
                 <Link href="/profile">
-                  <Button className="w-full justify-start bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30" data-testid="nav-profile">
+                  <Button className="w-full justify-start bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 hover:border-[#92b78c]/30" data-testid="nav-profile">
                     <User className="mr-2 h-4 w-4" />
                     Profile
                   </Button>
                 </Link>
                 <Link href="/logout">
                   <Button 
-                    className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30" 
+                    className="w-full justify-start bg-slate-600/20 hover:bg-slate-600/30 text-slate-300 border border-slate-500/30 hover:border-[#92b78c]/30" 
                     data-testid="nav-logout"
                   >
                     <LogOut className="mr-2 h-4 w-4" />

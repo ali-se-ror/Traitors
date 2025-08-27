@@ -34,7 +34,7 @@ export function Layout({ children }: LayoutProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 px-6 py-4 border-b border-[#92b78c]/20 backdrop-blur-sm bg-gradient-to-r from-black/90 via-black/95 to-black/90">
+      <nav className="relative z-10 px-6 py-4 border-b border-border/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <motion.div 
             className="flex items-center space-x-4"
@@ -67,7 +67,7 @@ export function Layout({ children }: LayoutProps) {
                     className={`nav-link flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
                       isActive 
                         ? "text-primary bg-primary/10 border border-primary/20" 
-                        : "text-foreground hover:text-[#92b78c]"
+                        : "text-foreground hover:text-primary"
                     }`}
                     data-testid={`nav-${item.href.replace('/', '')}`}
                   >
@@ -93,7 +93,7 @@ export function Layout({ children }: LayoutProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden text-foreground hover:text-[#92b78c]"
+            className="md:hidden text-foreground hover:text-primary"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             data-testid="button-mobile-menu"
           >
