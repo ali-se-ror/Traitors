@@ -120,7 +120,7 @@ export default function Auth() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="font-serif text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent"
+              className="text-3xl md:text-5xl font-bold mb-6 neon-gradient-accent"
             >
               Enter the Shadows
             </motion.h2>

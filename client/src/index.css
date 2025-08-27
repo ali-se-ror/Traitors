@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Audiowide&family=Bebas+Neue&family=Righteous&family=Monoton&family=Press+Start+2P&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,6 +41,11 @@
   --font-serif: 'Cinzel', serif;
   --font-mono: 'JetBrains Mono', monospace;
   --font-retro: 'Orbitron', monospace;
+  --font-neon: 'Audiowide', monospace;        /* Neon 80s style - sleek, techy */
+  --font-display: 'Bebas Neue', sans-serif;    /* Good Times alternative - capsule shaped */
+  --font-script: 'Righteous', cursive;         /* Streamster alternative - smooth retro */
+  --font-tech: 'Press Start 2P', monospace;    /* VCR OSD Mono alternative - pixelated */
+  --font-glow: 'Monoton', monospace;          /* Neon glow effects */
   --radius: 1rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(0, 0%, 0% / 0.05);
   --shadow-xs: 0px 2px 0px 0px hsl(0, 0%, 0% / 0.05);
@@ -185,15 +190,16 @@
     box-shadow: 0 0 10px currentColor;
   }
 
-  /* Harmonious neon gradient system - synthwave inspired */
+  /* 80s Halloween retro font system - clean and cohesive */
   .neon-gradient-heading {
     background: linear-gradient(135deg, var(--electric-purple), var(--hot-magenta), var(--electric-purple));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 700;
+    font-weight: 400;
     text-shadow: 0 0 25px rgba(138, 43, 226, 0.6);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-neon);
+    letter-spacing: 2px;
   }
 
   .neon-gradient-title {
@@ -201,8 +207,9 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-family: var(--font-display);
+    letter-spacing: 1px;
   }
 
   .neon-gradient-card {
@@ -210,8 +217,8 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-family: var(--font-display);
   }
 
   .neon-gradient-accent {
@@ -219,27 +226,36 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-family: var(--font-script);
   }
 
-  /* Subtle retro styling - use sparingly for special elements */
+  /* 80s retro styling - special accent elements */
   .retro-text {
-    font-family: var(--font-retro);
+    font-family: var(--font-glow);
     background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 15px var(--electric-purple);
+    letter-spacing: 3px;
   }
 
   .retro-heading {
-    font-family: var(--font-retro);
+    font-family: var(--font-script);
     background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 600;
+    font-weight: 400;
+  }
+
+  /* Tech UI elements - VCR OSD Mono style */
+  .tech-text {
+    font-family: var(--font-tech);
+    color: var(--electric-lime);
+    text-shadow: 0 0 10px var(--electric-lime);
+    font-size: 0.75rem;
   }
 
   .scanlines {
@@ -353,12 +369,12 @@
   }
 
   .retro-card-title {
-    font-family: var(--font-retro);
+    font-family: var(--font-display);
     background: linear-gradient(45deg, var(--electric-purple), var(--hot-magenta));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 600;
+    font-weight: 400;
   }
 
   .retro-card {
