@@ -25,7 +25,7 @@ export default function GameMasterAuth() {
             animate={{ opacity: 1, x: 0 }}
             className="mb-6"
           >
-            <Link href="/auth">
+            <Link to="/auth">
               <Button 
                 variant="ghost" 
                 className="text-amber-200 hover:text-amber-100 hover:bg-amber-900/20"

@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { gameMasterSchema } from "@shared/schema";
-import { useMutation } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { Crown, Key, Shield } from "lucide-react";
@@ -18,6 +18,7 @@ type GameMasterData = z.infer<typeof gameMasterSchema>;
 export default function GameMasterForm() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   const form = useForm<GameMasterData>({
     resolver: zodResolver(gameMasterSchema),
@@ -29,13 +30,17 @@ export default function GameMasterForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: GameMasterData) => apiClient.post("/api/auth/gamemaster", data),
+    mutationFn: async (data: GameMasterData) => {
+      const response = await apiRequest("POST", "/api/auth/gamemaster", data);
+      return response.json();
+    },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
       toast({
         title: "Game Master Access Granted",
         description: `Welcome Master ${data.user.username}! You now have administrative control.`,
       });
-      navigate("/game-master");
+      navigate("/dashboard");
     },
     onError: (error: any) => {
       toast({
