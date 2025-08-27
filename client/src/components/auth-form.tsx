@@ -78,9 +78,9 @@ export default function AuthForm({ type }: AuthFormProps) {
             }}
           >
             {isRegister ? (
-              <UserPlus className="text-ember text-4xl animate-glow" />
+              <UserPlus className="text-4xl neon-gradient-accent" />
             ) : (
-              <LogIn className="text-gold text-4xl" />
+              <LogIn className="text-4xl neon-gradient-card" />
             )}
           </motion.div>
           <CardTitle className="font-serif text-2xl font-semibold text-white">
@@ -107,7 +107,7 @@ export default function AuthForm({ type }: AuthFormProps) {
                       <Input
                         {...field}
                         placeholder={isRegister ? "e.g., MoonRaven, ShadowWhisper" : "Enter your chosen name"}
-                        className="bg-obsidian border-shadow text-white placeholder-mist focus:border-ember focus:ring-ember/20"
+                        className="bg-obsidian border-shadow text-white placeholder-mist focus:border-primary focus:ring-primary/20"
                         data-testid="input-username"
                       />
                     </FormControl>
@@ -132,8 +132,8 @@ export default function AuthForm({ type }: AuthFormProps) {
                         placeholder={isRegister ? "One word you'll never forget" : "Your secret phrase"}
                         className={`bg-obsidian border-shadow text-white placeholder-mist transition-all duration-300 ${
                           isRegister 
-                            ? "focus:border-ember focus:ring-ember/20" 
-                            : "focus:border-gold focus:ring-gold/20"
+                            ? "focus:border-primary focus:ring-primary/20" 
+                            : "focus:border-secondary focus:ring-secondary/20"
                         }`}
                         data-testid="input-codeword"
                       />
@@ -152,8 +152,8 @@ export default function AuthForm({ type }: AuthFormProps) {
                   disabled={mutation.isPending}
                   className={`w-full py-4 rounded-xl font-bold text-parchment-beige text-lg transition-all duration-300 ${
                     isRegister 
-                      ? "btn-primary hover:shadow-lg hover:shadow-purple-500/25" 
-                      : "btn-primary hover:shadow-lg hover:shadow-purple-500/25"
+                      ? "btn-primary hover:shadow-lg hover:shadow-primary/25" 
+                      : "btn-primary hover:shadow-lg hover:shadow-secondary/25"
                   }`}
                   data-testid={`button-${type}`}
                 >

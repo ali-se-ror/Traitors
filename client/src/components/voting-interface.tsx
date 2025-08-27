@@ -59,7 +59,7 @@ export default function VotingInterface({ players, currentVote, onVoteSuccess }:
       transition={{ duration: 0.4 }}
     >
       <h3 className="font-semibold text-white mb-4 flex items-center">
-        <Target className="text-ember mr-3" />
+        <Target className="text-primary mr-3" />
         Cast Your Suspicion
       </h3>
       
@@ -77,7 +77,7 @@ export default function VotingInterface({ players, currentVote, onVoteSuccess }:
                       onValueChange={field.onChange}
                       data-testid="select-vote-target"
                     >
-                      <SelectTrigger className="w-full bg-midnight border-shadow text-white focus:border-ember focus:ring-ember/20">
+                      <SelectTrigger className="w-full bg-midnight border-shadow text-white focus:border-primary focus:ring-primary/20">
                         <SelectValue placeholder="— Choose your target —" />
                       </SelectTrigger>
                       <SelectContent className="bg-midnight border-shadow">
@@ -85,7 +85,7 @@ export default function VotingInterface({ players, currentVote, onVoteSuccess }:
                           <SelectItem 
                             key={player.id} 
                             value={player.id}
-                            className="text-white hover:bg-ember/10 focus:bg-ember/10"
+                            className="text-white hover:bg-primary/10 focus:bg-primary/10"
                           >
                             {player.username}
                           </SelectItem>

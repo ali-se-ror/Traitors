@@ -11,19 +11,19 @@
   --card-foreground: hsl(48, 20%, 87%);      /* Parchment Beige */
   --popover: hsl(0, 0%, 0%);                 /* Midnight Black */
   --popover-foreground: hsl(48, 20%, 87%);   /* Parchment Beige */
-  --primary: hsl(14, 91%, 54%);              /* Pumpkin Orange */
+  --primary: var(--neon-pink);               /* Neon Pink */
   --primary-foreground: hsl(0, 0%, 0%);      /* Black text */
-  --secondary: hsl(158, 91%, 30%);           /* Witch Green */
+  --secondary: var(--vivid-purple);          /* Vivid Purple */
   --secondary-foreground: hsl(48, 20%, 87%); /* Parchment Beige */
   --muted: hsl(0, 0%, 10%);                  /* Dark variant */
   --muted-foreground: hsl(48, 15%, 65%);     /* Muted parchment */
-  --accent: hsl(275, 68%, 54%);              /* Acid Purple */
+  --accent: var(--pumpkin-orange);           /* Pumpkin Orange */
   --accent-foreground: hsl(48, 20%, 87%);    /* Parchment Beige */
-  --destructive: hsl(343, 81%, 65%);         /* Hot Pink */
+  --destructive: var(--blood-red);           /* Blood Red */
   --destructive-foreground: hsl(0, 0%, 0%);  /* Black text */
   --border: hsl(48, 20%, 20%);               /* Darker parchment borders */
   --input: hsl(0, 0%, 5%);                   /* Slightly lighter black */
-  --ring: hsl(14, 91%, 54%);                 /* Pumpkin Orange ring */
+  --ring: var(--pumpkin-orange);             /* Pumpkin Orange ring */
   --chart-1: hsl(15, 100%, 60%);
   --chart-2: hsl(159, 100%, 36%);
   --chart-3: hsl(42, 93%, 56%);

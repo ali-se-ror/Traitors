@@ -125,24 +125,24 @@ export default function Communications() {
           className="text-center mb-8"
         >
           <div className="flex items-center justify-center gap-3 mb-4">
-            <MessageCircle className="w-8 h-8 text-amber-400" />
+            <MessageCircle className="w-8 h-8 text-primary" />
             <h1 className="text-3xl font-bold neon-gradient-heading">Shadow Communications</h1>
-            <Skull className="w-8 h-8 text-red-400" />
+            <Skull className="w-8 h-8 text-destructive" />
           </div>
-          <p className="text-amber-200">Exchange whispers and secrets in the darkness...</p>
+          <p className="text-soft-cream/80">Exchange whispers and secrets in the darkness...</p>
         </motion.div>
 
         <Tabs defaultValue="public" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-slate-800/50">
-            <TabsTrigger value="public" className="data-[state=active]:bg-amber-600" data-testid="tab-public-chat">
+            <TabsTrigger value="public" className="data-[state=active]:bg-primary" data-testid="tab-public-chat">
               <Users className="w-4 h-4 mr-2" />
               Public Board
             </TabsTrigger>
-            <TabsTrigger value="private" className="data-[state=active]:bg-purple-600" data-testid="tab-private-chat">
+            <TabsTrigger value="private" className="data-[state=active]:bg-secondary" data-testid="tab-private-chat">
               <Ghost className="w-4 h-4 mr-2" />
               Private Messages
             </TabsTrigger>
-            <TabsTrigger value="announcements" className="data-[state=active]:bg-red-600" data-testid="tab-announcements">
+            <TabsTrigger value="announcements" className="data-[state=active]:bg-destructive" data-testid="tab-announcements">
               <Megaphone className="w-4 h-4 mr-2" />
               Announcements
             </TabsTrigger>
@@ -153,9 +153,9 @@ export default function Communications() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Messages Area */}
               <div className="lg:col-span-2">
-                <Card className="bg-slate-800/90 border-amber-500/30 h-96">
+                <Card className="bg-slate-800/90 border-primary/30 h-96">
                   <CardHeader>
-                    <CardTitle className="text-amber-400 flex items-center gap-2">
+                    <CardTitle className="text-primary flex items-center gap-2">
                       <Users className="w-5 h-5" />
                       Public Whispers
                     </CardTitle>
@@ -170,12 +170,12 @@ export default function Communications() {
                           transition={{ delay: index * 0.05 }}
                           className={`p-3 rounded-lg ${
                             msg.senderId === user?.id 
-                              ? 'bg-amber-900/30 ml-8 border-l-2 border-amber-400' 
+                              ? 'bg-primary/30 ml-8 border-l-2 border-primary' 
                               : 'bg-slate-700/50 mr-8'
                           }`}
                         >
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-amber-300 font-medium text-sm">
+                            <span className="text-primary font-medium text-sm">
                               {msg.senderUsername}
                             </span>
                             <span className="text-slate-400 text-xs">
@@ -198,9 +198,9 @@ export default function Communications() {
 
               {/* Send Message Panel */}
               <div className="space-y-4">
-                <Card className="bg-slate-800/90 border-amber-500/30">
+                <Card className="bg-slate-800/90 border-primary/30">
                   <CardHeader>
-                    <CardTitle className="text-amber-400 text-sm">Cast Your Words</CardTitle>
+                    <CardTitle className="text-primary text-sm">Cast Your Words</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <Textarea

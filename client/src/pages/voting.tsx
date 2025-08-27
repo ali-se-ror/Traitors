@@ -148,8 +148,8 @@ export default function Voting() {
                     <Card 
                       className={`cursor-pointer transition-all duration-300 hover:scale-105 border-2 ${
                         votedFor === player.id
-                          ? 'border-red-500 bg-red-900/20 shadow-lg shadow-red-900/50'
-                          : 'border-slate-700 hover:border-red-400 bg-slate-800/50'
+                          ? 'border-destructive bg-destructive/20 shadow-lg shadow-destructive/50'
+                          : 'border-slate-700 hover:border-primary bg-slate-800/50'
                       }`}
                       onClick={() => handleVote(player.id, player.username)}
                       data-testid={`card-player-${player.id}`}
@@ -168,7 +168,7 @@ export default function Voting() {
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="absolute -top-1 -right-1 bg-red-600 rounded-full p-1"
+                              className="absolute -top-1 -right-1 bg-destructive rounded-full p-1"
                             >
                               <Check className="w-4 h-4 text-white" />
                             </motion.div>
@@ -193,7 +193,7 @@ export default function Voting() {
                         {votedFor === player.id ? (
                           <Button 
                             disabled
-                            className="w-full bg-red-600 hover:bg-red-700 text-white border border-red-500"
+                            className="w-full bg-destructive hover:bg-destructive/80 text-white border border-destructive"
                           >
                             <Check className="w-4 h-4 mr-2" />
                             Vote Cast
@@ -202,7 +202,7 @@ export default function Voting() {
                           <Button 
                             variant="outline"
                             disabled={voteMutation.isPending || votedFor !== null}
-                            className="w-full border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                            className="w-full border-destructive text-destructive hover:bg-destructive hover:text-white"
                           >
                             <Skull className="w-4 h-4 mr-2" />
                             {voteMutation.isPending ? "Casting..." : "Vote Suspicious"}

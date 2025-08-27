@@ -21,7 +21,7 @@ interface PlayerCardProps {
 }
 
 export function PlayerCard({ player, isCurrentUser, selected = false, onClick, "data-testid": testId }: PlayerCardProps) {
-  const statusColor = "bg-emerald-500/20 text-emerald-400";
+  const statusColor = "bg-neon-pink/20 text-neon-pink";
   const statusText = "ONLINE";
 
   return (

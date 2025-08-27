@@ -56,7 +56,7 @@ export default function GameMasterForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3 }}
     >
-      <Card className="card-medieval rounded-2xl border-amber-500/50">
+      <Card className="card-medieval rounded-2xl border-primary/50">
         <CardHeader className="text-center">
           <motion.div 
             className="flex justify-center mb-4"
@@ -70,12 +70,12 @@ export default function GameMasterForm() {
               ease: "easeInOut"
             }}
           >
-            <Crown className="w-12 h-12 text-amber-400 drop-shadow-lg" />
+            <Crown className="w-12 h-12 text-primary drop-shadow-lg" />
           </motion.div>
-          <CardTitle className="text-2xl font-bold text-amber-400">
+          <CardTitle className="text-2xl font-bold neon-gradient-title">
             Game Master Registration
           </CardTitle>
-          <CardDescription className="text-amber-200/80">
+          <CardDescription className="text-soft-cream/80">
             Enter your credentials and secret key to gain administrative access
           </CardDescription>
         </CardHeader>
@@ -87,7 +87,7 @@ export default function GameMasterForm() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-amber-200 flex items-center gap-2">
+                    <FormLabel className="text-primary flex items-center gap-2">
                       <Shield className="w-4 h-4" />
                       Master Username
                     </FormLabel>
@@ -109,7 +109,7 @@ export default function GameMasterForm() {
                 name="codeword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-amber-200 flex items-center gap-2">
+                    <FormLabel className="text-secondary flex items-center gap-2">
                       <Key className="w-4 h-4" />
                       Master Codeword
                     </FormLabel>
@@ -132,7 +132,7 @@ export default function GameMasterForm() {
                 name="secretKey"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-amber-200 flex items-center gap-2">
+                    <FormLabel className="text-accent flex items-center gap-2">
                       <Crown className="w-4 h-4" />
                       Game Master Secret Key
                     </FormLabel>
@@ -146,7 +146,7 @@ export default function GameMasterForm() {
                       />
                     </FormControl>
                     <FormMessage className="text-red-400" />
-                    <p className="text-xs text-amber-300/60 mt-1">
+                    <p className="text-xs text-soft-cream/60 mt-1">
                       Hint: The secret key for this demo is "TRAITORS_MASTER_2024"
                     </p>
                   </FormItem>
