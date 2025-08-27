@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { PlayerCard } from "@/components/player-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Users, Send, Ghost, Skull, Crown, Eye, X, Upload, Paperclip, Info, Trash2 } from "lucide-react";
+import { Users, Send, Ghost, Skull, Crown, Eye, X, Upload, Paperclip, Info, Trash2, MessageCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -209,86 +209,36 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Private Message Notification - Only show if there are new messages */}
+      {/* Simple Secret Message Notification Banner */}
       {hasNewPrivateMessages && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md mx-auto"
+          className="bg-gradient-to-r from-red-800/30 to-purple-800/30 border border-red-500/50 rounded-lg p-4 mb-6"
         >
-          <Card className="bg-red-900/90 border-red-500/50 backdrop-blur-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-red-300 flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-red-400" />
-                Secret Message Received!
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-3">
-                <div className="p-3 rounded-lg bg-red-800/30 border border-red-500/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-red-300 font-medium text-sm">
-                      From: {latestPrivateMessage?.senderUsername}
-                    </span>
-                    <span className="text-red-400 text-xs">
-                      {latestPrivateMessage && formatTime(latestPrivateMessage.createdAt)}
-                    </span>
-                  </div>
-                  <p className="text-white text-sm">{latestPrivateMessage?.content}</p>
-                </div>
-                
-                {!showPrivateNotification ? (
-                  <Button 
-                    onClick={() => handleViewPrivateMessage(latestPrivateMessage?.senderId || '', latestPrivateMessage?.senderUsername || '')}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white"
-                    data-testid="button-view-private-message"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    View & Reply
-                  </Button>
-                ) : (
-                  <div className="space-y-2">
-                    <Textarea
-                      value={replyMessage}
-                      onChange={(e) => setReplyMessage(e.target.value)}
-                      placeholder="Send your secret reply..."
-                      className="bg-slate-800/80 border-red-500/30 text-white resize-none"
-                      data-testid="textarea-reply-message"
-                    />
-                    <div className="flex gap-2">
-                      <Button 
-                        onClick={handleReplyToMessage}
-                        disabled={sendPrivateMessageMutation.isPending || !replyMessage.trim()}
-                        className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-                        data-testid="button-send-reply"
-                      >
-                        {sendPrivateMessageMutation.isPending ? (
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                        ) : (
-                          <Send className="w-4 h-4 mr-2" />
-                        )}
-                        Send Reply
-                      </Button>
-                      <Button 
-                        onClick={() => {
-                          setShowPrivateNotification(false);
-                          setSelectedMessageSender("");
-                          setReplyMessage("");
-                        }}
-                        variant="outline"
-                        className="border-red-500/50 text-red-300 hover:bg-red-900/20"
-                        data-testid="button-dismiss-notification"
-                      >
-                        Dismiss
-                      </Button>
-                    </div>
-                  </div>
-                )}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <div>
+                <h3 className="text-red-300 font-medium">You have {receivedPrivateMessages.length} secret message{receivedPrivateMessages.length > 1 ? 's' : ''}!</h3>
+                <p className="text-red-400/80 text-sm">Someone has sent you a whisper in the shadows...</p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+            <Link to="/secret-messages">
+              <Button 
+                size="sm"
+                className="bg-red-600 hover:bg-red-700 text-white"
+                data-testid="button-view-secret-messages"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                View Messages
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       )}
+
+
 
       {/* Welcome Section */}
       <motion.div
