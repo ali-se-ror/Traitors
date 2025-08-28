@@ -363,4 +363,341 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Switch to database storage for persistence
+import { db } from "./db";
+import { users, votes, messages, announcements, cardDraws } from "@shared/schema";
+import { eq, and, or, desc, asc } from "drizzle-orm";
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(user: { username: string; codewordHash: string; symbol: string; profileImage?: string | null; isGameMaster?: number }): Promise<User> {
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        username: user.username,
+        codewordHash: user.codewordHash,
+        symbol: user.symbol,
+        profileImage: user.profileImage || null,
+        isGameMaster: user.isGameMaster || 0,
+      })
+      .returning();
+
+    // Initialize vote record for new user
+    await db.insert(votes).values({
+      voterId: newUser.id,
+      targetId: null,
+    }).onConflictDoNothing();
+
+    return newUser;
+  }
+
+  async updateUserCodeword(id: string, codewordHash: string): Promise<void> {
+    await db.update(users).set({ codewordHash }).where(eq(users.id, id));
+  }
+
+  async updateUserProfileImage(id: string, profileImage: string | null): Promise<void> {
+    await db.update(users).set({ profileImage }).where(eq(users.id, id));
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(asc(users.username));
+  }
+
+  async getUsedProfileImages(): Promise<string[]> {
+    const allUsers = await db.select({ profileImage: users.profileImage }).from(users);
+    return allUsers
+      .map(user => user.profileImage)
+      .filter((image): image is string => image !== null && image !== undefined);
+  }
+
+  async getVoteByVoterId(voterId: string): Promise<Vote | undefined> {
+    const [vote] = await db.select().from(votes).where(eq(votes.voterId, voterId));
+    return vote || undefined;
+  }
+
+  async setVote(voterId: string, targetId: string | null): Promise<void> {
+    await db
+      .insert(votes)
+      .values({ voterId, targetId })
+      .onConflictDoUpdate({
+        target: votes.voterId,
+        set: { targetId },
+      });
+  }
+
+  async getVoteCounts(): Promise<{ userId: string; username: string; voteCount: number }[]> {
+    const allUsers = await this.getAllUsers();
+    const allVotes = await db.select().from(votes).where(eq(votes.targetId, votes.targetId)); // Get all votes with targets
+    
+    const voteCounts = new Map<string, number>();
+    
+    // Count votes for each user
+    for (const vote of allVotes) {
+      if (vote.targetId) {
+        voteCounts.set(vote.targetId, (voteCounts.get(vote.targetId) || 0) + 1);
+      }
+    }
+    
+    // Return sorted by vote count (descending) then by username
+    return allUsers.map(user => ({
+      userId: user.id,
+      username: user.username,
+      voteCount: voteCounts.get(user.id) || 0,
+    })).sort((a, b) => {
+      if (a.voteCount !== b.voteCount) {
+        return b.voteCount - a.voteCount;
+      }
+      return a.username.localeCompare(b.username, undefined, { sensitivity: 'base' });
+    });
+  }
+
+  async getAllVotes(): Promise<Vote[]> {
+    return await db.select().from(votes);
+  }
+
+  async createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number; mediaUrl?: string; mediaType?: string }): Promise<Message> {
+    const [newMessage] = await db
+      .insert(messages)
+      .values({
+        senderId: message.senderId,
+        receiverId: message.receiverId || null,
+        content: message.content,
+        isPrivate: message.isPrivate || 0,
+        mediaUrl: message.mediaUrl || null,
+        mediaType: message.mediaType || null,
+      })
+      .returning();
+    return newMessage;
+  }
+
+  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
+    const publicMessages = await db
+      .select({
+        id: messages.id,
+        senderId: messages.senderId,
+        content: messages.content,
+        createdAt: messages.createdAt,
+        senderUsername: users.username,
+        senderProfileImage: users.profileImage,
+      })
+      .from(messages)
+      .innerJoin(users, eq(messages.senderId, users.id))
+      .where(eq(messages.isPrivate, 0))
+      .orderBy(asc(messages.createdAt));
+    
+    return publicMessages.map(msg => ({
+      ...msg,
+      createdAt: msg.createdAt!,
+    }));
+  }
+
+  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
+    const privateMessages = await db
+      .select({
+        id: messages.id,
+        senderId: messages.senderId,
+        content: messages.content,
+        createdAt: messages.createdAt,
+        senderUsername: users.username,
+        senderProfileImage: users.profileImage,
+      })
+      .from(messages)
+      .innerJoin(users, eq(messages.senderId, users.id))
+      .where(
+        and(
+          eq(messages.isPrivate, 1),
+          // Messages where user is sender and target is receiver OR user is receiver and target is sender
+          or(
+            and(eq(messages.senderId, userId), eq(messages.receiverId, targetId)),
+            and(eq(messages.senderId, targetId), eq(messages.receiverId, userId))
+          )
+        )
+      )
+      .orderBy(asc(messages.createdAt));
+    
+    return privateMessages.map(msg => ({
+      ...msg,
+      createdAt: msg.createdAt!,
+    }));
+  }
+
+  async getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]> {
+    const privateMessages = await db
+      .select({
+        id: messages.id,
+        senderId: messages.senderId,
+        receiverId: messages.receiverId,
+        content: messages.content,
+        createdAt: messages.createdAt,
+        senderUsername: users.username,
+        senderProfileImage: users.profileImage,
+      })
+      .from(messages)
+      .innerJoin(users, eq(messages.senderId, users.id))
+      .where(and(eq(messages.isPrivate, 1), eq(messages.receiverId, messages.receiverId))) // Has receiver
+      .orderBy(desc(messages.createdAt));
+    
+    // Get receiver usernames
+    const result = [];
+    for (const msg of privateMessages) {
+      if (msg.receiverId) {
+        const [receiver] = await db.select({ username: users.username }).from(users).where(eq(users.id, msg.receiverId));
+        result.push({
+          ...msg,
+          receiverUsername: receiver?.username || 'Unknown',
+          createdAt: msg.createdAt!,
+        });
+      }
+    }
+    
+    return result;
+  }
+
+  async getPrivateMessagesForUser(userId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
+    const privateMessages = await db
+      .select({
+        id: messages.id,
+        senderId: messages.senderId,
+        content: messages.content,
+        createdAt: messages.createdAt,
+        senderUsername: users.username,
+        senderProfileImage: users.profileImage,
+      })
+      .from(messages)
+      .innerJoin(users, eq(messages.senderId, users.id))
+      .where(and(eq(messages.isPrivate, 1), eq(messages.receiverId, userId)))
+      .orderBy(desc(messages.createdAt));
+    
+    return privateMessages.map(msg => ({
+      ...msg,
+      createdAt: msg.createdAt!,
+    }));
+  }
+
+  async getUnreadMessagesInboxForUser(userId: string): Promise<{ senderId: string; senderUsername: string; senderProfileImage: string | null; lastMessage: string; lastMessageTime: Date; unreadCount: number }[]> {
+    const privateMessages = await this.getPrivateMessagesForUser(userId);
+    
+    // Group by sender
+    const conversationMap = new Map<string, { messages: any[]; sender: any }>();
+    
+    privateMessages.forEach(msg => {
+      if (!conversationMap.has(msg.senderId)) {
+        conversationMap.set(msg.senderId, { 
+          messages: [], 
+          sender: { 
+            username: msg.senderUsername, 
+            profileImage: msg.senderProfileImage 
+          } 
+        });
+      }
+      conversationMap.get(msg.senderId)!.messages.push(msg);
+    });
+    
+    // Create inbox entries
+    return Array.from(conversationMap.entries()).map(([senderId, data]) => ({
+      senderId,
+      senderUsername: data.sender?.username || 'Unknown',
+      senderProfileImage: data.sender?.profileImage || null,
+      lastMessage: data.messages[0].content,
+      lastMessageTime: data.messages[0].createdAt!,
+      unreadCount: data.messages.length, // All messages are unread in this simple system
+    })).sort((a, b) => b.lastMessageTime.getTime() - a.lastMessageTime.getTime());
+  }
+
+  async createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement> {
+    const [newAnnouncement] = await db
+      .insert(announcements)
+      .values({
+        gameMasterId: announcement.gameMasterId,
+        title: announcement.title,
+        content: announcement.content,
+        mediaUrl: null,
+        mediaType: null,
+      })
+      .returning();
+    return newAnnouncement;
+  }
+
+  async getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; createdAt: Date }[]> {
+    const allAnnouncements = await db
+      .select({
+        id: announcements.id,
+        title: announcements.title,
+        content: announcements.content,
+        createdAt: announcements.createdAt,
+        gameMasterUsername: users.username,
+      })
+      .from(announcements)
+      .innerJoin(users, eq(announcements.gameMasterId, users.id))
+      .orderBy(desc(announcements.createdAt));
+    
+    return allAnnouncements.map(announcement => ({
+      ...announcement,
+      createdAt: announcement.createdAt!,
+    }));
+  }
+
+  async deleteAnnouncement(id: string): Promise<boolean> {
+    const result = await db.delete(announcements).where(eq(announcements.id, id));
+    return result.rowCount! > 0;
+  }
+
+  async canUserDrawCard(userId: string): Promise<boolean> {
+    const userDraws = await db
+      .select({ drawnAt: cardDraws.drawnAt })
+      .from(cardDraws)
+      .where(eq(cardDraws.userId, userId))
+      .orderBy(desc(cardDraws.drawnAt));
+    
+    if (userDraws.length === 0) {
+      return true; // First draw
+    }
+    
+    const lastDraw = userDraws[0];
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    
+    return lastDraw.drawnAt! < oneWeekAgo;
+  }
+
+  async getLastCardDraw(userId: string): Promise<{ drawnAt: Date } | null> {
+    const [lastDraw] = await db
+      .select({ drawnAt: cardDraws.drawnAt })
+      .from(cardDraws)
+      .where(eq(cardDraws.userId, userId))
+      .orderBy(desc(cardDraws.drawnAt))
+      .limit(1);
+    
+    return lastDraw ? { drawnAt: lastDraw.drawnAt! } : null;
+  }
+
+  async recordCardDraw(cardDraw: { userId: string; cardId: string; cardTitle: string; cardType: string; cardEffect: string }): Promise<{ id: string; drawnAt: Date }> {
+    const [newDraw] = await db
+      .insert(cardDraws)
+      .values({
+        userId: cardDraw.userId,
+        cardId: cardDraw.cardId,
+        cardTitle: cardDraw.cardTitle,
+        cardType: cardDraw.cardType,
+        cardEffect: cardDraw.cardEffect,
+      })
+      .returning();
+    
+    return { id: newDraw.id, drawnAt: newDraw.drawnAt! };
+  }
+
+  async getGameMasters(): Promise<User[]> {
+    return await db.select().from(users).where(eq(users.isGameMaster, 1));
+  }
+}
+
+export const storage = new DatabaseStorage();
