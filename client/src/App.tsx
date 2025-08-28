@@ -2,6 +2,7 @@ import { Switch, Route } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { Toaster } from "@/components/ui/toaster";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 import Auth from "@/pages/auth";
 import Dashboard from "@/pages/dashboard";
@@ -70,6 +71,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
+      <InstallPrompt />
       <Toaster />
     </QueryClientProvider>
   );
