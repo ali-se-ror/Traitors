@@ -109,7 +109,10 @@ export default function FateCards() {
   const [location] = useLocation();
 
   // Check if user can draw a card
-  const { data: drawStatus, isLoading } = useQuery({
+  const { data: drawStatus, isLoading } = useQuery<{
+    canDraw: boolean;
+    lastDraw?: { drawnAt: string } | null;
+  }>({
     queryKey: ["/api/cards/can-draw"],
     refetchOnWindowFocus: false,
   });
@@ -276,7 +279,7 @@ export default function FateCards() {
               <div className="flex items-center space-x-3">
                 <Avatar className="w-10 h-10 border-2 border-primary/30">
                   <AvatarImage 
-                    src={resolveProfileImage(user?.profileImage)} 
+                    src={resolveProfileImage(user?.profileImage || null) || undefined} 
                     alt={`${user?.username}'s avatar`} 
                   />
                   <AvatarFallback className="bg-gradient-to-br from-primary/20 to-secondary/20">
@@ -317,7 +320,7 @@ export default function FateCards() {
           >
             <Avatar className="w-8 h-8 border border-primary/30">
               <AvatarImage 
-                src={resolveProfileImage(user?.profileImage)} 
+                src={resolveProfileImage(user?.profileImage || null) || undefined} 
                 alt={`${user?.username}'s avatar`} 
               />
               <AvatarFallback className="bg-gradient-to-br from-primary/20 to-secondary/20 text-xs">

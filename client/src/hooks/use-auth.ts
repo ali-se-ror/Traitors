@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 interface User {
   id: string;
   username: string;
+  symbol?: string | null;
+  profileImage?: string | null;
   isGameMaster?: number;
   createdAt: string;
 }

@@ -89,6 +89,7 @@ export const announcementSchema = z.object({
   mediaType: z.string().optional(),
 });
 
+// Export types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Vote = typeof votes.$inferSelect;
@@ -99,9 +100,13 @@ export type InsertMessage = typeof messages.$inferInsert;
 export type MessageData = z.infer<typeof messageSchema>;
 export type Announcement = typeof announcements.$inferSelect;
 export type AnnouncementData = z.infer<typeof announcementSchema>;
-
 export type CardDraw = typeof cardDraws.$inferSelect;
 export type InsertCardDraw = typeof cardDraws.$inferInsert;
+
+// Auth types
+export type LoginData = z.infer<typeof loginSchema>;
+export type RegisterData = z.infer<typeof registerSchema>;
+export type AuthUser = User;
 
 export type PublicUser = {
   id: string;
