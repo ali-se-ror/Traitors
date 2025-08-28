@@ -3,7 +3,7 @@ const CACHE_NAME = 'traitors-v1.0.0';
 const STATIC_CACHE = [
   '/',
   '/manifest.json',
-  '/attached_assets/generated_images/Halloween_skull_app_icon_f79338f1.png'
+  '/icon-512.png'
 ];
 
 // Install event - cache static assets
@@ -120,8 +120,8 @@ self.addEventListener('push', (event) => {
     
     const options = {
       body: data.body,
-      icon: '/attached_assets/generated_images/Halloween_skull_app_icon_f79338f1.png',
-      badge: '/attached_assets/generated_images/Halloween_skull_app_icon_f79338f1.png',
+      icon: '/icon-512.png',
+      badge: '/icon-192.png',
       vibrate: [200, 100, 200],
       data: data.data || {},
       actions: data.actions || []
