@@ -1,5 +1,5 @@
 // Service Worker for The Traitors PWA
-const CACHE_NAME = 'traitors-v1.0.0';
+const CACHE_NAME = 'traitors-v1.0.1';
 const STATIC_CACHE = [
   '/',
   '/manifest.json',
