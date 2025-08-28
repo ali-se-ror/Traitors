@@ -2,10 +2,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Skull, Zap, Shield, Target, Hourglass, Eye, Crown, Ghost, AlertCircle } from "lucide-react";
+import { Skull, Zap, Shield, Target, Hourglass, Eye, Crown, Ghost, AlertCircle, Home, Users, MessageSquare, Vote, BarChart3, LogOut } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { resolveProfileImage } from "@/lib/profileImages";
 
 interface FateCard {
   id: string;
@@ -100,6 +105,8 @@ export default function FateCards() {
   const [hasDrawnCard, setHasDrawnCard] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const [location] = useLocation();
 
   // Check if user can draw a card
   const { data: drawStatus, isLoading } = useQuery({
@@ -185,8 +192,152 @@ export default function FateCards() {
     }
   };
 
+  // Navigation items
+  const navItems = [
+    { href: "/dashboard", icon: Home, label: "Dashboard" },
+    { href: "/suspicion-meter", icon: BarChart3, label: "Suspicion Meter" },
+    { href: "/secret-messages", icon: MessageSquare, label: "Secret Messages" },
+    { href: "/fate-cards", icon: Skull, label: "Dark Deck" },
+  ];
+
+  // Logout mutation
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/auth/logout", {});
+      return response.json();
+    },
+    onSuccess: () => {
+      window.location.href = "/";
+    },
+    onError: (error: any) => {
+      toast({ title: "Logout failed", description: error.message, variant: "destructive" });
+    },
+  });
+
   return (
     <div className="min-h-screen atmospheric-bg">
+      {/* Floating Particles Background */}
+      <div className="floating-particles">
+        <div className="particle w-2 h-2 animate-float" style={{ left: "10%", animationDelay: "0s", animationDuration: "6s" }}></div>
+        <div className="particle w-1 h-1 animate-float" style={{ left: "20%", top: "20%", animationDelay: "2s", animationDuration: "8s" }}></div>
+        <div className="particle w-3 h-3 animate-float" style={{ left: "30%", top: "60%", animationDelay: "1s", animationDuration: "7s" }}></div>
+        <div className="particle w-2 h-2 animate-float" style={{ left: "70%", top: "30%", animationDelay: "3s", animationDuration: "9s" }}></div>
+        <div className="particle w-1 h-1 animate-float" style={{ left: "80%", top: "70%", animationDelay: "4s", animationDuration: "6s" }}></div>
+        <div className="particle w-2 h-2 animate-float" style={{ left: "90%", top: "10%", animationDelay: "5s", animationDuration: "8s" }}></div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="relative z-10 px-6 py-4 border-b border-border/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <motion.div 
+            className="flex items-center space-x-4"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Skull className="text-primary text-3xl animate-pulse-ember" />
+            <Link href="/dashboard">
+              <h1 className="text-xl md:text-2xl font-bold neon-gradient-title cursor-pointer hover:scale-105 transition-transform">
+                The Traitors: A Game of Shadows
+              </h1>
+            </Link>
+          </motion.div>
+
+          {/* Desktop Navigation */}
+          <motion.div 
+            className="hidden md:flex items-center space-x-8"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location === item.href;
+              
+              return (
+                <Link key={item.href} href={item.href}>
+                  <button 
+                    className={`nav-link flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${
+                      isActive 
+                        ? "text-primary bg-primary/10 border border-primary/20" 
+                        : "text-foreground hover:text-primary"
+                    }`}
+                    data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </button>
+                </Link>
+              );
+            })}
+
+            {/* Profile Section */}
+            <div className="flex items-center space-x-4 pl-4 border-l border-border/30">
+              <div className="flex items-center space-x-3">
+                <Avatar className="w-10 h-10 border-2 border-primary/30">
+                  <AvatarImage 
+                    src={resolveProfileImage(user?.profileImage)} 
+                    alt={`${user?.username}'s avatar`} 
+                  />
+                  <AvatarFallback className="bg-gradient-to-br from-primary/20 to-secondary/20">
+                    {user?.symbol || user?.username?.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="hidden lg:block">
+                  <p className="text-sm font-medium text-foreground">{user?.username}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-muted-foreground">Player</p>
+                    {user?.isGameMaster && (
+                      <Badge variant="secondary" className="text-xs bg-amber-500/20 text-amber-300">
+                        GM
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => logoutMutation.mutate()}
+                disabled={logoutMutation.isPending}
+                className="text-muted-foreground hover:text-destructive transition-colors"
+                data-testid="logout-button"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Mobile Navigation */}
+          <motion.div 
+            className="md:hidden flex items-center space-x-4"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Avatar className="w-8 h-8 border border-primary/30">
+              <AvatarImage 
+                src={resolveProfileImage(user?.profileImage)} 
+                alt={`${user?.username}'s avatar`} 
+              />
+              <AvatarFallback className="bg-gradient-to-br from-primary/20 to-secondary/20 text-xs">
+                {user?.symbol || user?.username?.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => logoutMutation.mutate()}
+              disabled={logoutMutation.isPending}
+              className="text-muted-foreground hover:text-destructive transition-colors"
+              data-testid="logout-button-mobile"
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </motion.div>
+        </div>
+      </nav>
+
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div
