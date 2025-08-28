@@ -101,18 +101,18 @@ export default function Auth() {
         <div className="particle w-2 h-2 animate-float" style={{ left: "90%", top: "10%", animationDelay: "5s", animationDuration: "8s" }}></div>
       </div>
 
-      <div className="relative z-10 px-6 py-8">
+      <div className="relative z-10 px-4 md:px-6 py-4 md:py-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <motion.div 
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="text-center mb-6 md:mb-12"
           >
-            <div className="flex items-center justify-center space-x-4 mb-6">
-              <Skull className="text-primary text-4xl animate-pulse-ember" />
-              <h1 className="text-4xl md:text-6xl font-bold neon-gradient-heading">
+            <div className="flex items-center justify-center space-x-2 md:space-x-4 mb-4 md:mb-6">
+              <Skull className="text-primary text-2xl md:text-4xl animate-pulse-ember" />
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold neon-gradient-heading">
                 The Traitors: A Game of Shadows
               </h1>
             </div>
@@ -120,7 +120,7 @@ export default function Auth() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-3xl md:text-5xl font-bold mb-6 neon-gradient-accent"
+              className="text-xl md:text-3xl lg:text-5xl font-bold mb-4 md:mb-6 neon-gradient-accent"
             >
               Enter the Shadows
             </motion.h2>
@@ -128,14 +128,14 @@ export default function Auth() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8 }}
-              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+              className="text-sm md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4"
             >
               In the depths of an ancient castle, whispers of betrayal echo through shadowed halls. 
               Trust no one. Suspect everyone. Let the game of deception begin.
             </motion.p>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto">
             {/* Registration Card */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}

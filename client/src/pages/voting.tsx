@@ -67,12 +67,13 @@ export default function Voting() {
   const otherPlayers = (players as any[]).filter((player: any) => player.id !== user?.id);
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+    <div className="min-h-screen atmospheric-bg">
+      <div className="container mx-auto px-4 py-6 md:py-8 space-y-4 md:space-y-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         className="text-center"
       >
         <div className="flex items-center justify-center mb-6">
@@ -87,7 +88,7 @@ export default function Voting() {
             </Button>
           </Link>
           <Skull className="w-10 h-10 text-red-400 mr-4" />
-          <h1 className="text-4xl md:text-6xl font-bold neon-gradient-title">
+          <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold neon-gradient-title">
             Cast Your Suspicion
           </h1>
         </div>
@@ -138,7 +139,7 @@ export default function Voting() {
                 <p className="text-slate-500 text-sm mt-2">Wait for other players to join the game</p>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {otherPlayers.map((player: any, index: number) => (
                   <motion.div
                     key={player.id}
@@ -247,6 +248,7 @@ export default function Voting() {
           </Card>
         </motion.div>
       )}
+      </div>
     </div>
   );
 }

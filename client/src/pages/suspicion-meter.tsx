@@ -70,7 +70,7 @@ export default function SuspicionMeter() {
 
   return (
     <div className="min-h-screen atmospheric-bg">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 md:py-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -86,12 +86,12 @@ export default function SuspicionMeter() {
                   Back to Dashboard
                 </Button>
               </Link>
-              <h1 className="text-4xl md:text-5xl font-bold neon-gradient-title">
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold neon-gradient-title">
                 Suspicion Meter
               </h1>
             </div>
           </div>
-          <p className="text-xl text-muted-foreground mt-4">
+          <p className="text-sm md:text-lg lg:text-xl text-muted-foreground mt-4">
             See who the shadows whisper about most...
           </p>
         </motion.div>
@@ -101,7 +101,7 @@ export default function SuspicionMeter() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="grid md:grid-cols-3 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8"
         >
           <Card className="retro-card border-orange-500/30 bg-gradient-to-br from-orange-900/10 to-red-900/10">
             <CardHeader className="pb-2">
@@ -166,7 +166,7 @@ export default function SuspicionMeter() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 * index, duration: 0.4 }}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-slate-900/50 border border-slate-700/50 hover:border-orange-500/30 transition-all"
+                    className="flex items-center gap-2 md:gap-4 p-3 md:p-4 rounded-lg bg-slate-900/50 border border-slate-700/50 hover:border-orange-500/30 transition-all"
                   >
                     {/* Rank */}
                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-r from-orange-600 to-red-600 flex items-center justify-center text-white font-bold text-sm">
@@ -174,9 +174,9 @@ export default function SuspicionMeter() {
                     </div>
 
                     {/* Avatar */}
-                    <Avatar className="w-12 h-12 border-2 border-orange-500/30">
+                    <Avatar className="w-10 h-10 md:w-12 md:h-12 border-2 border-orange-500/30">
                       <AvatarImage 
-                        src={resolveProfileImage(data.profileImage || undefined)} 
+                        src={resolveProfileImage(data.profileImage || "") || ""} 
                         alt={data.username}
                       />
                       <AvatarFallback className="bg-slate-800 text-orange-300 font-bold text-lg">

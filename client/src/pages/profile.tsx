@@ -100,7 +100,8 @@ export default function Profile() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="min-h-screen atmospheric-bg">
+      <div className="container mx-auto px-4 py-6 md:py-8 space-y-4 md:space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -108,17 +109,17 @@ export default function Profile() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 neon-gradient-heading">
+        <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold mb-4 neon-gradient-heading">
           Your Secret Profile
         </h1>
-        <p className="text-xl text-muted-foreground">
+        <p className="text-sm md:text-lg lg:text-xl text-muted-foreground">
           Only you can see these shadows of your identity
         </p>
       </motion.div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Profile Info */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 md:space-y-6">
           {/* Main Profile Card */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -358,6 +359,7 @@ export default function Profile() {
 
 
         </div>
+      </div>
       </div>
     </div>
   );

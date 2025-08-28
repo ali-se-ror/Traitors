@@ -550,3 +550,197 @@
 .animate-fade-in { animation: fade-in 0.3s ease-in; }
 .animate-pulse-ember { animation: pulse-ember 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 .animate-shimmer { animation: shimmer 2s linear infinite; }
+
+/* ==============================================
+   MOBILE OPTIMIZATIONS FOR THE TRAITORS GAME
+   ============================================== */
+
+/* Global mobile fixes */
+@media (max-width: 768px) {
+  /* Enhanced touch targets */
+  button, 
+  [role="button"], 
+  input, 
+  select, 
+  textarea {
+    min-height: 44px; /* Apple's recommended minimum touch target */
+    min-width: 44px;
+  }
+
+  /* Better spacing for mobile */
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Atmospheric background mobile optimization */
+  .atmospheric-bg {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height */
+    background-attachment: scroll; /* Better mobile performance */
+  }
+
+  /* Card optimizations */
+  .card-medieval {
+    margin: 0.5rem 0;
+    padding: 1rem;
+  }
+
+  .card-medieval:hover {
+    transform: translateY(-2px) scale(1.01); /* Reduced hover effect for mobile */
+  }
+
+  /* Font size scaling for mobile */
+  .neon-gradient-title {
+    font-size: 1.5rem !important;
+    line-height: 1.2;
+  }
+
+  .neon-gradient-heading {
+    font-size: 2rem !important;
+    line-height: 1.2;
+  }
+
+  /* Navigation optimizations */
+  .nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Button optimizations */
+  .btn-primary, 
+  .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  /* Form input optimizations */
+  input, 
+  textarea, 
+  select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.75rem;
+  }
+
+  /* Text readability */
+  body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* Reduced animation for battery life */
+  .neon-glow {
+    animation: none;
+  }
+
+  /* Better spacing */
+  .space-y-8 > * + * {
+    margin-top: 1.5rem !important;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  /* Further reduce text sizes */
+  .neon-gradient-title {
+    font-size: 1.25rem !important;
+  }
+
+  .neon-gradient-heading {
+    font-size: 1.75rem !important;
+  }
+
+  /* Tighter spacing */
+  .container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  /* Stack navigation buttons vertically on very small screens */
+  .nav-buttons-mobile {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+
+  .nav-buttons-mobile button {
+    width: 100% !important;
+  }
+
+  /* Card padding adjustments */
+  .card-medieval {
+    padding: 0.75rem;
+  }
+
+  /* Form optimizations */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Reduce vertical padding in landscape */
+  .py-8 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .py-6 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  /* Compact card layout */
+  .card-medieval {
+    margin: 0.25rem 0;
+  }
+}
+
+/* Touch-specific optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .card-medieval:hover,
+  .player-card:hover,
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+    box-shadow: inherit;
+  }
+
+  /* Enhance active states for touch */
+  .card-medieval:active,
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+  }
+}
+
+/* Dark mode safe scrollbars for mobile webkit */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--midnight-black);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--pumpkin-orange);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-pink);
+  }
+}

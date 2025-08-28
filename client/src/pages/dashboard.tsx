@@ -214,55 +214,105 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex justify-between items-center mb-8"
+          className="mb-6 md:mb-8"
         >
-          <h1 className="text-2xl font-bold neon-gradient-title flex items-center">
-            <Skull className="mr-2 h-8 w-8 text-red-500" />
-            The Traitors
-          </h1>
-          <div className="flex items-center gap-4">
+          {/* Mobile Header */}
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-xl md:text-2xl font-bold neon-gradient-title flex items-center">
+              <Skull className="mr-2 h-6 w-6 md:h-8 md:w-8 text-red-500" />
+              The Traitors
+            </h1>
+            <Button onClick={handleLogout} variant="destructive" size="sm" className="md:hidden">
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Desktop Navigation - Hidden on mobile */}
+          <div className="hidden md:flex justify-center items-center gap-3 mb-4">
             <Link to="/voting">
-              <Button variant="outline" className="border-red-500 hover:bg-red-500/10">
+              <Button variant="outline" className="border-red-500 hover:bg-red-500/10 text-xs lg:text-sm">
+                <Vote className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                Vote
+              </Button>
+            </Link>
+            <Link to="/secret-messages">
+              <Button variant="outline" className="border-purple-500 hover:bg-purple-500/10 text-xs lg:text-sm">
+                <MessageCircle className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                Messages
+              </Button>
+            </Link>
+            <Link to="/suspicion-meter">
+              <Button variant="outline" className="border-orange-500 hover:bg-orange-500/10 text-xs lg:text-sm">
+                <Eye className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                Suspicion
+              </Button>
+            </Link>
+            <Link to="/fate-cards">
+              <Button variant="outline" className="border-purple-600 hover:bg-purple-600/10 text-xs lg:text-sm">
+                <Skull className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                DARK DECK
+              </Button>
+            </Link>
+            {user?.isGameMaster ? (
+              <Link to="/game-master">
+                <Button variant="outline" className="border-amber-500 hover:bg-amber-500/10 text-xs lg:text-sm">
+                  <Crown className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                  Master
+                </Button>
+              </Link>
+            ) : null}
+            <Link to="/profile">
+              <Button variant="outline" className="border-green-500 hover:bg-green-500/10 text-xs lg:text-sm">
+                <User className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                Profile
+              </Button>
+            </Link>
+            <Button onClick={handleLogout} variant="destructive" size="sm" className="text-xs lg:text-sm">
+              <LogOut className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+              Logout
+            </Button>
+          </div>
+
+          {/* Mobile Navigation Grid */}
+          <div className="grid grid-cols-2 gap-2 md:hidden nav-buttons-mobile">
+            <Link to="/voting">
+              <Button variant="outline" className="border-red-500 hover:bg-red-500/10 w-full text-sm py-3">
                 <Vote className="w-4 h-4 mr-2" />
                 Vote
               </Button>
             </Link>
             <Link to="/secret-messages">
-              <Button variant="outline" className="border-purple-500 hover:bg-purple-500/10">
+              <Button variant="outline" className="border-purple-500 hover:bg-purple-500/10 w-full text-sm py-3">
                 <MessageCircle className="w-4 h-4 mr-2" />
-                Secret Messages
+                Messages
               </Button>
             </Link>
             <Link to="/suspicion-meter">
-              <Button variant="outline" className="border-orange-500 hover:bg-orange-500/10">
+              <Button variant="outline" className="border-orange-500 hover:bg-orange-500/10 w-full text-sm py-3">
                 <Eye className="w-4 h-4 mr-2" />
-                Suspicion Meter
+                Suspicion
               </Button>
             </Link>
             <Link to="/fate-cards">
-              <Button variant="outline" className="border-purple-600 hover:bg-purple-600/10">
+              <Button variant="outline" className="border-purple-600 hover:bg-purple-600/10 w-full text-sm py-3">
                 <Skull className="w-4 h-4 mr-2" />
-                THE DARK DECK
+                DARK DECK
               </Button>
             </Link>
             {user?.isGameMaster ? (
-              <Link to="/game-master">
-                <Button variant="outline" className="border-amber-500 hover:bg-amber-500/10">
+              <Link to="/game-master" className="col-span-1">
+                <Button variant="outline" className="border-amber-500 hover:bg-amber-500/10 w-full text-sm py-3">
                   <Crown className="w-4 h-4 mr-2" />
-                  Game Master
+                  Master
                 </Button>
               </Link>
             ) : null}
-            <Link to="/profile">
-              <Button variant="outline" className="border-green-500 hover:bg-green-500/10">
+            <Link to="/profile" className={user?.isGameMaster ? "col-span-1" : "col-span-2"}>
+              <Button variant="outline" className="border-green-500 hover:bg-green-500/10 w-full text-sm py-3">
                 <User className="w-4 h-4 mr-2" />
                 Profile
               </Button>
             </Link>
-            <Button onClick={handleLogout} variant="destructive" size="sm">
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
           </div>
         </motion.nav>
 
@@ -274,7 +324,7 @@ export default function Dashboard() {
         transition={{ duration: 0.6 }}
         className="text-center"
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 neon-gradient-title">
+        <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold mb-4 neon-gradient-title">
           Welcome, <span className="neon-glow-magenta">{user?.username}</span>
         </h1>
         <p className="text-xl text-muted-foreground">
