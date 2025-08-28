@@ -117,7 +117,7 @@ export default function InstallPage() {
             Download The Traitors
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Tap the big button below to add this game to your phone's home screen!
+            Follow the simple steps below to add this game to your phone's home screen!
           </p>
           
           <div className="flex items-center justify-center gap-4 text-sm text-gray-400">
@@ -168,28 +168,28 @@ export default function InstallPage() {
               <h3 className="text-xl font-bold text-neon-pink mb-4">📱 Easy Install Instructions</h3>
               {isIOS ? (
                 <div className="text-left space-y-3">
-                  <p className="text-gray-300">For iPhone users:</p>
-                  <div className="bg-black/70 p-4 rounded-lg">
-                    <p className="text-lg">1. Tap Share button <span className="text-2xl">📤</span></p>
-                    <p className="text-lg">2. Tap "Add to Home Screen"</p>
-                    <p className="text-lg">3. Tap "Add" ✅</p>
+                  <p className="text-gray-300 font-semibold">iPhone Instructions:</p>
+                  <div className="bg-black/70 p-4 rounded-lg space-y-2">
+                    <p className="text-lg">1. Tap the Share button at the bottom <br/><span className="bg-blue-600 px-2 py-1 rounded text-sm">🔗</span></p>
+                    <p className="text-lg">2. Scroll down and tap "Add to Home Screen"</p>
+                    <p className="text-lg">3. Tap "Add" to confirm</p>
                   </div>
                 </div>
               ) : isAndroid ? (
                 <div className="text-left space-y-3">
-                  <p className="text-gray-300">For Android users:</p>
-                  <div className="bg-black/70 p-4 rounded-lg">
-                    <p className="text-lg">1. Tap menu <span className="text-2xl">⋮</span></p>
-                    <p className="text-lg">2. Tap "Install app"</p>
-                    <p className="text-lg">3. Tap "Install" ✅</p>
+                  <p className="text-gray-300 font-semibold">Android Instructions:</p>
+                  <div className="bg-black/70 p-4 rounded-lg space-y-2">
+                    <p className="text-lg">1. Tap the menu button <span className="text-2xl">⋮</span></p>
+                    <p className="text-lg">2. Tap "Install app" or "Add to Home screen"</p>
+                    <p className="text-lg">3. Tap "Install" to confirm</p>
                   </div>
                 </div>
               ) : (
                 <div className="text-left space-y-3">
-                  <p className="text-gray-300">For desktop users:</p>
-                  <div className="bg-black/70 p-4 rounded-lg">
-                    <p className="text-lg">1. Look for install icon 📥 in address bar</p>
-                    <p className="text-lg">2. Click "Install"</p>
+                  <p className="text-gray-300 font-semibold">Desktop Instructions:</p>
+                  <div className="bg-black/70 p-4 rounded-lg space-y-2">
+                    <p className="text-lg">1. Look for the install icon <span className="text-xl">📥</span> in your browser's address bar</p>
+                    <p className="text-lg">2. Click "Install The Traitors"</p>
                   </div>
                 </div>
               )}
