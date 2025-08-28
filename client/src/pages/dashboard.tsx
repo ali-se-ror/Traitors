@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ObjectUploader } from "@/components/ObjectUploader";
 
 interface Player {
@@ -52,6 +52,7 @@ export default function Dashboard() {
   const [newPrivateMessage, setNewPrivateMessage] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState("");
   const [pendingMedia, setPendingMedia] = useState<{ url: string; type: string } | null>(null);
+  const [pendingPrivateMedia, setPendingPrivateMedia] = useState<{ url: string; type: string } | null>(null);
   const [showPrivateNotification, setShowPrivateNotification] = useState(false);
   const [selectedMessageSender, setSelectedMessageSender] = useState("");
   const [replyMessage, setReplyMessage] = useState("");
@@ -59,6 +60,10 @@ export default function Dashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Refs for auto-scrolling
+  const publicMessagesRef = useRef<HTMLDivElement>(null);
+  const privateMessagesRef = useRef<HTMLDivElement>(null);
   
   const { data: players = [], isLoading: playersLoading } = useQuery<Player[]>({
     queryKey: ["/api/players"],
@@ -123,14 +128,14 @@ export default function Dashboard() {
         content, 
         isPrivate: true, 
         receiverId,
-        mediaUrl: pendingMedia?.url,
-        mediaType: pendingMedia?.type,
+        mediaUrl: pendingPrivateMedia?.url,
+        mediaType: pendingPrivateMedia?.type,
       });
       return response.json();
     },
     onSuccess: () => {
       setNewPrivateMessage("");
-      setPendingMedia(null);
+      setPendingPrivateMedia(null);
       setSelectedRecipient("");
       setReplyMessage("");
       queryClient.invalidateQueries({ queryKey: ["/api/messages/private/received"] });
@@ -140,6 +145,19 @@ export default function Dashboard() {
       toast({ title: "Failed to send secret", description: error.message, variant: "destructive" });
     },
   });
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (publicMessagesRef.current) {
+      publicMessagesRef.current.scrollTop = publicMessagesRef.current.scrollHeight;
+    }
+  }, [publicMessages]);
+
+  useEffect(() => {
+    if (privateMessagesRef.current) {
+      privateMessagesRef.current.scrollTop = privateMessagesRef.current.scrollHeight;
+    }
+  }, [receivedPrivateMessages]);
 
   const deleteAnnouncementMutation = useMutation({
     mutationFn: async (announcementId: string) => {
@@ -442,9 +460,12 @@ export default function Dashboard() {
 
             <div className="grid lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2">
-                <div className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700">
+                <div 
+                  ref={publicMessagesRef}
+                  className="bg-slate-800/50 rounded-lg p-4 h-48 overflow-y-auto border border-slate-700"
+                >
                   <div className="space-y-3">
-                    {publicMessages.slice(-8).map((msg, index) => (
+                    {publicMessages.map((msg, index) => (
                       <motion.div
                         key={msg.id}
                         initial={{ opacity: 0, x: -20 }}

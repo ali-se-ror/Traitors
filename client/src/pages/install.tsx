@@ -69,7 +69,8 @@ export default function InstallPage() {
     }
   };
 
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPad detection
   const isAndroid = /Android/.test(navigator.userAgent);
   const isChrome = /Chrome/.test(navigator.userAgent);
 
@@ -168,12 +169,14 @@ export default function InstallPage() {
               <h3 className="text-xl font-bold text-neon-pink mb-4">📱 Easy Install Instructions</h3>
               {isIOS ? (
                 <div className="text-left space-y-3">
-                  <p className="text-gray-300 font-semibold">iPhone Instructions:</p>
-                  <div className="bg-black/70 p-4 rounded-lg space-y-2">
-                    <p className="text-lg">1. Tap the Share button at the bottom <br/><span className="bg-blue-600 px-2 py-1 rounded text-sm">🔗</span></p>
-                    <p className="text-lg">2. Scroll down and tap "Add to Home Screen"</p>
-                    <p className="text-lg">3. Tap "Add" to confirm</p>
+                  <p className="text-gray-300 font-semibold">iPhone/iPad Instructions:</p>
+                  <div className="bg-black/70 p-4 rounded-lg space-y-3">
+                    <p className="text-lg">1. Tap the Share button at the bottom of Safari<br/><span className="bg-blue-600 px-2 py-1 rounded text-sm inline-flex items-center gap-1">📤 Share</span></p>
+                    <p className="text-lg">2. Scroll down in the popup menu</p>
+                    <p className="text-lg">3. Find and tap "Add to Home Screen"</p>
+                    <p className="text-lg">4. Tap "Add" to install the app</p>
                   </div>
+                  <p className="text-xs text-gray-400 italic">The app icon will appear on your home screen!</p>
                 </div>
               ) : isAndroid ? (
                 <div className="text-left space-y-3">

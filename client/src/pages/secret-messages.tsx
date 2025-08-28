@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { resolveProfileImage } from "@/lib/profileImages";
 
 interface Player {
@@ -42,6 +42,7 @@ export default function SecretMessages() {
   const [newPrivateMessage, setNewPrivateMessage] = useState("");
   const [selectedConversation, setSelectedConversation] = useState("");
   const [pendingMedia, setPendingMedia] = useState<{ url: string; type: string } | null>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
 
   // Check URL parameters for auto-selecting conversation
   useEffect(() => {
@@ -80,6 +81,13 @@ export default function SecretMessages() {
     refetchInterval: 3000,
     enabled: !!selectedConversation,
   });
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  }, [conversationMessages]);
 
   const sendPrivateMessageMutation = useMutation({
     mutationFn: async ({ content, receiverId }: { content: string; receiverId: string }) => {
@@ -289,7 +297,10 @@ export default function SecretMessages() {
                 <CardContent>
                   <div className="space-y-4">
                     {/* Messages */}
-                    <div className="bg-slate-800/50 rounded-lg p-4 h-96 overflow-y-auto border border-slate-700">
+                    <div 
+                      ref={messagesRef}
+                      className="bg-slate-800/50 rounded-lg p-4 h-96 overflow-y-auto border border-slate-700"
+                    >
                       <div className="space-y-3">
                         {conversationMessages.map((msg, index) => (
                           <motion.div
