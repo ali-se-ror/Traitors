@@ -114,11 +114,10 @@ export default function InstallPage() {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-4 neon-gradient-title">
-            Install The Traitors
+            Download The Traitors
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Get the full mobile app experience! Install The Traitors on your phone for 
-            faster access, offline play, and native app features.
+            Tap the big button below to add this game to your phone's home screen!
           </p>
           
           <div className="flex items-center justify-center gap-4 text-sm text-gray-400">
@@ -137,8 +136,69 @@ export default function InstallPage() {
           </div>
         </motion.div>
 
+        {/* Big Download Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-center mb-12"
+        >
+          {deferredPrompt ? (
+            <Button
+              size="lg"
+              onClick={handleInstallClick}
+              disabled={isInstalling}
+              className="w-full max-w-md mx-auto bg-gradient-to-r from-neon-pink to-vivid-purple hover:from-neon-pink/80 hover:to-vivid-purple/80 text-white font-bold py-8 text-2xl rounded-2xl shadow-2xl shadow-neon-pink/30 transform hover:scale-105 transition-all duration-300"
+              data-testid="button-install-app-big"
+            >
+              {isInstalling ? (
+                <>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mr-4"></div>
+                  Installing...
+                </>
+              ) : (
+                <>
+                  <Download className="w-8 h-8 mr-4" />
+                  📱 Add to Phone
+                </>
+              )}
+            </Button>
+          ) : (
+            <div className="bg-black/50 border-2 border-neon-pink rounded-2xl p-8 max-w-md mx-auto">
+              <h3 className="text-xl font-bold text-neon-pink mb-4">📱 Easy Install Instructions</h3>
+              {isIOS ? (
+                <div className="text-left space-y-3">
+                  <p className="text-gray-300">For iPhone users:</p>
+                  <div className="bg-black/70 p-4 rounded-lg">
+                    <p className="text-lg">1. Tap Share button <span className="text-2xl">📤</span></p>
+                    <p className="text-lg">2. Tap "Add to Home Screen"</p>
+                    <p className="text-lg">3. Tap "Add" ✅</p>
+                  </div>
+                </div>
+              ) : isAndroid ? (
+                <div className="text-left space-y-3">
+                  <p className="text-gray-300">For Android users:</p>
+                  <div className="bg-black/70 p-4 rounded-lg">
+                    <p className="text-lg">1. Tap menu <span className="text-2xl">⋮</span></p>
+                    <p className="text-lg">2. Tap "Install app"</p>
+                    <p className="text-lg">3. Tap "Install" ✅</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-left space-y-3">
+                  <p className="text-gray-300">For desktop users:</p>
+                  <div className="bg-black/70 p-4 rounded-lg">
+                    <p className="text-lg">1. Look for install icon 📥 in address bar</p>
+                    <p className="text-lg">2. Click "Install"</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </motion.div>
+
         {/* Installation Methods */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 gap-8 mb-12 hidden md:block">
           {/* Automatic Installation */}
           {deferredPrompt && (
             <motion.div
@@ -328,10 +388,10 @@ export default function InstallPage() {
           <Button
             variant="outline"
             onClick={() => setLocation('/')}
-            className="border-gray-600 hover:bg-gray-800 text-gray-300"
+            className="border-gray-600 hover:bg-gray-800 text-gray-300 text-lg py-3 px-6"
             data-testid="button-use-browser"
           >
-            Continue in Browser Instead
+            Skip - Play in Browser
           </Button>
         </motion.div>
       </div>
