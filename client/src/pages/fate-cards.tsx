@@ -16,7 +16,7 @@ interface FateCard {
   id: string;
   title: string;
   description: string;
-  type: 'challenge' | 'advantage' | 'disadvantage';
+  type: 'advantage' | 'disadvantage';
   icon: React.ReactNode;
   effect: string;
 }
@@ -194,12 +194,12 @@ const FATE_CARDS: FateCard[] = [
     effect: 'You must capture a jump scare on another player this week and share it with the group. If successful, you gain an extra vote; if not, you cannot vote next round'
   },
 
-  // Chaotic / Funny Cards 🎭
+  // Chaotic / Funny Cards (now Disadvantage type) 🎭
   {
     id: 'chaotic-1',
     title: 'Bat Wings',
     description: 'Embrace your inner creature',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Ghost className="w-8 h-8" />,
     effect: 'After you vote, you must leave the roundtable doing your best bat impression (no explanation). If you don\'t, your vote is void'
   },
@@ -207,7 +207,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-2',
     title: 'Haunted Megaphone',
     description: 'The spirits amplify your voice',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Volume2 className="w-8 h-8" />,
     effect: 'You must shout all your arguments in the next roundtable. But you cannot be murdered that night because "the ghosts find you entertaining"'
   },
@@ -215,7 +215,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-3',
     title: 'Pumpkin King/Queen',
     description: 'Crown yourself in orange',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Crown className="w-8 h-8" />,
     effect: 'Wear something orange (or put something orange on you). As long as it stays on, you cannot be eliminated. Do not share this with others'
   },
@@ -223,7 +223,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-4',
     title: 'Silent Movie Star',
     description: 'Words are forbidden',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Users className="w-8 h-8" />,
     effect: 'You must communicate only through exaggerated gestures during the next roundtable. No explanation allowed'
   },
@@ -231,7 +231,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-5',
     title: 'Cackle of Doom',
     description: 'Madness overtakes you',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Skull className="w-8 h-8" />,
     effect: 'You must laugh maniacally every time someone says the word "traitor." (If you forget, you lose your vote.)'
   },
@@ -239,7 +239,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-6',
     title: 'Possessed Puppet',
     description: 'Another controls your strings',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Users className="w-8 h-8" />,
     effect: 'Another player of your choice gets to control your vote this round'
   },
@@ -247,7 +247,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-7',
     title: 'The Itchy Twitch',
     description: 'Cursed with supernatural affliction',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Zap className="w-8 h-8" />,
     effect: 'At the roundtable, you must scratch and twitch every time someone says "traitor." If you forget, you lose your vote'
   },
@@ -255,7 +255,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-8',
     title: 'Dead Weight',
     description: 'Burden of the grave',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Hourglass className="w-8 h-8" />,
     effect: 'You must carry a big heavy object (pumpkin, rock, random prop) during the next in-person event'
   },
@@ -263,7 +263,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-9',
     title: 'No Eye Contact',
     description: 'The gaze of guilt',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Eye className="w-8 h-8" />,
     effect: 'You cannot look anyone in the eyes during the next roundtable. No explanation allowed'
   },
@@ -271,7 +271,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-10',
     title: 'Truth Serum',
     description: 'Honesty becomes compulsion',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Shield className="w-8 h-8" />,
     effect: 'You must answer every question at the roundtable honestly (Game Master enforces). Roundabout truths are allowed'
   },
@@ -279,7 +279,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-11',
     title: 'Monster Mash',
     description: 'Become the beast within',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Skull className="w-8 h-8" />,
     effect: 'You must speak in your best monster voice at the next roundtable. No exceptions'
   },
@@ -287,7 +287,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-12',
     title: 'Werewolf Howl',
     description: 'Channel your inner predator',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Moon className="w-8 h-8" />,
     effect: 'You must howl loudly every time someone accuses you. If you do it well enough, you gain protection from murder and elimination that night'
   },
@@ -295,7 +295,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-13',
     title: 'Phantom Flatulence',
     description: 'Blame the supernatural',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Ghost className="w-8 h-8" />,
     effect: 'You must blame any strange noises on a ghost at the next in-person meeting. If the group laughs, you gain immunity from elimination'
   },
@@ -303,7 +303,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-14',
     title: 'Vampire\'s Kiss',
     description: 'Bound by blood',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Heart className="w-8 h-8" />,
     effect: 'Pick another player before the next roundtable begins. You\'re "bound" to them — if they\'re eliminated, you go too'
   },
@@ -311,7 +311,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-15',
     title: 'The Skeleton\'s Joke',
     description: 'Humor from beyond the grave',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Skull className="w-8 h-8" />,
     effect: 'Tell a skeleton-themed joke at the roundtable. If no one laughs, you\'re cursed and cannot vote'
   },
@@ -319,7 +319,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-16',
     title: 'Coffin Nap',
     description: 'Embrace temporary death',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Hourglass className="w-8 h-8" />,
     effect: 'Pretend to "die" (lie down, close eyes) for the first half of the discussion. No one can accuse you while you\'re "dead"'
   },
@@ -327,7 +327,7 @@ const FATE_CARDS: FateCard[] = [
     id: 'chaotic-17',
     title: 'Headless Horseman\'s Gamble',
     description: 'Let fate decide your doom',
-    type: 'challenge',
+    type: 'disadvantage',
     icon: <Zap className="w-8 h-8" />,
     effect: 'Flip a coin in front of everyone: heads, you\'re immune next round; tails, you\'re automatically on the chopping block'
   }
@@ -405,8 +405,6 @@ export default function FateCards() {
 
   const getCardColor = (type: string) => {
     switch (type) {
-      case 'challenge':
-        return 'from-purple-600 to-purple-800';
       case 'advantage':
         return 'from-green-600 to-green-800';
       case 'disadvantage':
@@ -418,8 +416,6 @@ export default function FateCards() {
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'challenge':
-        return '🎭';
       case 'advantage':
         return '✨';
       case 'disadvantage':
@@ -587,7 +583,7 @@ export default function FateCards() {
             THE DARK DECK
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            From the shadows emerges a deck of ancient power. Draw wisely - each card will alter your path...
+            Step right up, brave soul… pick a card, if you dare. Within this cursed deck lurk tricks and treats alike: some grant you unholy powers, others chain you in dreadful curses. Risk is the price, chaos the reward. Will you gain a ghost's protection, or be doomed to twitch, cackle, and carry pumpkins until your end? Only the deck knows…
           </p>
           {!isLoading && drawStatus && !drawStatus.canDraw && (
             <div className="mt-4 p-4 bg-red-900/20 border border-red-500/30 rounded-lg max-w-md mx-auto">
