@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Skull, Zap, Shield, Target, Hourglass, Eye, Crown, Ghost, AlertCircle, Home, Users, MessageSquare, Vote, BarChart3, LogOut } from "lucide-react";
+import { Skull, Zap, Shield, Target, Hourglass, Eye, Crown, Ghost, AlertCircle, Home, Users, MessageSquare, Vote, BarChart3, LogOut, Lock, X, Cloud, Volume2, Moon, Heart } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -22,80 +22,314 @@ interface FateCard {
 }
 
 const FATE_CARDS: FateCard[] = [
-  // Challenges
-  {
-    id: 'challenge-1',
-    title: 'Trial by Shadows',
-    description: 'The darkness tests your resolve',
-    type: 'challenge',
-    icon: <Skull className="w-8 h-8" />,
-    effect: 'You must vote for someone different than your original suspicion this round'
-  },
-  {
-    id: 'challenge-2',
-    title: 'Whispered Doubts',
-    description: 'Paranoia clouds your judgment',
-    type: 'challenge',
-    icon: <Ghost className="w-8 h-8" />,
-    effect: 'Your next private message must contain exactly 13 words'
-  },
-  {
-    id: 'challenge-3',
-    title: 'Cursed Silence',
-    description: 'The spirits demand quiet',
-    type: 'challenge',
-    icon: <Hourglass className="w-8 h-8" />,
-    effect: 'You cannot send any public messages for the next 5 minutes'
-  },
-  // Advantages
+  // Advantage Cards ✨
   {
     id: 'advantage-1',
-    title: 'Mystic Insight',
-    description: 'The crystal ball reveals truth',
-    type: 'advantage',
-    icon: <Eye className="w-8 h-8" />,
-    effect: 'You can see who the last person to vote was (ask Game Master privately)'
-  },
-  {
-    id: 'advantage-2',
-    title: 'Shadow Cloak',
-    description: 'You blend with the darkness',
+    title: 'Secret Shield',
+    description: 'Divine protection surrounds you',
     type: 'advantage',
     icon: <Shield className="w-8 h-8" />,
-    effect: 'Your vote this round is completely anonymous and untraceable'
+    effect: 'You cannot be banished at the next roundtable'
+  },
+  {
+    id: 'advantage-2', 
+    title: 'Divine Protection',
+    description: 'The spirits guard your life',
+    type: 'advantage',
+    icon: <Crown className="w-8 h-8" />,
+    effect: 'You cannot be murdered tonight'
   },
   {
     id: 'advantage-3',
-    title: 'Divine Protection',
-    description: 'The spirits favor you',
+    title: 'Ghostly Whisper',
+    description: 'Secrets drift through the shadows',
+    type: 'advantage', 
+    icon: <Ghost className="w-8 h-8" />,
+    effect: 'The Game Master will secretly slip you a clue about one traitor'
+  },
+  {
+    id: 'advantage-4',
+    title: 'Double Vote',
+    description: 'Your voice echoes twice',
+    type: 'advantage',
+    icon: <Eye className="w-8 h-8" />,
+    effect: 'Your vote counts twice this round (but you must vote for the same person)'
+  },
+  {
+    id: 'advantage-5',
+    title: 'Phantom Ally',
+    description: 'Fates intertwine in darkness',
+    type: 'advantage',
+    icon: <Users className="w-8 h-8" />,
+    effect: 'Choose one person; if they are eliminated this round, you survive instead (your fates swap)'
+  },
+  {
+    id: 'advantage-6',
+    title: 'Eternal Life',
+    description: 'Death is not the end',
+    type: 'advantage',
+    icon: <Skull className="w-8 h-8" />,
+    effect: 'If you are murdered, you come back as a ghost and get one more round to vote before fully eliminated'
+  },
+  {
+    id: 'advantage-7',
+    title: 'Resurrection',
+    description: 'Rise from the ashes',
     type: 'advantage',
     icon: <Crown className="w-8 h-8" />,
-    effect: 'Immunity from elimination if you receive the most votes this round'
+    effect: 'If banished, you survive but cannot vote ever again'
   },
-  // Disadvantages
+  {
+    id: 'advantage-8',
+    title: 'Blood Moon',
+    description: 'The crimson night protects all',
+    type: 'advantage',
+    icon: <Moon className="w-8 h-8" />,
+    effect: 'If you pull this card, the traitors are not allowed to murder anyone tonight'
+  },
+  {
+    id: 'advantage-9',
+    title: 'The Curse of Reverse',
+    description: 'Death turns upon itself',
+    type: 'advantage',
+    icon: <Zap className="w-8 h-8" />,
+    effect: 'If you are murdered in the next round, the traitor who killed you dies instead'
+  },
+  {
+    id: 'advantage-10',
+    title: 'The Ghost Arises',
+    description: 'Command over life and death',
+    type: 'advantage',
+    icon: <Ghost className="w-8 h-8" />,
+    effect: 'At any point in the game, you may bring one murdered or eliminated player back from the dead'
+  },
+  {
+    id: 'advantage-11',
+    title: 'Traitor for a Night',
+    description: 'Darkness consumes the faithful',
+    type: 'advantage',
+    icon: <Skull className="w-8 h-8" />,
+    effect: 'Even if you are Faithful, you may murder one player at any point in the game'
+  },
+
+  // Disadvantage Cards 💀
   {
     id: 'disadvantage-1',
-    title: 'Marked by Fear',
-    description: 'Others sense your terror',
+    title: 'Tongue-Tied',
+    description: 'Words fail you in darkness',
     type: 'disadvantage',
-    icon: <Target className="w-8 h-8" />,
-    effect: 'Your username appears in red to all other players for this round'
+    icon: <Lock className="w-8 h-8" />,
+    effect: 'You cannot speak during the next roundtable (only vote silently)'
   },
   {
     id: 'disadvantage-2',
-    title: 'Cursed Tongue',
-    description: 'Your words betray you',
+    title: 'No Vote for You',
+    description: 'Your voice is silenced',
     type: 'disadvantage',
-    icon: <Zap className="w-8 h-8" />,
-    effect: 'All your messages this round must end with "...or so the spirits whisper"'
+    icon: <X className="w-8 h-8" />,
+    effect: 'You cannot vote this round'
   },
   {
     id: 'disadvantage-3',
-    title: 'Phantom Votes',
-    description: 'Your influence wanes',
+    title: 'Cursed Mark',
+    description: 'All eyes turn to you',
+    type: 'disadvantage',
+    icon: <Target className="w-8 h-8" />,
+    effect: 'Announce publicly that you have drawn this card; your name must be written on at least one ballot this round'
+  },
+  {
+    id: 'disadvantage-4',
+    title: 'Restless Spirit',
+    description: 'The dead demand your confession',
     type: 'disadvantage',
     icon: <Ghost className="w-8 h-8" />,
-    effect: 'Your vote counts as 0.5 instead of 1 for this round'
+    effect: 'You must stand up and reveal your suspicion out loud before voting'
+  },
+  {
+    id: 'disadvantage-5',
+    title: 'Bad Omen',
+    description: 'Darkness clouds your judgment',
+    type: 'disadvantage',
+    icon: <Cloud className="w-8 h-8" />,
+    effect: 'You must cast your vote first this round'
+  },
+  {
+    id: 'disadvantage-6',
+    title: 'Ghastly Burden',
+    description: 'The weight of shadows',
+    type: 'disadvantage',
+    icon: <Hourglass className="w-8 h-8" />,
+    effect: 'You automatically lose your vote next round'
+  },
+  {
+    id: 'disadvantage-7',
+    title: 'Gravedigger\'s Debt',
+    description: 'Bound by unholy oath',
+    type: 'disadvantage',
+    icon: <Users className="w-8 h-8" />,
+    effect: 'You owe loyalty to the next person who speaks to you; you must vote the same as them this round'
+  },
+  {
+    id: 'disadvantage-8',
+    title: 'Haunted Silence',
+    description: 'Ghosts steal your defense',
+    type: 'disadvantage',
+    icon: <Lock className="w-8 h-8" />,
+    effect: 'You may not defend yourself if accused at the next roundtable'
+  },
+  {
+    id: 'disadvantage-9',
+    title: 'Cursed Treasure',
+    description: 'Safety comes at a price',
+    type: 'disadvantage',
+    icon: <Shield className="w-8 h-8" />,
+    effect: 'You are safe for 2 rounds but cannot vote during them'
+  },
+  {
+    id: 'disadvantage-10',
+    title: 'Scare',
+    description: 'Terror must be shared',
+    type: 'disadvantage',
+    icon: <Zap className="w-8 h-8" />,
+    effect: 'You must capture a jump scare on another player this week and share it with the group. If successful, you gain an extra vote; if not, you cannot vote next round'
+  },
+
+  // Chaotic / Funny Cards 🎭
+  {
+    id: 'chaotic-1',
+    title: 'Bat Wings',
+    description: 'Embrace your inner creature',
+    type: 'challenge',
+    icon: <Ghost className="w-8 h-8" />,
+    effect: 'After you vote, you must leave the roundtable doing your best bat impression (no explanation). If you don\'t, your vote is void'
+  },
+  {
+    id: 'chaotic-2',
+    title: 'Haunted Megaphone',
+    description: 'The spirits amplify your voice',
+    type: 'challenge',
+    icon: <Volume2 className="w-8 h-8" />,
+    effect: 'You must shout all your arguments in the next roundtable. But you cannot be murdered that night because "the ghosts find you entertaining"'
+  },
+  {
+    id: 'chaotic-3',
+    title: 'Pumpkin King/Queen',
+    description: 'Crown yourself in orange',
+    type: 'challenge',
+    icon: <Crown className="w-8 h-8" />,
+    effect: 'Wear something orange (or put something orange on you). As long as it stays on, you cannot be eliminated. Do not share this with others'
+  },
+  {
+    id: 'chaotic-4',
+    title: 'Silent Movie Star',
+    description: 'Words are forbidden',
+    type: 'challenge',
+    icon: <Users className="w-8 h-8" />,
+    effect: 'You must communicate only through exaggerated gestures during the next roundtable. No explanation allowed'
+  },
+  {
+    id: 'chaotic-5',
+    title: 'Cackle of Doom',
+    description: 'Madness overtakes you',
+    type: 'challenge',
+    icon: <Skull className="w-8 h-8" />,
+    effect: 'You must laugh maniacally every time someone says the word "traitor." (If you forget, you lose your vote.)'
+  },
+  {
+    id: 'chaotic-6',
+    title: 'Possessed Puppet',
+    description: 'Another controls your strings',
+    type: 'challenge',
+    icon: <Users className="w-8 h-8" />,
+    effect: 'Another player of your choice gets to control your vote this round'
+  },
+  {
+    id: 'chaotic-7',
+    title: 'The Itchy Twitch',
+    description: 'Cursed with supernatural affliction',
+    type: 'challenge',
+    icon: <Zap className="w-8 h-8" />,
+    effect: 'At the roundtable, you must scratch and twitch every time someone says "traitor." If you forget, you lose your vote'
+  },
+  {
+    id: 'chaotic-8',
+    title: 'Dead Weight',
+    description: 'Burden of the grave',
+    type: 'challenge',
+    icon: <Hourglass className="w-8 h-8" />,
+    effect: 'You must carry a big heavy object (pumpkin, rock, random prop) during the next in-person event'
+  },
+  {
+    id: 'chaotic-9',
+    title: 'No Eye Contact',
+    description: 'The gaze of guilt',
+    type: 'challenge',
+    icon: <Eye className="w-8 h-8" />,
+    effect: 'You cannot look anyone in the eyes during the next roundtable. No explanation allowed'
+  },
+  {
+    id: 'chaotic-10',
+    title: 'Truth Serum',
+    description: 'Honesty becomes compulsion',
+    type: 'challenge',
+    icon: <Shield className="w-8 h-8" />,
+    effect: 'You must answer every question at the roundtable honestly (Game Master enforces). Roundabout truths are allowed'
+  },
+  {
+    id: 'chaotic-11',
+    title: 'Monster Mash',
+    description: 'Become the beast within',
+    type: 'challenge',
+    icon: <Skull className="w-8 h-8" />,
+    effect: 'You must speak in your best monster voice at the next roundtable. No exceptions'
+  },
+  {
+    id: 'chaotic-12',
+    title: 'Werewolf Howl',
+    description: 'Channel your inner predator',
+    type: 'challenge',
+    icon: <Moon className="w-8 h-8" />,
+    effect: 'You must howl loudly every time someone accuses you. If you do it well enough, you gain protection from murder and elimination that night'
+  },
+  {
+    id: 'chaotic-13',
+    title: 'Phantom Flatulence',
+    description: 'Blame the supernatural',
+    type: 'challenge',
+    icon: <Ghost className="w-8 h-8" />,
+    effect: 'You must blame any strange noises on a ghost at the next in-person meeting. If the group laughs, you gain immunity from elimination'
+  },
+  {
+    id: 'chaotic-14',
+    title: 'Vampire\'s Kiss',
+    description: 'Bound by blood',
+    type: 'challenge',
+    icon: <Heart className="w-8 h-8" />,
+    effect: 'Pick another player before the next roundtable begins. You\'re "bound" to them — if they\'re eliminated, you go too'
+  },
+  {
+    id: 'chaotic-15',
+    title: 'The Skeleton\'s Joke',
+    description: 'Humor from beyond the grave',
+    type: 'challenge',
+    icon: <Skull className="w-8 h-8" />,
+    effect: 'Tell a skeleton-themed joke at the roundtable. If no one laughs, you\'re cursed and cannot vote'
+  },
+  {
+    id: 'chaotic-16',
+    title: 'Coffin Nap',
+    description: 'Embrace temporary death',
+    type: 'challenge',
+    icon: <Hourglass className="w-8 h-8" />,
+    effect: 'Pretend to "die" (lie down, close eyes) for the first half of the discussion. No one can accuse you while you\'re "dead"'
+  },
+  {
+    id: 'chaotic-17',
+    title: 'Headless Horseman\'s Gamble',
+    description: 'Let fate decide your doom',
+    type: 'challenge',
+    icon: <Zap className="w-8 h-8" />,
+    effect: 'Flip a coin in front of everyone: heads, you\'re immune next round; tails, you\'re automatically on the chopping block'
   }
 ];
 
@@ -185,11 +419,11 @@ export default function FateCards() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'challenge':
-        return '🎯';
+        return '🎭';
       case 'advantage':
         return '✨';
       case 'disadvantage':
-        return '⚡';
+        return '💀';
       default:
         return '🎴';
     }
@@ -353,7 +587,7 @@ export default function FateCards() {
             THE DARK DECK
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            The ancient deck holds your destiny. One card will change the course of your game...
+            From the shadows emerges a deck of ancient power. Draw wisely - each card will alter your path...
           </p>
           {!isLoading && drawStatus && !drawStatus.canDraw && (
             <div className="mt-4 p-4 bg-red-900/20 border border-red-500/30 rounded-lg max-w-md mx-auto">
@@ -400,8 +634,8 @@ export default function FateCards() {
                           <div className="absolute inset-0 bg-purple-500/20 rounded-full blur-xl"></div>
                         </div>
                         <div className="space-y-2">
-                          <h3 className="text-2xl font-bold neon-gradient-title">FATE DECK</h3>
-                          <p className="text-purple-300 text-sm">Click to draw your destiny</p>
+                          <h3 className="text-2xl font-bold neon-gradient-title">DARK DECK</h3>
+                          <p className="text-purple-300 text-sm">Click to reveal your fate</p>
                         </div>
                         <div className="grid grid-cols-3 gap-1 opacity-30">
                           {[...Array(9)].map((_, i) => (
@@ -485,7 +719,7 @@ export default function FateCards() {
                 ) : (
                   <>
                     <Target className="w-5 h-5 mr-2" />
-                    Draw Your Fate
+                    Draw From The Dark Deck
                   </>
                 )}
               </Button>
