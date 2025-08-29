@@ -124,24 +124,25 @@ export default function SecretMessages() {
 
   return (
     <div className="min-h-screen atmospheric-bg">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 lg:px-4 py-4 lg:py-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          className="mb-4 lg:mb-8"
         >
           <div className="flex items-center gap-4 mb-4">
             <Link to="/">
               <Button variant="outline" size="sm" className="border-slate-600 hover:bg-slate-700">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                <span className="hidden sm:inline">Back to Dashboard</span>
+                <span className="sm:hidden">Back</span>
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-serif font-bold text-white">Secret Messages</h1>
-              <p className="text-slate-400">Whisper in the shadows with your fellow players</p>
+              <h1 className="text-2xl lg:text-3xl font-serif font-bold text-white">Secret Messages</h1>
+              <p className="text-slate-400 text-sm lg:text-base">Whisper in the shadows with your fellow players</p>
             </div>
           </div>
         </motion.div>
@@ -202,7 +203,7 @@ export default function SecretMessages() {
                             <div className="text-center">
                               <Avatar className="w-20 h-20 mx-auto mb-4 border-2 border-slate-600 group-hover:border-red-400/50 transition-colors">
                                 <AvatarImage 
-                                  src={resolveProfileImage(player.profileImage)} 
+                                  src={resolveProfileImage(player.profileImage || null)} 
                                   alt={`${player.username}'s avatar`} 
                                 />
                                 <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-3xl">
@@ -235,12 +236,59 @@ export default function SecretMessages() {
           </motion.div>
         ) : (
           /* Conversation View */
-          <div className="grid lg:grid-cols-4 gap-6">
-            {/* Back Button & Info */}
+          <div className="flex flex-col lg:grid lg:grid-cols-4 gap-4 lg:gap-6 max-w-7xl mx-auto">
+            {/* Mobile Header & Back Button */}
+            <div className="lg:hidden">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.6 }}
+                className="flex items-center gap-3 mb-4"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedConversation("")}
+                  className="border-slate-600 hover:bg-slate-700"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </Button>
+                
+                {(() => {
+                  const targetPlayer = players.find(p => p.id === selectedConversation);
+                  const spookySymbols = ["👻", "💀", "🦇", "🕷️", "🔮", "⚡", "🌙", "🗡️", "🏴‍☠️", "🦹", "🎭", "🔥"];
+                  const symbolIndex = selectedConversation.charCodeAt(0) % spookySymbols.length;
+                  const playerSymbol = spookySymbols[symbolIndex];
+                  
+                  return (
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-10 h-10 border-2 border-slate-600">
+                        <AvatarImage 
+                          src={resolveProfileImage(targetPlayer?.profileImage || null)} 
+                          alt={`${targetPlayer?.username}'s avatar`} 
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-sm">
+                          {targetPlayer?.symbol || playerSymbol}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="font-semibold text-white text-sm">
+                          {targetPlayer?.username || 'Unknown'}
+                        </h3>
+                        <p className="text-xs text-slate-400">Secret Conversation</p>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </motion.div>
+            </div>
+
+            {/* Desktop Sidebar */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
+              className="hidden lg:block"
             >
               <Card className="card-medieval">
                 <CardContent className="p-4">
@@ -263,7 +311,7 @@ export default function SecretMessages() {
                       return (
                         <Avatar className="w-16 h-16 mx-auto mb-3 border-2 border-slate-600">
                           <AvatarImage 
-                            src={resolveProfileImage(targetPlayer?.profileImage)} 
+                            src={resolveProfileImage(targetPlayer?.profileImage || null)} 
                             alt={`${targetPlayer?.username}'s avatar`} 
                           />
                           <AvatarFallback className="bg-gradient-to-br from-slate-700 to-slate-800 text-2xl">
@@ -281,103 +329,107 @@ export default function SecretMessages() {
               </Card>
             </motion.div>
 
-            {/* Message Thread */}
+            {/* Message Thread - Mobile Optimized */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="lg:col-span-3"
+              className="lg:col-span-3 flex flex-col h-full"
             >
-              <Card className="card-medieval">
-                <CardHeader>
+              <Card className="card-medieval flex-1 flex flex-col">
+                <CardHeader className="hidden lg:block">
                   <CardTitle className="text-lg font-serif text-red-300">
                     Conversation with {players.find(p => p.id === selectedConversation)?.username || 'Unknown'}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {/* Messages */}
-                    <div 
-                      ref={messagesRef}
-                      className="bg-slate-800/50 rounded-lg p-4 h-96 overflow-y-auto border border-slate-700"
-                    >
-                      <div className="space-y-3">
-                        {conversationMessages.map((msg, index) => (
-                          <motion.div
-                            key={msg.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`p-3 rounded ${
-                              msg.senderId === user?.id 
-                                ? 'bg-red-900/20 ml-8 border-l-2 border-red-400' 
-                                : 'bg-slate-700/50 mr-8 border border-amber-500/30'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <Avatar className="w-6 h-6 border border-red-400/30">
-                                <AvatarImage 
-                                  src={resolveProfileImage(msg.senderProfileImage)} 
-                                  alt={`${msg.senderUsername}'s avatar`} 
-                                />
-                                <AvatarFallback className="bg-red-800 text-xs">
-                                  {msg.senderId === user?.id ? user?.symbol : (players.find(p => p.id === msg.senderId)?.symbol || msg.senderUsername.slice(0, 2).toUpperCase())}
-                                </AvatarFallback>
-                              </Avatar>
-                              <span className="text-red-300 font-medium text-xs">
-                                {msg.senderId === user?.id ? 'You' : msg.senderUsername}
-                              </span>
-                              <span className="text-slate-400 text-xs">
-                                {formatTime(msg.createdAt)}
-                              </span>
-                            </div>
-                            <p className="text-white text-sm">{msg.content}</p>
-                            {msg.mediaUrl && (
-                              <div className="mt-2">
-                                {msg.mediaType?.startsWith('image/') ? (
-                                  <img 
-                                    src={msg.mediaUrl} 
-                                    alt="Shared media" 
-                                    className="max-w-xs rounded border border-slate-600"
+                <CardContent className="flex-1 flex flex-col p-3 lg:p-6">
+                  <div className="flex flex-col h-full space-y-4">
+                    {/* Messages Container - Fixed Height with Proper Scrolling */}
+                    <div className="flex-1 min-h-0">
+                      <div 
+                        ref={messagesRef}
+                        className="bg-slate-800/50 rounded-lg p-3 lg:p-4 h-full overflow-y-auto border border-slate-700 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800"
+                        style={{ maxHeight: 'calc(100vh - 280px)' }}
+                      >
+                        <div className="space-y-3">
+                          {conversationMessages.map((msg, index) => (
+                            <motion.div
+                              key={msg.id}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                              className={`p-3 rounded ${
+                                msg.senderId === user?.id 
+                                  ? 'bg-red-900/20 ml-4 lg:ml-8 border-l-2 border-red-400' 
+                                  : 'bg-slate-700/50 mr-4 lg:mr-8 border border-amber-500/30'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <Avatar className="w-6 h-6 border border-red-400/30">
+                                  <AvatarImage 
+                                    src={resolveProfileImage(msg.senderProfileImage || null)} 
+                                    alt={`${msg.senderUsername}'s avatar`} 
                                   />
-                                ) : msg.mediaType?.startsWith('video/') ? (
-                                  <video 
-                                    src={msg.mediaUrl} 
-                                    controls 
-                                    className="max-w-xs rounded border border-slate-600"
-                                  />
-                                ) : (
-                                  <a 
-                                    href={msg.mediaUrl} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-red-400 hover:text-red-300 underline text-sm"
-                                  >
-                                    <Paperclip className="w-3 h-3 inline mr-1" />
-                                    View attachment
-                                  </a>
-                                )}
+                                  <AvatarFallback className="bg-red-800 text-xs">
+                                    {msg.senderId === user?.id ? user?.symbol : (players.find(p => p.id === msg.senderId)?.symbol || msg.senderUsername.slice(0, 2).toUpperCase())}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <span className="text-red-300 font-medium text-xs">
+                                  {msg.senderId === user?.id ? 'You' : msg.senderUsername}
+                                </span>
+                                <span className="text-slate-400 text-xs">
+                                  {formatTime(msg.createdAt)}
+                                </span>
                               </div>
-                            )}
-                          </motion.div>
-                        ))}
-                        {conversationMessages.length === 0 && (
-                          <div className="text-center text-slate-400 py-8">
-                            <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            <p className="text-sm">Start the conversation...</p>
-                          </div>
-                        )}
+                              <p className="text-white text-sm leading-relaxed">{msg.content}</p>
+                              {msg.mediaUrl && (
+                                <div className="mt-2">
+                                  {msg.mediaType?.startsWith('image/') ? (
+                                    <img 
+                                      src={msg.mediaUrl} 
+                                      alt="Shared media" 
+                                      className="max-w-xs rounded border border-slate-600"
+                                    />
+                                  ) : msg.mediaType?.startsWith('video/') ? (
+                                    <video 
+                                      src={msg.mediaUrl} 
+                                      controls 
+                                      className="max-w-xs rounded border border-slate-600"
+                                    />
+                                  ) : (
+                                    <a 
+                                      href={msg.mediaUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="text-red-400 hover:text-red-300 underline text-sm"
+                                    >
+                                      <Paperclip className="w-3 h-3 inline mr-1" />
+                                      View attachment
+                                    </a>
+                                  )}
+                                </div>
+                              )}
+                            </motion.div>
+                          ))}
+                          {conversationMessages.length === 0 && (
+                            <div className="text-center text-slate-400 py-8">
+                              <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                              <p className="text-sm">Start the conversation...</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Send Message */}
-                    <div className="space-y-3">
+                    {/* Send Message - Always at Bottom */}
+                    <div className="flex-shrink-0 space-y-3">
                       <Textarea
                         value={newPrivateMessage}
                         onChange={(e) => setNewPrivateMessage(e.target.value)}
                         placeholder="Send a secret message..."
-                        className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
+                        className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm resize-none"
                         maxLength={200}
+                        rows={3}
                       />
                       <div className="flex gap-2">
                         <Button
