@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Crown, Users, MessageCircle, Eye, BarChart3, Shield, Skull, Swords } from "lucide-react";
+import { Crown, Users, MessageCircle, Eye, BarChart3, Shield, Skull, Swords, Paperclip, X } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
+import { ObjectUploader } from "@/components/ObjectUploader";
 
 interface Player {
   id: string;
@@ -54,12 +55,15 @@ interface Announcement {
   gameMasterUsername: string;
   title: string;
   content: string;
+  mediaUrl?: string;
+  mediaType?: string;
   createdAt: string;
 }
 
 export default function GameMaster() {
   const [announcementTitle, setAnnouncementTitle] = useState("");
   const [announcementContent, setAnnouncementContent] = useState("");
+  const [pendingAnnouncementMedia, setPendingAnnouncementMedia] = useState<{url: string, type: string} | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -94,10 +98,11 @@ export default function GameMaster() {
   });
 
   const createAnnouncementMutation = useMutation({
-    mutationFn: (data: { title: string; content: string }) => apiRequest("POST", "/api/announcements", data),
+    mutationFn: (data: { title: string; content: string; mediaUrl?: string; mediaType?: string }) => apiRequest("POST", "/api/announcements", data),
     onSuccess: () => {
       setAnnouncementTitle("");
       setAnnouncementContent("");
+      setPendingAnnouncementMedia(null);
       refetchAnnouncements();
       toast({ title: "Announcement created!", description: "Your proclamation has been broadcast to all players" });
     },
@@ -509,7 +514,34 @@ export default function GameMaster() {
                             </span>
                           </div>
                           <h3 className="text-purple-200 font-bold mb-2">{announcement.title}</h3>
-                          <p className="text-white text-sm">{announcement.content}</p>
+                          <p className="text-white text-sm mb-3">{announcement.content}</p>
+                          
+                          {announcement.mediaUrl && (
+                            <div className="mt-3">
+                              {announcement.mediaType?.startsWith('image/') ? (
+                                <img 
+                                  src={announcement.mediaUrl} 
+                                  alt="Announcement media" 
+                                  className="max-w-full h-auto rounded-lg border border-purple-500/30"
+                                />
+                              ) : announcement.mediaType?.startsWith('video/') ? (
+                                <video 
+                                  src={announcement.mediaUrl} 
+                                  controls 
+                                  className="max-w-full rounded-lg border border-purple-500/30"
+                                />
+                              ) : (
+                                <a 
+                                  href={announcement.mediaUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-purple-400 hover:text-purple-300 underline"
+                                >
+                                  View Media Attachment
+                                </a>
+                              )}
+                            </div>
+                          )}
                         </motion.div>
                       ))}
                       {announcements.length === 0 && (
@@ -551,10 +583,63 @@ export default function GameMaster() {
                       data-testid="input-gm-announcement-content"
                     />
 
+                    {/* Media Upload */}
+                    <div className="flex items-center gap-2">
+                      <ObjectUploader
+                        maxNumberOfFiles={1}
+                        maxFileSize={50485760} // 50MB for Game Master
+                        onGetUploadParameters={async () => {
+                          const response = await apiRequest("POST", "/api/objects/upload", {});
+                          const data = await response.json();
+                          return { method: "PUT", url: data.uploadURL };
+                        }}
+                        onComplete={async (result) => {
+                          if (result.successful[0]) {
+                            const uploadURL = result.successful[0].uploadURL;
+                            const file = result.successful[0].data as File;
+                            
+                            const mediaResponse = await apiRequest("PUT", "/api/media-attachments", {
+                              mediaUrl: uploadURL,
+                            });
+                            const mediaData = await mediaResponse.json();
+                            
+                            setPendingAnnouncementMedia({
+                              url: mediaData.objectPath,
+                              type: file.type,
+                            });
+                          }
+                        }}
+                        buttonClassName="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30"
+                      >
+                        <Paperclip className="w-4 h-4 mr-2" />
+                        Attach Video/Image
+                      </ObjectUploader>
+                      
+                      {pendingAnnouncementMedia && (
+                        <Button
+                          onClick={() => setPendingAnnouncementMedia(null)}
+                          size="sm"
+                          variant="ghost"
+                          className="text-red-400 hover:text-red-300"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+
+                    {pendingAnnouncementMedia && (
+                      <div className="p-2 bg-purple-900/20 rounded border border-purple-400/30 text-sm text-purple-300">
+                        <Paperclip className="w-3 h-3 inline mr-1" />
+                        Media attached ({pendingAnnouncementMedia.type.split('/')[0]})
+                      </div>
+                    )}
+
                     <Button
                       onClick={() => createAnnouncementMutation.mutate({
                         title: announcementTitle,
-                        content: announcementContent
+                        content: announcementContent,
+                        mediaUrl: pendingAnnouncementMedia?.url,
+                        mediaType: pendingAnnouncementMedia?.type,
                       })}
                       disabled={!announcementTitle.trim() || !announcementContent.trim() || createAnnouncementMutation.isPending}
                       className="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold"

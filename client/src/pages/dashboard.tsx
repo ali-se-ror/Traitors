@@ -42,6 +42,8 @@ interface Message {
 interface Announcement {
   id: string;
   content: string;
+  mediaUrl?: string;
+  mediaType?: string;
   createdAt: string;
 }
 
@@ -406,7 +408,34 @@ export default function Dashboard() {
                         </Button>
                       )}
                     </div>
-                    <p className="text-amber-100 text-sm font-medium">{announcement.content}</p>
+                    <p className="text-amber-100 text-sm font-medium mb-3">{announcement.content}</p>
+                    
+                    {announcement.mediaUrl && (
+                      <div className="mt-3">
+                        {announcement.mediaType?.startsWith('image/') ? (
+                          <img 
+                            src={announcement.mediaUrl} 
+                            alt="Announcement media" 
+                            className="max-w-full h-auto rounded-lg border border-amber-500/30"
+                          />
+                        ) : announcement.mediaType?.startsWith('video/') ? (
+                          <video 
+                            src={announcement.mediaUrl} 
+                            controls 
+                            className="max-w-full rounded-lg border border-amber-500/30"
+                          />
+                        ) : (
+                          <a 
+                            href={announcement.mediaUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-amber-400 hover:text-amber-300 underline"
+                          >
+                            View Media Attachment
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </motion.div>
                 ))}
                 {announcements.length === 0 && (

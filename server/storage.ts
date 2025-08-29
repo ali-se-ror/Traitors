@@ -19,16 +19,16 @@ export interface IStorage {
   getAllVotes(): Promise<Vote[]>;
 
   // Message operations
-  createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number }): Promise<Message>;
-  getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
-  getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
+  createMessage(message: { senderId: string; receiverId?: string; content: string; isPrivate?: number; mediaUrl?: string; mediaType?: string }): Promise<Message>;
+  getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; mediaUrl?: string; mediaType?: string; createdAt: Date }[]>;
+  getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; mediaUrl?: string; mediaType?: string; createdAt: Date }[]>;
   getAllPrivateMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; receiverId: string; receiverUsername: string; content: string; createdAt: Date }[]>;
   getPrivateMessagesForUser(userId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]>;
   getUnreadMessagesInboxForUser(userId: string): Promise<{ senderId: string; senderUsername: string; senderProfileImage: string | null; lastMessage: string; lastMessageTime: Date; unreadCount: number }[]>;
   
   // Announcement operations
-  createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement>;
-  getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; createdAt: Date }[]>;
+  createAnnouncement(announcement: { gameMasterId: string; title: string; content: string; mediaUrl?: string; mediaType?: string }): Promise<Announcement>;
+  getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; mediaUrl?: string; mediaType?: string; createdAt: Date }[]>;
   deleteAnnouncement(id: string): Promise<boolean>;
 
   // Card draw operations
@@ -479,12 +479,14 @@ export class DatabaseStorage implements IStorage {
     return newMessage;
   }
 
-  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
+  async getPublicMessages(): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; mediaUrl?: string; mediaType?: string; createdAt: Date }[]> {
     const publicMessages = await db
       .select({
         id: messages.id,
         senderId: messages.senderId,
         content: messages.content,
+        mediaUrl: messages.mediaUrl,
+        mediaType: messages.mediaType,
         createdAt: messages.createdAt,
         senderUsername: users.username,
         senderProfileImage: users.profileImage,
@@ -500,12 +502,14 @@ export class DatabaseStorage implements IStorage {
     }));
   }
 
-  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; createdAt: Date }[]> {
+  async getPrivateMessages(userId: string, targetId: string): Promise<{ id: string; senderId: string; senderUsername: string; senderProfileImage: string | null; content: string; mediaUrl?: string; mediaType?: string; createdAt: Date }[]> {
     const privateMessages = await db
       .select({
         id: messages.id,
         senderId: messages.senderId,
         content: messages.content,
+        mediaUrl: messages.mediaUrl,
+        mediaType: messages.mediaType,
         createdAt: messages.createdAt,
         senderUsername: users.username,
         senderProfileImage: users.profileImage,
@@ -613,26 +617,28 @@ export class DatabaseStorage implements IStorage {
     })).sort((a, b) => b.lastMessageTime.getTime() - a.lastMessageTime.getTime());
   }
 
-  async createAnnouncement(announcement: { gameMasterId: string; title: string; content: string }): Promise<Announcement> {
+  async createAnnouncement(announcement: { gameMasterId: string; title: string; content: string; mediaUrl?: string; mediaType?: string }): Promise<Announcement> {
     const [newAnnouncement] = await db
       .insert(announcements)
       .values({
         gameMasterId: announcement.gameMasterId,
         title: announcement.title,
         content: announcement.content,
-        mediaUrl: null,
-        mediaType: null,
+        mediaUrl: announcement.mediaUrl || null,
+        mediaType: announcement.mediaType || null,
       })
       .returning();
     return newAnnouncement;
   }
 
-  async getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; createdAt: Date }[]> {
+  async getAnnouncements(): Promise<{ id: string; gameMasterUsername: string; title: string; content: string; mediaUrl?: string; mediaType?: string; createdAt: Date }[]> {
     const allAnnouncements = await db
       .select({
         id: announcements.id,
         title: announcements.title,
         content: announcements.content,
+        mediaUrl: announcements.mediaUrl,
+        mediaType: announcements.mediaType,
         createdAt: announcements.createdAt,
         gameMasterUsername: users.username,
       })

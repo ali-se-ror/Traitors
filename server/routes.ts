@@ -5,6 +5,7 @@ import { loginSchema, registerSchema, voteSchema, changeCodewordSchema, gameMast
 import bcrypt from "bcrypt";
 import session from "express-session";
 import MemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 // Extend session type to include userId
@@ -15,6 +16,7 @@ declare module "express-session" {
 }
 
 const MemoryStoreSession = MemoryStore(session);
+const PostgreSQLStore = connectPgSimple(session);
 
 // Spooky symbols for player avatars
 const SPOOKY_SYMBOLS = [
@@ -64,10 +66,12 @@ async function getAvailableProfileImageForUser(): Promise<string | null> {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Session middleware
+  // Session middleware with PostgreSQL persistence
   app.use(session({
-    store: new MemoryStoreSession({
-      checkPeriod: 86400000 // prune expired entries every 24h
+    store: new PostgreSQLStore({
+      conString: process.env.DATABASE_URL,
+      tableName: 'sessions',
+      createTableIfMissing: false, // We already created it
     }),
     secret: process.env.SESSION_SECRET || 'traitors-game-secret-change-in-production',
     resave: false,
@@ -516,11 +520,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Game Master access required" });
       }
 
-      const { title, content } = announcementSchema.parse(req.body);
+      const { title, content, mediaUrl, mediaType } = announcementSchema.parse(req.body);
       const announcement = await storage.createAnnouncement({
         gameMasterId: userId,
         title,
         content,
+        mediaUrl,
+        mediaType,
       });
 
       res.status(201).json({ message: "Announcement created successfully", data: announcement });
