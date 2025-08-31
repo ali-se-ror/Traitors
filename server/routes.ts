@@ -637,7 +637,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if user can draw
       const canDraw = await storage.canUserDrawCard(userId);
       if (!canDraw) {
-        return res.status(403).json({ message: "You can only draw one card per week" });
+        return res.status(403).json({ message: "You can only draw one card every 3 days" });
       }
 
       // Record the card draw

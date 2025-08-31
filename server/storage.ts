@@ -322,10 +322,10 @@ export class MemStorage implements IStorage {
     }
     
     const lastDraw = userDraws[0];
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
     
-    return lastDraw.drawnAt < oneWeekAgo;
+    return lastDraw.drawnAt < threeDaysAgo;
   }
 
   async getLastCardDraw(userId: string): Promise<{ drawnAt: Date } | null> {

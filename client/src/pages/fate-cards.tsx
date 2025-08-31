@@ -368,7 +368,7 @@ export default function FateCards() {
     onError: (error: any) => {
       toast({
         title: "Cannot Draw Card",
-        description: error.message || "You can only draw one card per week",
+        description: error.message || "You can only draw one card every 3 days",
         variant: "destructive",
       });
       setIsFlipping(false);
