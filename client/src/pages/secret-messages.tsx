@@ -386,19 +386,19 @@ export default function SecretMessages() {
                                 <div className="mt-2">
                                   {msg.mediaType?.startsWith('image/') ? (
                                     <img 
-                                      src={msg.mediaUrl} 
+                                      src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                       alt="Shared media" 
                                       className="max-w-xs rounded border border-slate-600"
                                     />
                                   ) : msg.mediaType?.startsWith('video/') ? (
                                     <video 
-                                      src={msg.mediaUrl} 
+                                      src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`}
                                       controls 
                                       className="max-w-xs rounded border border-slate-600"
                                     />
                                   ) : (
                                     <a 
-                                      href={msg.mediaUrl} 
+                                      href={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                       target="_blank" 
                                       rel="noopener noreferrer"
                                       className="text-red-400 hover:text-red-300 underline text-sm"

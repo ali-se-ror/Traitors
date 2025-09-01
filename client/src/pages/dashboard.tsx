@@ -414,19 +414,19 @@ export default function Dashboard() {
                       <div className="mt-3">
                         {announcement.mediaType?.startsWith('image/') ? (
                           <img 
-                            src={announcement.mediaUrl} 
+                            src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${announcement.mediaUrl}`} 
                             alt="Announcement media" 
                             className="max-w-full h-auto rounded-lg border border-amber-500/30"
                           />
                         ) : announcement.mediaType?.startsWith('video/') ? (
                           <video 
-                            src={announcement.mediaUrl} 
+                            src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${announcement.mediaUrl}`} 
                             controls 
                             className="max-w-full rounded-lg border border-amber-500/30"
                           />
                         ) : (
                           <a 
-                            href={announcement.mediaUrl} 
+                            href={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${announcement.mediaUrl}`} 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-amber-400 hover:text-amber-300 underline"
@@ -527,19 +527,19 @@ export default function Dashboard() {
                           <div className="mt-2">
                             {msg.mediaType?.startsWith('image/') ? (
                               <img 
-                                src={msg.mediaUrl} 
+                                src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                 alt="Shared media" 
                                 className="max-w-xs rounded border border-slate-600"
                               />
                             ) : msg.mediaType?.startsWith('video/') ? (
                               <video 
-                                src={msg.mediaUrl} 
+                                src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                 controls 
                                 className="max-w-xs rounded border border-slate-600"
                               />
                             ) : (
                               <a 
-                                href={msg.mediaUrl} 
+                                href={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="text-purple-400 hover:text-purple-300 underline text-sm"
