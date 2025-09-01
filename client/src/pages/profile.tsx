@@ -13,6 +13,9 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { z } from "zod";
+import { Link } from "wouter";
+import { Eye, ArrowLeft, MessageCircle } from "lucide-react";
+
 import { 
   User, 
   Calendar, 
@@ -116,7 +119,14 @@ export default function Profile() {
           Only you can see these shadows of your identity
         </p>
       </motion.div>
-
+      <div className="flex items-center gap-4 mb-4">
+        <Link href="/">
+          <Button variant="outline" size="sm" className="border-slate-600 hover:bg-slate-700">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </Link>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Profile Info */}
         <div className="lg:col-span-2 space-y-4 md:space-y-6">
