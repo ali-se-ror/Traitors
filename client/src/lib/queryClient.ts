@@ -1,8 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-// Add base URL configuration
-const API_BASE_URL = 'http://api.adamfoleyrealestate.com';
-
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     const text = (await res.text()) || res.statusText;
@@ -15,10 +12,7 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  console.log("---------------->",url, API_BASE_URL)
-  const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
-  
-  const res = await fetch(fullUrl, {
+  const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
@@ -35,11 +29,7 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    // Prepend base URL to query key
-    const urlPath = queryKey.join("/");
-    const fullUrl = urlPath.startsWith('http') ? urlPath : `${API_BASE_URL}/${urlPath}`;
-    
-    const res = await fetch(fullUrl, {
+    const res = await fetch(queryKey.join("/") as string, {
       credentials: "include",
     });
 
