@@ -1,7 +1,7 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 // Add base URL configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://api.adamfoleyrealestate.com';
+const API_BASE_URL = 'http://api.adamfoleyrealestate.com';
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
