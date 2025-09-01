@@ -12,6 +12,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect, useRef } from "react";
 import { resolveProfileImage } from "@/lib/profileImages";
+import { ObjectUploader } from "@/components/ObjectUploader";
 
 interface Player {
   id: string;
@@ -432,15 +433,14 @@ export default function SecretMessages() {
                         rows={3}
                       />
                       <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setPendingMedia({ url: "test.jpg", type: "image/jpeg" })}
+                        <ObjectUploader
+                          onUploadComplete={(url, type) => setPendingMedia({ url, type })}
                           className="flex-shrink-0"
+                          buttonBG=" "
                         >
                           <Upload className="w-4 h-4 mr-1" />
                           Media
-                        </Button>
+                        </ObjectUploader>
                         {pendingMedia && (
                           <Button
                             variant="outline"

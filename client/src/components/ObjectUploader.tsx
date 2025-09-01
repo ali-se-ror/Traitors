@@ -10,6 +10,7 @@ interface ObjectUploaderProps {
   maxFileSize?: number;
   children?: ReactNode;
   className?: string;
+  buttonBG?: string;
 }
 
 export function ObjectUploader({
@@ -18,6 +19,7 @@ export function ObjectUploader({
   maxFileSize = 10485760, // 10MB default
   children,
   className = "",
+  buttonBG = "hover:bg-purple-900/30 border-purple-400/50",
 }: ObjectUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
@@ -126,7 +128,7 @@ export function ObjectUploader({
           variant="outline"
           size="sm"
           disabled={isUploading}
-          className="cursor-pointer hover:bg-purple-900/30 border-purple-400/50"
+          className={`cursor-pointer ${buttonBG}`}
           asChild
         >
           <span>
