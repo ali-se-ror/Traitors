@@ -350,7 +350,7 @@ export default function SecretMessages() {
                       <div 
                         ref={messagesRef}
                         className="bg-slate-800/50 rounded-lg p-3 lg:p-4 h-full overflow-y-auto border border-slate-700 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800"
-                        style={{ maxHeight: 'calc(100vh - 280px)' }}
+                        // style={{ maxHeight: 'calc(100vh - 280px)' }}
                       >
                         <div className="space-y-3">
                           {conversationMessages.map((msg, index) => (
