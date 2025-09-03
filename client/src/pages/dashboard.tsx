@@ -491,7 +491,7 @@ export default function Dashboard() {
               <div className="lg:col-span-2">
                 <div 
                   ref={publicMessagesRef}
-                  className="scroll-container bg-slate-800/50 rounded-lg lg:p-4 h-48 scroll-container relative max-h-[65vh] border border-slate-700 overflow-y-auto overscroll-contain touch-pan-y"
+                  className="scroll-container bg-slate-800/50 rounded-lg lg:p-4 h-full lg:h-48 scroll-container relative border border-slate-700 overflow-y-auto overscroll-contain touch-pan-y"
                 >
                   <div className="space-y-3">
                     {publicMessages.map((msg, index) => (
