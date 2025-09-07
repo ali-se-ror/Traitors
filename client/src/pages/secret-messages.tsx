@@ -286,9 +286,9 @@ export default function SecretMessages() {
 
             {/* Desktop Sidebar */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1, duration: 0.6 }}
+              // initial={{ opacity: 0, x: -20 }}
+              // animate={{ opacity: 1, x: 0 }}
+              // transition={{ delay: 0.1, duration: 0.6 }}
               className="hidden lg:block"
             >
               <Card className="card-medieval">
@@ -332,9 +332,9 @@ export default function SecretMessages() {
 
             {/* Message Thread - Mobile Optimized */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
+              // initial={{ opacity: 0, y: 20 }}
+              // animate={{ opacity: 1, y: 0 }}
+              // transition={{ delay: 0.2, duration: 0.6 }}
               className="lg:col-span-3 flex flex-col h-full"
             >
               <Card className="card-medieval flex-1 flex flex-col">
@@ -349,7 +349,7 @@ export default function SecretMessages() {
                     <div className="flex-1 min-h-0">
                       <div 
                         ref={messagesRef}
-                        className="bg-slate-800/50 rounded-lg p-3 lg:p-4 h-full overflow-y-auto border border-slate-700 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800"
+                        className="w-full h-60 overflow-y-auto"
                         // style={{ maxHeight: 'calc(100vh - 280px)' }}
                       >
                         <div className="space-y-3">
