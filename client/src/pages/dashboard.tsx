@@ -487,11 +487,11 @@ export default function Dashboard() {
               </Link>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* <div className="w-full md:w-7/12 h-70"> */}
                 <div 
                   ref={publicMessagesRef}
-                  className="scroll-container bg-slate-800/50 rounded-lg lg:p-4 h-full lg:h-48 scroll-container relative border border-slate-700 overflow-y-auto overscroll-contain touch-pan-y"
+                  className="w-full md:w-7/12 h-60 overflow-y-auto"
                 >
                   <div className="space-y-3">
                     {publicMessages.map((msg, index) => (
@@ -529,13 +529,13 @@ export default function Dashboard() {
                               <img 
                                 src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                 alt="Shared media" 
-                                className="max-w-xs rounded border border-slate-600"
+                                className="rounded border border-slate-600"
                               />
                             ) : msg.mediaType?.startsWith('video/') ? (
                               <video 
                                 src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                 controls 
-                                className="max-w-xs rounded border border-slate-600"
+                                className="rounded border border-slate-600"
                               />
                             ) : (
                               <a 
@@ -560,8 +560,8 @@ export default function Dashboard() {
                     )}
                   </div>
                 </div>
-              </div>
-              <div className="space-y-3">
+              {/* </div> */}
+              <div className="w-full md:w-5/12 flex flex-col">
                 <Textarea
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
@@ -569,7 +569,7 @@ export default function Dashboard() {
                   className="bg-slate-700/50 border-slate-600 text-white min-h-16 text-sm"
                   maxLength={200}
                 />
-                <div className="grid grid-cols-4 gap-1">
+                <div className="grid grid-cols-4 gap-1 mb-3">
                   {SPOOKY_EMOJIS.map((emoji) => (
                     <Button
                       key={emoji}
@@ -610,7 +610,7 @@ export default function Dashboard() {
                 <Button
                   onClick={() => sendMessageMutation.mutate(newMessage)}
                   disabled={!newMessage.trim() || sendMessageMutation.isPending}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm"
+                  className="mt-3 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-sm"
                 >
                   <Send className="w-3 h-3 mr-2" />
                   {sendMessageMutation.isPending ? "Sending..." : "Whisper"}
