@@ -452,12 +452,12 @@ export default function Dashboard() {
 
       {/* Whispers in the Dark - Communication Section */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.6 }}
+        // initial={{ opacity: 0, y: 20 }}
+        // animate={{ opacity: 1, y: 0 }}
+        // transition={{ delay: 0.08, duration: 0.6 }}
         className="mb-8"
       >
-        <Card className="card-medieval">
+        <Card className="retro-card border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
           <CardHeader>
             <CardTitle className="font-serif text-2xl font-semibold text-foreground flex items-center">
               <Ghost className="mr-3 h-6 w-6 text-purple-400" />
@@ -487,23 +487,23 @@ export default function Dashboard() {
               </Link>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-4 border border-amber-500/20">
               {/* <div className="w-full md:w-7/12 h-70"> */}
                 <div 
                   ref={publicMessagesRef}
                   className="w-full md:w-7/12 h-60 overflow-y-auto"
                 >
-                  <div className="space-y-3">
+                  {/* <div className="space-y-3"> */}
                     {publicMessages.map((msg, index) => (
                       <motion.div
                         key={msg.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
+                        // initial={{ opacity: 0, x: -20 }}
+                        // animate={{ opacity: 1, x: 0 }}
+                        // transition={{ delay: index * 0.05 }}
                         className={`p-2 rounded ${
                           msg.senderId === user?.id 
                             ? 'bg-purple-900/30 ml-4 border-l-2 border-purple-400' 
-                            : 'bg-slate-700/50 mr-4'
+                            : 'bg-slate-700/50'
                         }`}
                       >
                         <div className="flex items-center gap-2 mb-1">
@@ -558,7 +558,7 @@ export default function Dashboard() {
                         <p className="text-sm">The darkness is silent... be the first to whisper</p>
                       </div>
                     )}
-                  </div>
+                  {/* </div> */}
                 </div>
               {/* </div> */}
               <div className="w-full md:w-5/12 flex flex-col">
