@@ -337,7 +337,7 @@ export default function SecretMessages() {
               // transition={{ delay: 0.2, duration: 0.6 }}
               className="lg:col-span-3 flex flex-col h-full"
             >
-              <Card className="card-medieval flex-1 flex flex-col">
+              <Card className="retro-card border-amber-500/30 bg-gradient-to-br from-amber-900/10 to-yellow-900/10">
                 <CardHeader className="hidden lg:block">
                   <CardTitle className="text-lg font-serif text-red-300">
                     Conversation with {players.find(p => p.id === selectedConversation)?.username || 'Unknown'}
@@ -352,13 +352,13 @@ export default function SecretMessages() {
                         className="w-full h-60 overflow-y-auto"
                         // style={{ maxHeight: 'calc(100vh - 280px)' }}
                       >
-                        <div className="space-y-3">
+                        {/* <div className="space-y-3"> */}
                           {conversationMessages.map((msg, index) => (
                             <motion.div
                               key={msg.id}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.05 }}
+                              // initial={{ opacity: 0, x: -20 }}
+                              // animate={{ opacity: 1, x: 0 }}
+                              // transition={{ delay: index * 0.05 }}
                               className={`p-3 rounded ${
                                 msg.senderId === user?.id 
                                   ? 'bg-red-900/20 ml-4 lg:ml-8 border-l-2 border-red-400' 
@@ -389,13 +389,13 @@ export default function SecretMessages() {
                                     <img 
                                       src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`} 
                                       alt="Shared media" 
-                                      className="max-w-xs rounded border border-slate-600"
+                                      className="rounded border border-slate-600"
                                     />
                                   ) : msg.mediaType?.startsWith('video/') ? (
                                     <video 
                                       src={`https://thetraitorsapp.s3.us-west-2.amazonaws.com/${msg.mediaUrl}`}
                                       controls 
-                                      className="max-w-xs rounded border border-slate-600"
+                                      className="rounded border border-slate-600"
                                     />
                                   ) : (
                                     <a 
@@ -418,7 +418,7 @@ export default function SecretMessages() {
                               <p className="text-sm">Start the conversation...</p>
                             </div>
                           )}
-                        </div>
+                        {/* </div> */}
                       </div>
                     </div>
 
