@@ -390,7 +390,7 @@ export default function InstallPage() {
 
           <Button
             variant="outline"
-            onClick={() => setLocation('/')}
+            onClick={() => setLocation('/auth')}
             className="border-gray-600 hover:bg-gray-800 text-gray-300 text-lg py-3 px-6"
             data-testid="button-use-browser"
           >
